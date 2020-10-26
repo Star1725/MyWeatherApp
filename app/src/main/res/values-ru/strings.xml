@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="moscow">Москва</string>
+    <string name="unit_C">\u2103</string>
+    <string name="unit_F">\u2109</string>
+    <string name="app_name" translatable="false">Погода</string>
+    <string name="value" translatable="false">30</string>
+</resources>

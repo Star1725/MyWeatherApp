@@ -8,11 +8,13 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="356dp"
+        android:layout_width="0dp"
         android:layout_height="314dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/searchPlace"
-        app:layout_constraintStart_toStartOf="@+id/searchPlace"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchPlace"
         app:srcCompat="@drawable/ic_weather_sunny_black_48dp" />
 
@@ -21,6 +23,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:gravity="left"
         android:text="@string/moscow"
         android:textSize="32sp"
         app:layout_constraintEnd_toStartOf="@+id/tvTemperature"
@@ -33,23 +36,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:text="@string/unit_C"
         android:textAlignment="textEnd"
         android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        tools:text="@string/grad" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
         android:id="@+id/tvTemperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:text="@string/value"
         android:textAlignment="textEnd"
         android:textSize="32sp"
         app:layout_constraintEnd_toStartOf="@+id/tvUnits"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        tools:text="@string/value" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <SearchView
         android:id="@+id/searchPlace"
@@ -64,7 +67,7 @@
 
     <Button
         android:id="@+id/buttonSetSity"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="set sity"
@@ -73,7 +76,7 @@
 
     <Button
         android:id="@+id/buttonImage"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
@@ -83,7 +86,7 @@
 
     <Button
         android:id="@+id/buttonTemp"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="set temp"
@@ -92,10 +95,11 @@
 
     <Button
         android:id="@+id/buttonUnit"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="set unit"
+        android:onClick="onClick"
         app:layout_constraintStart_toEndOf="@+id/buttonTemp"
         app:layout_constraintTop_toTopOf="@+id/buttonSetSity" />
 
