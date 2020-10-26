@@ -6,13 +6,97 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="356dp"
+        android:layout_height="314dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/searchPlace"
+        app:layout_constraintStart_toStartOf="@+id/searchPlace"
+        app:layout_constraintTop_toBottomOf="@+id/searchPlace"
+        app:srcCompat="@drawable/ic_weather_sunny_black_48dp" />
+
     <TextView
+        android:id="@+id/tvPlace"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/moscow"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toStartOf="@+id/tvTemperature"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/tvUnits"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        android:textAlignment="textEnd"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        tools:text="@string/grad" />
+
+    <TextView
+        android:id="@+id/tvTemperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAlignment="textEnd"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toStartOf="@+id/tvUnits"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        tools:text="@string/value" />
+
+    <SearchView
+        android:id="@+id/searchPlace"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSetSity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="set sity"
+        app:layout_constraintStart_toEndOf="@+id/buttonImage"
+        app:layout_constraintTop_toTopOf="@+id/buttonImage" />
+
+    <Button
+        android:id="@+id/buttonImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="set image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPlace" />
+
+    <Button
+        android:id="@+id/buttonTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="set temp"
+        app:layout_constraintStart_toEndOf="@+id/buttonSetSity"
+        app:layout_constraintTop_toTopOf="@+id/buttonSetSity" />
+
+    <Button
+        android:id="@+id/buttonUnit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="set unit"
+        app:layout_constraintStart_toEndOf="@+id/buttonTemp"
+        app:layout_constraintTop_toTopOf="@+id/buttonSetSity" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
