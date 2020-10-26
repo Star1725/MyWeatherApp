@@ -7,12 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
-    boolean isUnit_F;
-    boolean isImageSun;
-    ImageView imageViewWeather;
+public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+    private boolean isUnit_F;
+    private boolean isImageSun;
+    private ImageView imageViewWeather;
+    private TextView tvTemperature;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +23,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d("myLog", "onCreate");
 
         imageViewWeather = findViewById(R.id.imageView);
+        final SeekBar seekBarTemp = findViewById(R.id.seekBarTemp);
+        seekBarTemp.setOnSeekBarChangeListener(this);
+
+        tvTemperature = (TextView)findViewById(R.id.tvTemperature);
+        tvTemperature.setText("0");
     }
 
     public void onClick(View view) {
@@ -47,5 +55,20 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        tvTemperature.setText(String.valueOf(seekBar.getProgress()));
     }
 }

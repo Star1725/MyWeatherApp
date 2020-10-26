@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name" translatable="false">MyWeatherApp</string>
+    <string name="app_name">MyWeatherApp</string>
     <string name="moscow">Moscow</string>
     <string name="unit_C">\u2103</string>
     <string name="unit_F">\u2109</string>
-    <string name="value" translatable="false">40</string>
+    <string name="value">40</string>
+    <string name="temperature">Temperature</string>
 </resources>

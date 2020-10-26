@@ -5,4 +5,5 @@
     <string name="unit_F">\u2109</string>
     <string name="app_name" translatable="false">Погода</string>
     <string name="value" translatable="false">30</string>
+    <string name="temperature">Температура</string>
 </resources>

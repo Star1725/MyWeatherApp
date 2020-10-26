@@ -86,22 +86,35 @@
         app:layout_constraintTop_toBottomOf="@+id/tvPlace" />
 
     <Button
-        android:id="@+id/buttonTemp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="set temp"
-        app:layout_constraintStart_toEndOf="@+id/buttonSetSity"
-        app:layout_constraintTop_toTopOf="@+id/buttonSetSity" />
-
-    <Button
         android:id="@+id/buttonUnit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="set unit"
         android:onClick="onClick"
-        app:layout_constraintStart_toEndOf="@+id/buttonTemp"
+        android:text="set unit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonSetSity"
         app:layout_constraintTop_toTopOf="@+id/buttonSetSity" />
+
+    <SeekBar
+        android:id="@+id/seekBarTemp"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="0dp"
+        android:layout_height="11dp"
+        android:layout_marginTop="16dp"
+        android:max="10"
+        android:progress="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTemp" />
+
+    <TextView
+        android:id="@+id/textViewTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/temperature"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonUnit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
