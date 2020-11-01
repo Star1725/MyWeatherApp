@@ -13,14 +13,16 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="400dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchPlace"
-        app:srcCompat="@drawable/ic_weather_sunny_black_48dp" />
+        app:srcCompat="@drawable/ic_sun_svg"
+        tools:srcCompat="@drawable/ic_sun_svg" />
 
     <TextView
-        android:id="@+id/tvPlace"
+        android:id="@+id/tvNameCites"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -39,9 +41,9 @@
         android:text="@string/unit_C"
         android:textAlignment="textEnd"
         android:textSize="32sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvPlace"
+        app:layout_constraintBottom_toBottomOf="@+id/tvNameCites"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvPlace" />
+        app:layout_constraintTop_toTopOf="@+id/tvNameCites" />
 
     <TextView
         android:id="@+id/tvTemperature"
@@ -50,9 +52,9 @@
         android:text="@string/value"
         android:textAlignment="textEnd"
         android:textSize="32sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvPlace"
+        app:layout_constraintBottom_toBottomOf="@+id/tvNameCites"
         app:layout_constraintEnd_toStartOf="@+id/tvUnits"
-        app:layout_constraintTop_toTopOf="@+id/tvPlace" />
+        app:layout_constraintTop_toTopOf="@+id/tvNameCites" />
 
     <SearchView
         android:id="@+id/searchPlace"
@@ -121,8 +123,8 @@
         android:layout_marginTop="16dp"
         android:text="@string/temperature"
         app:layout_constraintEnd_toEndOf="@+id/tvUnits"
-        app:layout_constraintStart_toStartOf="@+id/tvPlace"
-        app:layout_constraintTop_toBottomOf="@+id/tvPlace" />
+        app:layout_constraintStart_toStartOf="@+id/tvNameCites"
+        app:layout_constraintTop_toBottomOf="@+id/tvNameCites" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

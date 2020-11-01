@@ -6,4 +6,21 @@
     <string name="app_name" translatable="false">Погода</string>
     <string name="value" translatable="false">30</string>
     <string name="temperature">Температура</string>
+    <string name="button_choose_city">Выбор города</string>
+
+    <!-- Список городов -->
+    <string-array name="name_city">
+        <item>Москва</item>
+        <item>Лондон</item>
+        <item>Париж</item>
+        <item>Токио</item>
+        <item>Нью Йорк</item>
+        <item>Красноярск</item>
+        <item>Иркутск</item>
+        <item>Сидней</item>
+        <item>Берлин</item>
+        <item>Пекин</item>
+        <item>Кейптаун</item>
+    </string-array>
+
 </resources>

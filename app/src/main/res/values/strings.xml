@@ -5,4 +5,36 @@
     <string name="unit_F">\u2109</string>
     <string name="value">40</string>
     <string name="temperature">Temperature</string>
+    <string name="button_choose_city">Сhoose city</string>
+
+    <!-- Список городов -->
+    <string-array name="name_city">
+        <item>Moscow</item>
+        <item>London</item>
+        <item>Paris</item>
+        <item>Tokyo</item>
+        <item>New York</item>
+        <item>Krasnoyarsk</item>
+        <item>Irkutsk</item>
+        <item>Sydney</item>
+        <item>Berlin</item>
+        <item>Beijing</item>
+        <item>Cape Town</item>
+    </string-array>
+
+    <!-- Список температур -->
+    <integer-array name="temps">
+        <item>20</item>
+        <item>18</item>
+        <item>-10</item>
+        <item>0</item>
+        <item>15</item>
+        <item>35</item>
+        <item>-20</item>
+        <item>12</item>
+        <item>-3</item>
+        <item>6</item>
+        <item>17</item>
+    </integer-array>
+
 </resources>

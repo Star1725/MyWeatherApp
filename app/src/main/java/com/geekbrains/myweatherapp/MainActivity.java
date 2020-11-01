@@ -2,6 +2,7 @@ package com.geekbrains.myweatherapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,24 +11,41 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+public class MainActivity extends AppCompatActivity{
+    private static final String TAG = "myLog";
+
     private boolean isUnit_F;
-    private boolean isImageSun;
-    private ImageView imageViewWeather;
-    private TextView tvTemperature;
+    private ImageView imageViewWeatherCites;
+    private TextView tvNameCites;
+    private TextView tvTemperatureCites;
+    private Button buttonChoiceCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("myLog", "onCreate");
 
-        imageViewWeather = findViewById(R.id.imageView);
-        final SeekBar seekBarTemp = findViewById(R.id.seekBarTemp);
-        seekBarTemp.setOnSeekBarChangeListener(this);
+        buttonChoiceCity = findViewById(R.id.button_choice_city);
+        imageViewWeatherCites = findViewById(R.id.imageView);
+        tvNameCites = findViewById(R.id.tvNameCites);
+        tvTemperatureCites = findViewById(R.id.tvTemperature);
 
-        tvTemperature = (TextView)findViewById(R.id.tvTemperature);
-        tvTemperature.setText("0");
+        tvTemperatureCites.setText("0");
+        tvNameCites.setText(R.string.moscow);
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.button_choice_city:
+                        Intent intent = new Intent(MainActivity.this, CitesActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+            }
+        };
+
+        buttonChoiceCity.setOnClickListener(onClickListener);
     }
 
     public void onClick(View view) {
@@ -35,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
         switch (view.getId()){
             case R.id.buttonUnit:
-                Log.d("myLog", "isUnit_F: " + isUnit_F);
                 if (isUnit_F) {
                     tvUnit.setText(R.string.unit_C);
                     isUnit_F = false;
@@ -44,31 +61,17 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                     isUnit_F = true;
                 }
                 break;
-            case R.id.buttonImage:
-                Log.d("myLog", "isUnit_F: " + isImageSun);
-                if (isImageSun) {
-                    imageViewWeather.setImageResource(R.drawable.ic_weather_sunny_black_48dp);
-                    isImageSun = false;
-                } else {
-                    imageViewWeather.setImageResource(R.drawable.ic_weather_pouring_black_48dp);
-                    isImageSun = true;
-                }
-                break;
         }
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
 
-    }
+        tvNameCites.setText(intent.getStringExtra("citesName"));
+        tvTemperatureCites.setText(intent.getStringExtra("citesTemp"));
+        imageViewWeatherCites.setImageResource(intent.getIntExtra("citesWeather", R.drawable.ic_sun_svg));
 
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        tvTemperature.setText(String.valueOf(seekBar.getProgress()));
     }
 }
