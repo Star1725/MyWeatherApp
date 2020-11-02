@@ -6,6 +6,11 @@
     <string name="value">40</string>
     <string name="temperature">Temperature</string>
     <string name="button_choose_city">Сhoose city</string>
+    <string name="action_settings">Setting</string>
+    <string name="theme">Theme</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
+    <string name="temperature_units">Temperature units</string>
 
     <!-- Список городов -->
     <string-array name="name_city">

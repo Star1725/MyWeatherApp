@@ -11,13 +11,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="400dp"
-        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchPlace"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_sun_svg"
         tools:srcCompat="@drawable/ic_sun_svg" />
 
@@ -55,76 +54,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/tvNameCites"
         app:layout_constraintEnd_toStartOf="@+id/tvUnits"
         app:layout_constraintTop_toTopOf="@+id/tvNameCites" />
-
-    <SearchView
-        android:id="@+id/searchPlace"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonSetSity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="set sity"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonUnit"
-        app:layout_constraintStart_toEndOf="@+id/buttonImage"
-        app:layout_constraintTop_toBottomOf="@+id/seekBarTemp" />
-
-    <Button
-        android:id="@+id/buttonImage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:onClick="onClick"
-        android:text="set image"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonSetSity"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/seekBarTemp" />
-
-    <Button
-        android:id="@+id/buttonUnit"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:onClick="onClick"
-        android:text="set unit"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonSetSity"
-        app:layout_constraintTop_toBottomOf="@+id/seekBarTemp" />
-
-    <SeekBar
-        android:id="@+id/seekBarTemp"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:max="10"
-        android:progress="3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTemp" />
-
-    <TextView
-        android:id="@+id/textViewTemp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/temperature"
-        app:layout_constraintEnd_toEndOf="@+id/tvUnits"
-        app:layout_constraintStart_toStartOf="@+id/tvNameCites"
-        app:layout_constraintTop_toBottomOf="@+id/tvNameCites" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

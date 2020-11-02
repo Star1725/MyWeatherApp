@@ -7,6 +7,11 @@
     <string name="value" translatable="false">30</string>
     <string name="temperature">Температура</string>
     <string name="button_choose_city">Выбор города</string>
+    <string name="action_settings">Настройки</string>
+    <string name="theme">Тема</string>
+    <string name="dark">Тёмная</string>
+    <string name="light">Светлая</string>
+    <string name="temperature_units">Ед. измерения</string>
 
     <!-- Список городов -->
     <string-array name="name_city">
