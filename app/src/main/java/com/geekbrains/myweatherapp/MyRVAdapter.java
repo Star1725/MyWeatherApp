@@ -1,6 +1,7 @@
 package com.geekbrains.myweatherapp;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolder> {
     private List<City> cites;
+    private static final String TAG = "myLog";
     //Внутри конструктора нашего кастомного ViewHolder, инициализируем View, входящие в RecyclerView.
     public static class CitesViewHolder extends RecyclerView.ViewHolder {
         private LinearLayout llCity;
@@ -80,6 +82,10 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
             intent.putExtra("citesName", cites.get(localPos).getName());
             intent.putExtra("citesTemp", String.valueOf(cites.get(localPos).getTemp()));
             intent.putExtra("citesWeather", cites.get(localPos).getImageWeatherID());
+                Log.d(TAG, this.getClass().getSimpleName() + "onClick: send intent: ");
+                Log.d(TAG, this.getClass().getSimpleName() + "                     - citesName " + cites.get(localPos).getName());
+                Log.d(TAG, this.getClass().getSimpleName() + "                     - citesTemp " + cites.get(localPos).getTemp());
+                Log.d(TAG, this.getClass().getSimpleName() + "                     - citesWeather " + cites.get(localPos).getImageWeatherID());
             v.getContext().startActivity(intent);
             }
         });

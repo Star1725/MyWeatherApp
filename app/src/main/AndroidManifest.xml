@@ -9,8 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SettingActivity"
-            android:launchMode="singleInstance"/>
+        <activity android:name=".SettingActivity" />
         <activity android:name=".CitesActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
