@@ -1,11 +1,13 @@
 package com.geekbrains.myweatherapp;
 
 import android.app.Application;
+import android.util.Log;
 
 import lombok.Getter;
 
 @Getter
 public class MyApp extends Application {
+    private static final String TAG = "myLog";
     private static MyApp INSTANCE;
     Storage storage = new Storage();
 
@@ -14,6 +16,8 @@ public class MyApp extends Application {
         super.onCreate();
 
         INSTANCE = this;
+        Log.d(TAG, this.getClass().getSimpleName() + " onCreate() " + INSTANCE.getStorage().getUnitTemp());
+
     }
 
     public static MyApp getINSTANCE() {

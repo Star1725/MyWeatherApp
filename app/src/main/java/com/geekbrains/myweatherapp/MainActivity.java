@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity{
         };
 
         buttonChoiceCity.setOnClickListener(onClickListener);
+        tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
     }
 // методы меню/////////////////////////////////
     @Override
@@ -78,11 +79,11 @@ public class MainActivity extends AppCompatActivity{
             case R.id.buttonUnit:
                 if (isUnit_F) {
                     tvUnit.setText(R.string.unit_C);
-                    //MyApp.getINSTANCE().getStorage().setUnitTemp(tvUnit.getText().toString());
+                    MyApp.getINSTANCE().getStorage().setUnitTemp(tvUnit.getText().toString());
                     isUnit_F = false;
                 } else {
                     tvUnit.setText(R.string.unit_F);
-                    //MyApp.getINSTANCE().getStorage().setUnitTemp(tvUnit.getText().toString());
+                    MyApp.getINSTANCE().getStorage().setUnitTemp(tvUnit.getText().toString());
                     isUnit_F = true;
                 }
                 break;

@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Storage {
-    private String unitTemp;
+    private String unitTemp = "\u2103";
 }
