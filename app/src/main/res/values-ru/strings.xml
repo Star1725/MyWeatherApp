@@ -12,6 +12,7 @@
     <string name="dark">Тёмная</string>
     <string name="light">Светлая</string>
     <string name="temperature_units">Ед. измерения</string>
+    <string name="actv_hint_ru">поиск города</string>
 
     <!-- Список городов -->
     <string-array name="name_city">

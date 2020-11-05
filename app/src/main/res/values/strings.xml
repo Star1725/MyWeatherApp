@@ -11,6 +11,7 @@
     <string name="dark">Dark</string>
     <string name="light">Light</string>
     <string name="temperature_units">Temperature units</string>
+    <string name="actv_hint_ru">city search</string>
 
     <!-- Список городов -->
     <string-array name="name_city">

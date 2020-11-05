@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -19,7 +21,7 @@ public class CitesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sitys);
+        setContentView(R.layout.activity_cites);
         Log.d(TAG, this.getClass().getSimpleName() + " onCreate");
 //RecyclerView необходим менеджер компоновки для управления позиционированием своих элементов
         RecyclerView rvSites = (RecyclerView)findViewById(R.id.recyclerView_sitys);
@@ -37,6 +39,11 @@ public class CitesActivity extends AppCompatActivity {
 //создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites
         MyRVAdapter myRVAdapter = new MyRVAdapter(cityList);
         rvSites.setAdapter(myRVAdapter);
+//автозаполнение
+        AutoCompleteTextView myAutoCompleteTextView = findViewById(R.id.autoCompleteTextView_for_cearch);
+        Log.d(TAG, this.getClass().getSimpleName() + " onCreate() - myAutoCompleteTextView.setAdapter");
+        Log.d(TAG, this.getClass().getSimpleName() + " onCreate() - nameCites:" + Arrays.asList(nameCites));
+        myAutoCompleteTextView.setAdapter( new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, nameCites));
 
     }
 //    @Override
