@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity{
@@ -23,7 +22,6 @@ public class MainActivity extends AppCompatActivity{
     private TextView tvNameCites;
     private TextView tvTemperatureCites;
     private TextView tvUnit;
-    private Button buttonChoiceCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         Log.d(TAG, this.getClass().getSimpleName() + " onCreate");
 
-        buttonChoiceCity = findViewById(R.id.button_choice_city);
+        Button buttonChoiceCity = findViewById(R.id.button_choice_city);
         imageViewWeatherCites = findViewById(R.id.imageView);
         tvNameCites = findViewById(R.id.tvNameCites);
         tvTemperatureCites = findViewById(R.id.tvTemperature);
@@ -74,21 +72,6 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 /////////////////////////////////////////////////
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.buttonUnit:
-                if (isUnit_F) {
-                    tvUnit.setText(R.string.unit_C);
-                    MyApp.getINSTANCE().getStorage().setUnitTemp(tvUnit.getText().toString());
-                    isUnit_F = false;
-                } else {
-                    tvUnit.setText(R.string.unit_F);
-                    MyApp.getINSTANCE().getStorage().setUnitTemp(tvUnit.getText().toString());
-                    isUnit_F = true;
-                }
-                break;
-        }
-    }
 
     @Override
     protected void onResume() {
@@ -104,6 +87,7 @@ public class MainActivity extends AppCompatActivity{
         Log.d(TAG, this.getClass().getSimpleName() + "                     - citesTemp " + tvTemperatureCites.getText());
         Log.d(TAG, this.getClass().getSimpleName() + "                     - citesWeather " + intent.getIntExtra(" citesWeather", R.drawable.ic_sun_svg));
 
+        tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
     }
     @Override
     protected void onStart() {
@@ -122,7 +106,7 @@ public class MainActivity extends AppCompatActivity{
         Log.d(TAG, this.getClass().getSimpleName() + " onPause()");
     }
     @Override
-    protected void onSaveInstanceState(Bundle saveInstanceState){
+    protected void onSaveInstanceState(@NonNull Bundle saveInstanceState){
         super .onSaveInstanceState(saveInstanceState);
         Log.d(TAG, this.getClass().getSimpleName() + " onSaveInstanceState()");
         //saveInstanceState.putString(INSTANCE_KEY_UNIT_TEMP, tvUnit.getText().toString());

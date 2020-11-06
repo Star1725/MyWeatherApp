@@ -14,7 +14,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:completionThreshold="1"
-        android:dropDownAnchor="@+id/spiner_categoty"
         android:hint="@string/actv_hint_ru"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"

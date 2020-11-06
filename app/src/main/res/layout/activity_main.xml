@@ -16,8 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_choice_city"
-        app:srcCompat="@drawable/ic_sun_svg"
-        tools:srcCompat="@drawable/ic_sun_svg" />
+        app:srcCompat="@drawable/ic_noimages_svg"
+        tools:srcCompat="@drawable/ic_noimages_svg" />
 
     <TextView
         android:id="@+id/tvNameCites"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="left"
-        android:text="@string/moscow"
+        android:text="@string/emptyText"
         android:textSize="32sp"
         app:layout_constraintEnd_toStartOf="@+id/tvTemperature"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/unit_C"
+        android:text="@string/emptyText"
         android:textAlignment="textEnd"
         android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
@@ -49,22 +49,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/value"
+        android:text="@string/emptyText"
         android:textAlignment="textEnd"
         android:textSize="32sp"
         app:layout_constraintEnd_toStartOf="@+id/tvUnits"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <Button
-        android:id="@+id/buttonUnit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClick"
-        android:text="set unit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.975"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTemperature" />
 
     <Button
         android:id="@+id/button_choice_city"

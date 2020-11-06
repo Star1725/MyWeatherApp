@@ -7,4 +7,6 @@ import lombok.Setter;
 @Setter
 public class Storage {
     private String unitTemp = "\u2103";
+    private boolean lightTheme = true;
+    private boolean unitC = true;
 }

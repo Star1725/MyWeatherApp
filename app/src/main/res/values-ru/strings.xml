@@ -13,6 +13,7 @@
     <string name="light">Светлая</string>
     <string name="temperature_units">Ед. измерения</string>
     <string name="actv_hint_ru">поиск города</string>
+    <string name="emptyText">" "</string>
 
     <!-- Список городов -->
     <string-array name="name_city">
@@ -27,6 +28,9 @@
         <item>Берлин</item>
         <item>Пекин</item>
         <item>Кейптаун</item>
+        <item>Ницца</item>
+        <item>Сан-Паулу</item>
+        <item>Каир</item>
     </string-array>
 
 </resources>

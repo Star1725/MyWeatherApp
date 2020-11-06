@@ -26,31 +26,17 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
     private static final String TAG = "myLog";
     //Внутри конструктора нашего кастомного ViewHolder, инициализируем View, входящие в RecyclerView.
     public static class CitesViewHolder extends RecyclerView.ViewHolder {
-        private LinearLayout llCity;
         private TextView citesName;
         private TextView citesTemp;
         private TextView unit;
         private ImageView citesWeather;
         public CitesViewHolder(@NonNull View itemView) {
             super(itemView);
-            llCity = (LinearLayout) itemView.findViewById(R.id.linearLayout_city);
             citesName = (TextView) itemView.findViewById(R.id.tv_name_sity);
             citesTemp = (TextView) itemView.findViewById(R.id.tv_temp);
             unit = (TextView) itemView.findViewById(R.id.tv_unit);
             citesWeather = (ImageView) itemView.findViewById(R.id.iv_weather_in_cites);
-
-            //llCity.setOnClickListener(this);
         }
-
-//        @Override
-//        public void onClick(View v) {
-//            int position = getAdapterPosition();
-//            Intent intent = new Intent(llCity.getContext(), MainActivity.class);
-//            intent.putExtra("citesName", citesName.getText().toString());
-//            intent.putExtra("citesTemp", citesTemp.getText().toString());
-//            intent.putExtra("citesWeather", citesWeather.getResources().getIdentifier()
-//            llCity.getContext().startActivity(intent);
-//        }
     }
     /*метод вызывается, когда кастомный ViewHolder должен быть инициализирован.
     Мы указываем макет для каждого элемента RecyclerView.
@@ -70,7 +56,7 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
     public void onBindViewHolder(@NonNull CitesViewHolder citesViewHolder, int position) {
         citesViewHolder.citesName.setText(cites.get(position).getName());
         citesViewHolder.citesTemp.setText(String.valueOf(cites.get(position).getTemp()));
-        citesViewHolder.unit.setText(R.string.unit_C);
+        citesViewHolder.unit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
         citesViewHolder.citesWeather.setImageResource(cites.get(position).getImageWeatherID());
 
         final int localPos = position;

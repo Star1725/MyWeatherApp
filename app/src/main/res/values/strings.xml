@@ -12,6 +12,7 @@
     <string name="light">Light</string>
     <string name="temperature_units">Temperature units</string>
     <string name="actv_hint_ru">city search</string>
+    <string name="emptyText">" "</string>
 
     <!-- Список городов -->
     <string-array name="name_city">
@@ -26,6 +27,9 @@
         <item>Berlin</item>
         <item>Beijing</item>
         <item>Cape Town</item>
+        <item>Nice</item>
+        <item>Sao Paulo</item>
+        <item>Cairo</item>
     </string-array>
 
     <!-- Список температур -->
@@ -41,6 +45,9 @@
         <item>-3</item>
         <item>6</item>
         <item>17</item>
+        <item>25</item>
+        <item>-2</item>
+        <item>0</item>
     </integer-array>
 
 </resources>
