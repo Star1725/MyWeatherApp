@@ -40,7 +40,7 @@ public class CitesActivity extends AppCompatActivity {
         rvSites.setLayoutManager(llm);
 //определяем данные для заполнения rvSites
         cityList = new ArrayList<>();
-        final String[] nameCites = getResources().getStringArray(R.array.name_city);
+        String[] nameCites = getResources().getStringArray(R.array.name_city);
         int[] tempCites = getResources().getIntArray(R.array.temps);
         int[] imageIDs = {R.drawable.ic_rain_svg, R.drawable.ic_moon_svg, R.drawable.ic_sun_svg};
         Random randomImage = new Random();

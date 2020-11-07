@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -35,10 +36,14 @@ public class MainActivity extends AppCompatActivity{
         }
 
         Button buttonChoiceCity = findViewById(R.id.button_choice_city);
+        Button buttonInfoCity = findViewById(R.id.button_info_city);
         imageViewWeatherCites = findViewById(R.id.imageView);
         tvNameCites = findViewById(R.id.tvNameCites);
         tvTemperatureCites = findViewById(R.id.tvTemperature);
         tvUnit = findViewById(R.id.tvUnits);
+
+        currentCity = MyApp.getINSTANCE().getStorage().getDefaultCity();
+        settingViews(currentCity);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -48,11 +53,21 @@ public class MainActivity extends AppCompatActivity{
                         Intent intent = new Intent(MainActivity.this, CitesActivity.class);
                         startActivityForResult(intent, REQUEST_CODE);
                         break;
+                    case R.id.button_info_city:
+                        String url = "https://yandex.ru/pogoda/" + currentCity.getName();
+                        if (FLAG_TURN_ON_LOG) {
+                            Log.d(TAG, this.getClass().getSimpleName() + " onClick(): url = " + url);
+                        }
+                        Uri uri = Uri.parse(url);
+                        Intent intentGET = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intentGET);
+                        break;
                 }
             }
         };
 
         buttonChoiceCity.setOnClickListener(onClickListener);
+        buttonInfoCity.setOnClickListener(onClickListener);
     }
 // методы меню/////////////////////////////////
     @Override
@@ -82,28 +97,23 @@ public class MainActivity extends AppCompatActivity{
             Log.d(TAG, this.getClass().getSimpleName() + " onActivityResult()");
             Log.d(TAG, this.getClass().getSimpleName() + " requestCode = " + requestCode);
         }
-        if (requestCode == REQUEST_CODE){
+        if (resultCode == RESULT_OK){
             assert data != null;
             currentCity = data.getParcelableExtra(Constants.CITY_EXTRA);
-            settingViews();
-            //
+            settingViews(currentCity);
         }
     }
 
-    private void settingViews() {
-        tvNameCites.setText(currentCity.getName());
-        tvTemperatureCites.setText(String.valueOf(currentCity.getTemp()));
-        imageViewWeatherCites.setImageResource(currentCity.getImageWeatherID());
+    private void settingViews(City city) {
+        tvNameCites.setText(city.getName());
+        tvTemperatureCites.setText(String.valueOf(city.getTemp()));
+        imageViewWeatherCites.setImageResource(city.getImageWeatherID());
         tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (currentCity != null){
-            settingViews();
-            //tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
-        }
         if (FLAG_TURN_ON_LOG) {
             Log.d(TAG, this.getClass().getSimpleName() + " onResume()");
         }
@@ -111,6 +121,9 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onStart() {
         super .onStart();
+        if (currentCity != null){
+            settingViews(currentCity);
+        }
         if (FLAG_TURN_ON_LOG) {
             Log.d(TAG, this.getClass().getSimpleName() + " onStart()");
         }

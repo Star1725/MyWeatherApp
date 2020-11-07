@@ -9,7 +9,7 @@ import lombok.Getter;
 public class MyApp extends Application {
     private static final String TAG = "myLog";
     private static MyApp INSTANCE;
-    Storage storage = new Storage();
+    private Storage storage = new Storage();
 
     @Override
     public void onCreate() {
@@ -17,6 +17,8 @@ public class MyApp extends Application {
 
         INSTANCE = this;
         Log.d(TAG, this.getClass().getSimpleName() + " onCreate() " + INSTANCE.getStorage().getUnitTemp());
+
+
 
     }
 

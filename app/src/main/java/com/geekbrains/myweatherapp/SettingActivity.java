@@ -5,18 +5,22 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 
 public class SettingActivity extends AppCompatActivity {
     private static boolean FLAG_TURN_ON_LOG = true;
     private static final String TAG = "myLog";
 
-    RadioButton radioButtonLight;
-    RadioButton radioButtonDark;
-    RadioButton radioButtonC;
-    RadioButton radioButtonF;
+    private RadioButton radioButtonLight;
+    private RadioButton radioButtonDark;
+    private RadioButton radioButtonC;
+    private RadioButton radioButtonF;
+    private Spinner spinnerCites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,12 @@ public class SettingActivity extends AppCompatActivity {
         radioButtonDark = findViewById(R.id.radioButton_dark_theme);
         radioButtonC = findViewById(R.id.radioButton_celsius);
         radioButtonF = findViewById(R.id.radioButton_fahrenheit);
+        spinnerCites = findViewById(R.id.spinnerCites);
+
+        //создаём adapter для Spinner и настраиваем список
+        ArrayAdapter<?> adapterForSpinner = ArrayAdapter.createFromResource(this, R.array.name_city, R.layout.layout_for_spiner_cites);
+        adapterForSpinner.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinnerCites.setAdapter(adapterForSpinner);
 
         if(MyApp.getINSTANCE().getStorage().isLightTheme()){radioButtonLight.setChecked(true);}
         else {radioButtonDark.setChecked(true);}

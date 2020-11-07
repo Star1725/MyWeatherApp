@@ -1,6 +1,21 @@
 <resources>
-    <string name="app_name">MyWeatherApp</string>
+    <!-- Список городов -->
     <string name="moscow">Moscow</string>
+    <string name="london">London</string>
+    <string name="paris">Paris</string>
+    <string name="tokyo">Tokyo</string>
+    <string name="new_york">New-York</string>
+    <string name="krasnoyarsk">Krasnoyarsk</string>
+    <string name="irkutsk">Irkutsk</string>
+    <string name="sydney">Sydney</string>
+    <string name="berlin">Berlin</string>
+    <string name="beijing">Beijing</string>
+    <string name="capetown">Сapetown</string>
+    <string name="nice">Nice</string>
+    <string name="sao_paulo">Sao-Paulo</string>
+    <string name="cairo">Cairo</string>
+
+    <string name="app_name">MyWeatherApp</string>
     <string name="unit_C">\u2103</string>
     <string name="unit_F">\u2109</string>
     <string name="value">40</string>
@@ -11,25 +26,26 @@
     <string name="dark">Dark</string>
     <string name="light">Light</string>
     <string name="temperature_units">Temperature units</string>
-    <string name="actv_hint_ru">city search</string>
-    <string name="emptyText">" "</string>
+    <string name="actv_search_cites">city search</string>
+    <string name="default_name_city">City</string>
+    <string name="default_city">Default city</string>
+    <string name="yandex_weather">yandex weather</string>
 
-    <!-- Список городов -->
     <string-array name="name_city">
-        <item>Moscow</item>
-        <item>London</item>
-        <item>Paris</item>
-        <item>Tokyo</item>
-        <item>New York</item>
-        <item>Krasnoyarsk</item>
-        <item>Irkutsk</item>
-        <item>Sydney</item>
-        <item>Berlin</item>
-        <item>Beijing</item>
-        <item>Cape Town</item>
-        <item>Nice</item>
-        <item>Sao Paulo</item>
-        <item>Cairo</item>
+        <item>@string/moscow</item>
+        <item>@string/london</item>
+        <item>@string/paris</item>
+        <item>@string/tokyo</item>
+        <item>@string/new_york</item>
+        <item>@string/krasnoyarsk</item>
+        <item>@string/irkutsk</item>
+        <item>@string/sydney</item>
+        <item>@string/berlin</item>
+        <item>@string/beijing</item>
+        <item>@string/cape_town</item>
+        <item>@string/sao_paulo</item>
+        <item>@string/cairo</item>
+        <item>@string/nice</item>
     </string-array>
 
     <!-- Список температур -->
@@ -49,5 +65,7 @@
         <item>-2</item>
         <item>0</item>
     </integer-array>
+    <string name="cape_town">Capetown</string>
+
 
 </resources>

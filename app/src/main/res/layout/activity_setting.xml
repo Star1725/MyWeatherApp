@@ -11,8 +11,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="8dp"
         android:text="@string/theme"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTheme2" />
+
+    <TextView
+        android:id="@+id/textViewTheme2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/default_city"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,6 +44,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/textViewTheme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +53,7 @@
 
         <RadioButton
             android:id="@+id/radioButton_light_theme"
-            android:layout_width="wrap_content"
+            android:layout_width="59dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/light"
@@ -54,8 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/dark"
-            android:textSize="24sp"
-            />
+            android:textSize="24sp" />
 
     </RadioGroup>
 
@@ -64,6 +75,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/textView_temp_units"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,5 +98,18 @@
             android:text="@string/unit_F"
             android:textSize="24sp" />
     </RadioGroup>
+
+    <Spinner
+        android:id="@+id/spinnerCites"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:entries="@array/name_city"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewTheme2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewTheme2"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

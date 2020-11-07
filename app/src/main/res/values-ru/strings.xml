@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Список городов -->
     <string name="moscow">Москва</string>
+    <string name="london">Лондон</string>
+    <string name="paris">Париж</string>
+    <string name="tokyo">Токио</string>
+    <string name="new_york">Нью-Йорк</string>
+    <string name="krasnoyarsk">Красноярск</string>
+    <string name="irkutsk">Иркутск</string>
+    <string name="sydney">Сидней</string>
+    <string name="berlin">Берлин</string>
+    <string name="beijing">Пекин</string>
+    <string name="capetown">Кейптаун</string>
+    <string name="nice">Ница</string>
+    <string name="cairo">Каир</string>
+    <string name="sao_paulo">Сан-Пауло</string>
+
     <string name="unit_C">\u2103</string>
     <string name="unit_F">\u2109</string>
     <string name="app_name" translatable="false">Погода</string>
@@ -12,25 +27,9 @@
     <string name="dark">Тёмная</string>
     <string name="light">Светлая</string>
     <string name="temperature_units">Ед. измерения</string>
-    <string name="actv_hint_ru">поиск города</string>
-    <string name="emptyText">" "</string>
-
-    <!-- Список городов -->
-    <string-array name="name_city">
-        <item>Москва</item>
-        <item>Лондон</item>
-        <item>Париж</item>
-        <item>Токио</item>
-        <item>Нью Йорк</item>
-        <item>Красноярск</item>
-        <item>Иркутск</item>
-        <item>Сидней</item>
-        <item>Берлин</item>
-        <item>Пекин</item>
-        <item>Кейптаун</item>
-        <item>Ницца</item>
-        <item>Сан-Паулу</item>
-        <item>Каир</item>
-    </string-array>
+    <string name="actv_search_cites">поиск города</string>
+    <string name="default_name_city">Город</string>
+    <string name="default_city">Город по умолчанию</string>
+    <string name="yandex_weather">яндекс погода</string>
 
 </resources>
