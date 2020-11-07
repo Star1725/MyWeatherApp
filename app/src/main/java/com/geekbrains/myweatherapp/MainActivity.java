@@ -1,6 +1,7 @@
 package com.geekbrains.myweatherapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,10 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity{
+    private static boolean FLAG_TURN_ON_LOG = true;
     private static final String TAG = "myLog";
     public final static String INSTANCE_KEY_UNIT_TEMP = "INSTANCE_KEY_UNIT_TEMP";
+    private final static int REQUEST_CODE = 1;
+    private City currentCity;
 
-    private boolean isUnit_F;
     private ImageView imageViewWeatherCites;
     private TextView tvNameCites;
     private TextView tvTemperatureCites;
@@ -27,7 +30,9 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(TAG, this.getClass().getSimpleName() + " onCreate");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onCreate");
+        }
 
         Button buttonChoiceCity = findViewById(R.id.button_choice_city);
         imageViewWeatherCites = findViewById(R.id.imageView);
@@ -35,23 +40,19 @@ public class MainActivity extends AppCompatActivity{
         tvTemperatureCites = findViewById(R.id.tvTemperature);
         tvUnit = findViewById(R.id.tvUnits);
 
-        tvTemperatureCites.setText("0");
-        tvNameCites.setText(R.string.moscow);
-
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.button_choice_city:
                         Intent intent = new Intent(MainActivity.this, CitesActivity.class);
-                        startActivity(intent);
+                        startActivityForResult(intent, REQUEST_CODE);
                         break;
                 }
             }
         };
 
         buttonChoiceCity.setOnClickListener(onClickListener);
-        tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
     }
 // методы меню/////////////////////////////////
     @Override
@@ -73,57 +74,91 @@ public class MainActivity extends AppCompatActivity{
     }
 /////////////////////////////////////////////////
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onActivityResult()");
+            Log.d(TAG, this.getClass().getSimpleName() + " requestCode = " + requestCode);
+        }
+        if (requestCode == REQUEST_CODE){
+            assert data != null;
+            currentCity = data.getParcelableExtra(Constants.CITY_EXTRA);
+            settingViews();
+            //
+        }
+    }
+
+    private void settingViews() {
+        tvNameCites.setText(currentCity.getName());
+        tvTemperatureCites.setText(String.valueOf(currentCity.getTemp()));
+        imageViewWeatherCites.setImageResource(currentCity.getImageWeatherID());
+        tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, this.getClass().getSimpleName() + " onResume()");
-        Intent intent = getIntent();
-
-        tvNameCites.setText(intent.getStringExtra("citesName"));
-        tvTemperatureCites.setText(intent.getStringExtra("citesTemp"));
-        imageViewWeatherCites.setImageResource(intent.getIntExtra("citesWeather", R.drawable.ic_sun_svg));
-        Log.d(TAG, this.getClass().getSimpleName() + "onResume: get intent: ");
-        Log.d(TAG, this.getClass().getSimpleName() + "                     - citesName " + tvNameCites.getText());
-        Log.d(TAG, this.getClass().getSimpleName() + "                     - citesTemp " + tvTemperatureCites.getText());
-        Log.d(TAG, this.getClass().getSimpleName() + "                     - citesWeather " + intent.getIntExtra(" citesWeather", R.drawable.ic_sun_svg));
-
-        tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
+        if (currentCity != null){
+            settingViews();
+            //tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
+        }
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onResume()");
+        }
     }
     @Override
     protected void onStart() {
         super .onStart();
-        Log.d(TAG, this.getClass().getSimpleName() + " onStart()");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onStart()");
+        }
     }
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle saveInstanceState){
         super .onRestoreInstanceState(saveInstanceState);
-        Log.d(TAG, this.getClass().getSimpleName() + " Повторный запуск!! onRestoreInstanceState()");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " Повторный запуск!! onRestoreInstanceState()");
+        }
         //tvUnit.setText(saveInstanceState.getCharSequence(INSTANCE_KEY_UNIT_TEMP));
+        currentCity = saveInstanceState.getParcelable(Constants.CITY_EXTRA);
     }
     @Override
     protected void onPause() {
         super .onPause();
-        Log.d(TAG, this.getClass().getSimpleName() + " onPause()");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onPause()");
+        }
     }
     @Override
     protected void onSaveInstanceState(@NonNull Bundle saveInstanceState){
         super .onSaveInstanceState(saveInstanceState);
-        Log.d(TAG, this.getClass().getSimpleName() + " onSaveInstanceState()");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onSaveInstanceState()");
+        }
         //saveInstanceState.putString(INSTANCE_KEY_UNIT_TEMP, tvUnit.getText().toString());
+        saveInstanceState.putParcelable(Constants.CITY_EXTRA, currentCity);
     }
     @Override
     protected void onStop() {
         super .onStop();
-        Log.d(TAG, this.getClass().getSimpleName() + " onStop()");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onStop()");
+        }
     }
     @Override
     protected void onRestart() {
         super .onRestart();
-        Log.d(TAG, this.getClass().getSimpleName() + " onRestart()");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onRestart()");
+        }
     }
     @Override
     protected void onDestroy() {
         super .onDestroy();
-        Log.d(TAG, this.getClass().getSimpleName() + " onDestroy()");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onDestroy()");
+        }
     }
 }

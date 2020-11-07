@@ -10,7 +10,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 public class SettingActivity extends AppCompatActivity {
+    private static boolean FLAG_TURN_ON_LOG = true;
     private static final String TAG = "myLog";
+
     RadioButton radioButtonLight;
     RadioButton radioButtonDark;
     RadioButton radioButtonC;
@@ -20,7 +22,9 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        Log.d(TAG, this.getClass().getSimpleName() + " onCreate");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onCreate");
+        }
         radioButtonLight = findViewById(R.id.radioButton_light_theme);
         radioButtonDark = findViewById(R.id.radioButton_dark_theme);
         radioButtonC = findViewById(R.id.radioButton_celsius);
@@ -68,22 +72,30 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super .onStart();
-        Log.d(TAG, this.getClass().getSimpleName() + " onStart()");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onStart()");
+        }
     }
     @Override
     protected void onRestoreInstanceState(Bundle saveInstanceState){
         super .onRestoreInstanceState(saveInstanceState);
-        Log.d(TAG, this.getClass().getSimpleName() + " Повторный запуск!! onRestoreInstanceState()");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " Повторный запуск!! onRestoreInstanceState()");
+        }
     }
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, this.getClass().getSimpleName() + " onResume()");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onResume()");
+        }
     }
     @Override
     protected void onPause() {
         super .onPause();
-        Log.d(TAG, this.getClass().getSimpleName() + " onPause()");
+        if (FLAG_TURN_ON_LOG) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onPause()");
+        }
     }
     @Override
     protected void onSaveInstanceState(Bundle saveInstanceState){

@@ -1,5 +1,6 @@
 package com.geekbrains.myweatherapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,8 +23,11 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolder> {
-    private List<City> cites;
+
     private static final String TAG = "myLog";
+    private static boolean FLAG_TURN_ON_LOG = true;
+
+    private List<City> cites;
     //Внутри конструктора нашего кастомного ViewHolder, инициализируем View, входящие в RecyclerView.
     public static class CitesViewHolder extends RecyclerView.ViewHolder {
         private TextView citesName;
@@ -64,15 +68,13 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
         citesViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), MainActivity.class);
-            intent.putExtra("citesName", cites.get(localPos).getName());
-            intent.putExtra("citesTemp", String.valueOf(cites.get(localPos).getTemp()));
-            intent.putExtra("citesWeather", cites.get(localPos).getImageWeatherID());
-                Log.d(TAG, this.getClass().getSimpleName() + "onClick: send intent: ");
-                Log.d(TAG, this.getClass().getSimpleName() + "                     - citesName " + cites.get(localPos).getName());
-                Log.d(TAG, this.getClass().getSimpleName() + "                     - citesTemp " + cites.get(localPos).getTemp());
-                Log.d(TAG, this.getClass().getSimpleName() + "                     - citesWeather " + cites.get(localPos).getImageWeatherID());
-            v.getContext().startActivity(intent);
+                if (FLAG_TURN_ON_LOG) {
+                    Log.d(TAG, this.getClass().getSimpleName() + "onClick: send " + cites.get(localPos).getName() + " for intent");
+                }
+                Intent intentResult = new Intent();
+                intentResult.putExtra(Constants.CITY_EXTRA, cites.get(localPos));
+                ((Activity)v.getContext()).setResult(Activity.RESULT_OK, intentResult);
+                ((Activity)v.getContext()).finish();
             }
         });
     }
