@@ -66,6 +66,7 @@
         <item>0</item>
     </integer-array>
     <string name="cape_town">Capetown</string>
+    <string name="current_date">current date</string>
 
 
 </resources>

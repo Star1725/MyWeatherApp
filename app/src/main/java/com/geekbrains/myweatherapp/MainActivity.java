@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity{
     private static boolean FLAG_TURN_ON_LOG = true;
     private static final String TAG = "myLog";
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity{
     private TextView tvNameCites;
     private TextView tvTemperatureCites;
     private TextView tvUnit;
+    private TextView tvCurrentDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,10 @@ public class MainActivity extends AppCompatActivity{
         tvNameCites = findViewById(R.id.tvNameCites);
         tvTemperatureCites = findViewById(R.id.tvTemperature);
         tvUnit = findViewById(R.id.tvUnits);
+
+        tvCurrentDate = findViewById(R.id.tv_current_date);
+        Calendar calendar = Calendar.getInstance();
+        tvCurrentDate.setText(getDate(calendar));
 
         currentCity = MyApp.getINSTANCE().getStorage().getDefaultCity();
         settingViews(currentCity);
@@ -68,6 +75,10 @@ public class MainActivity extends AppCompatActivity{
 
         buttonChoiceCity.setOnClickListener(onClickListener);
         buttonInfoCity.setOnClickListener(onClickListener);
+    }
+
+    public String getDate(Calendar calendar){
+        return "today " + calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.YEAR);
     }
 // методы меню/////////////////////////////////
     @Override
