@@ -11,21 +11,29 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/button_choose_city"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/button_choose_city" />
 
+    <Button
+        android:id="@+id/button_info_city"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:text="@string/yandex_weather"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/tvNameCites"
+        app:layout_constraintTop_toBottomOf="@+id/tvNameCites" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -41,13 +49,13 @@
         android:id="@+id/tvNameCites"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="152dp"
-        android:layout_marginEnd="164dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="160dp"
         android:gravity="left"
         android:text="@string/moscow"
         android:textSize="32sp"
         app:layout_constraintEnd_toStartOf="@+id/tvTemperature"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/button_choice_city" />
 
     <TextView
         android:id="@+id/tvUnits"
@@ -65,12 +73,23 @@
         android:id="@+id/tvTemperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:text="@string/value"
         android:textAlignment="textEnd"
         android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="@+id/tvNameCites"
         app:layout_constraintEnd_toStartOf="@+id/tvUnits"
         app:layout_constraintTop_toTopOf="@+id/tvNameCites" />
+
+    <TextView
+        android:id="@+id/tv_current_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/current_date"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

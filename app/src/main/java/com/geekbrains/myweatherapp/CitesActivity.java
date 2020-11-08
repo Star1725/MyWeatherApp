@@ -52,6 +52,7 @@ public class CitesActivity extends AppCompatActivity {
         rvSites.setAdapter(myRVAdapter);
 //автозаполнение
         AutoCompleteTextView myAutoCompleteTextView = findViewById(R.id.autoCompleteTextView_for_cearch);
+        myAutoCompleteTextView.setFreezesText(false);
         myAutoCompleteTextView.setAdapter( new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, nameCites));
         //динамически изменяем rvCites через myAutoCompleteTextView
         myAutoCompleteTextView.addTextChangedListener(new TextWatcher() {

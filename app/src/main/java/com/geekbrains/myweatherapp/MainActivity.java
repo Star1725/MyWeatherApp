@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity{
     private TextView tvNameCites;
     private TextView tvTemperatureCites;
     private TextView tvUnit;
-    private TextView tvCurrentDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity{
         tvTemperatureCites = findViewById(R.id.tvTemperature);
         tvUnit = findViewById(R.id.tvUnits);
 
-        tvCurrentDate = findViewById(R.id.tv_current_date);
+        TextView tvCurrentDate = findViewById(R.id.tv_current_date);
         Calendar calendar = Calendar.getInstance();
         tvCurrentDate.setText(getDate(calendar));
 
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity{
         buttonInfoCity.setOnClickListener(onClickListener);
     }
 
-    public String getDate(Calendar calendar){
+    private String getDate(Calendar calendar){
         return "today " + calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.YEAR);
     }
 // методы меню/////////////////////////////////
@@ -99,7 +98,6 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 /////////////////////////////////////////////////
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
