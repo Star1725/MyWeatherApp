@@ -13,7 +13,6 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
 public class SettingActivity extends AppCompatActivity {
-    private static boolean FLAG_TURN_ON_LOG = true;
     private static final String TAG = "myLog";
 
     private RadioButton radioButtonLight;
@@ -26,7 +25,7 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onCreate");
         }
         radioButtonLight = findViewById(R.id.radioButton_light_theme);
@@ -82,49 +81,57 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super .onStart();
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onStart()");
         }
     }
     @Override
     protected void onRestoreInstanceState(Bundle saveInstanceState){
         super .onRestoreInstanceState(saveInstanceState);
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " Повторный запуск!! onRestoreInstanceState()");
         }
     }
     @Override
     protected void onResume() {
         super.onResume();
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onResume()");
         }
     }
     @Override
     protected void onPause() {
         super .onPause();
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onPause()");
         }
     }
     @Override
     protected void onSaveInstanceState(Bundle saveInstanceState){
         super .onSaveInstanceState(saveInstanceState);
-        Log.d(TAG, this.getClass().getSimpleName() + " onSaveInstanceState()");
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onSaveInstanceState()");
+        }
     }
     @Override
     protected void onStop() {
         super .onStop();
-        Log.d(TAG, this.getClass().getSimpleName() + " onStop()");
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onStop()");
+        }
     }
     @Override
     protected void onRestart() {
         super .onRestart();
-        Log.d(TAG, this.getClass().getSimpleName() + " onRestart()");
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onRestart()");
+        }
     }
     @Override
     protected void onDestroy() {
         super .onDestroy();
-        Log.d(TAG, this.getClass().getSimpleName() + " onDestroy()");
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
+            Log.d(TAG, this.getClass().getSimpleName() + " onDestroy()");
+        }
     }
 }

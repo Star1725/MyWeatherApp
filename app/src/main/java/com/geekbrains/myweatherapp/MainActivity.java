@@ -18,7 +18,6 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity{
-    private static boolean FLAG_TURN_ON_LOG = true;
     private static final String TAG = "myLog";
     public final static String INSTANCE_KEY_UNIT_TEMP = "INSTANCE_KEY_UNIT_TEMP";
     private final static int REQUEST_CODE = 1;
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onCreate");
         }
 
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity{
                         break;
                     case R.id.button_info_city:
                         String url = "https://yandex.ru/pogoda/" + currentCity.getName();
-                        if (FLAG_TURN_ON_LOG) {
+                        if (Constants.FLAG_TURN_ON_VERBOSE) {
                             Log.d(TAG, this.getClass().getSimpleName() + " onClick(): url = " + url);
                         }
                         Uri uri = Uri.parse(url);
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onActivityResult()");
             Log.d(TAG, this.getClass().getSimpleName() + " requestCode = " + requestCode);
         }
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onResume()");
         }
     }
@@ -133,14 +132,14 @@ public class MainActivity extends AppCompatActivity{
         if (currentCity != null){
             settingViews(currentCity);
         }
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onStart()");
         }
     }
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle saveInstanceState){
         super .onRestoreInstanceState(saveInstanceState);
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " Повторный запуск!! onRestoreInstanceState()");
         }
         //tvUnit.setText(saveInstanceState.getCharSequence(INSTANCE_KEY_UNIT_TEMP));
@@ -149,14 +148,14 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onPause() {
         super .onPause();
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onPause()");
         }
     }
     @Override
     protected void onSaveInstanceState(@NonNull Bundle saveInstanceState){
         super .onSaveInstanceState(saveInstanceState);
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onSaveInstanceState()");
         }
         //saveInstanceState.putString(INSTANCE_KEY_UNIT_TEMP, tvUnit.getText().toString());
@@ -165,21 +164,21 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onStop() {
         super .onStop();
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onStop()");
         }
     }
     @Override
     protected void onRestart() {
         super .onRestart();
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onRestart()");
         }
     }
     @Override
     protected void onDestroy() {
         super .onDestroy();
-        if (FLAG_TURN_ON_LOG) {
+        if (Constants.FLAG_TURN_ON_VERBOSE) {
             Log.d(TAG, this.getClass().getSimpleName() + " onDestroy()");
         }
     }
