@@ -21,12 +21,25 @@ import java.util.Calendar;
 
 public class FragmentShowWeatherInCity extends Fragment {
     private boolean orientationIsLand;
-    private City currentCity;
+    private static City currentCity;
 
     private ImageView imageViewWeatherCites;
     private TextView tvNameCites;
     private TextView tvTemperatureCites;
     private TextView tvUnit;
+
+    @NonNull
+    static FragmentShowWeatherInCity create(){
+        FragmentShowWeatherInCity fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.CITY_EXTRA, currentCity);
+        fragmentShowWeatherInCity.setArguments(bundle);
+        if (Logger.VERBOSE){
+            Log.d(Logger.TAG, FragmentShowWeatherInCity.class.getSimpleName() +  " create():");
+        }
+        return fragmentShowWeatherInCity;
+    }
 
     @Nullable
     @Override
@@ -40,13 +53,20 @@ public class FragmentShowWeatherInCity extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        if (Logger.VERBOSE){
+            Log.d(Logger.TAG, getClass().getSimpleName() + " onViewCreated()");
+        }
         Button buttonInfoCity = view.findViewById(R.id.button_info_city);
         imageViewWeatherCites = view.findViewById(R.id.imageView);
         tvNameCites = view.findViewById(R.id.tvNameCites);
         tvTemperatureCites = view.findViewById(R.id.tvTemperature);
         tvUnit = view.findViewById(R.id.tvUnits);
 
+        if (savedInstanceState != null){
+            currentCity = savedInstanceState.getParcelable(Constants.CITY_EXTRA);
+        } else {
+            currentCity = MyApp.getINSTANCE().getDefaultCity();
+        }
         TextView tvCurrentDate = view.findViewById(R.id.tv_current_date);
         Calendar calendar = Calendar.getInstance();
         tvCurrentDate.setText(getDate(calendar));
@@ -75,24 +95,13 @@ public class FragmentShowWeatherInCity extends Fragment {
     }
 
     private void showWeatherInCity(City city) {
+        if (Logger.VERBOSE){
+            Log.d(Logger.TAG, getClass().getSimpleName() + " showImagesCountry(): orientationIsLand = " + orientationIsLand);
+        }
         tvNameCites.setText(city.getName());
         tvTemperatureCites.setText(String.valueOf(city.getTemp()));
         imageViewWeatherCites.setImageResource(city.getImageWeatherID());
         tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
-
-        if (Logger.VERBOSE){
-            Log.d(Logger.TAG, getClass().getSimpleName() + " showImagesCountry(): orientationIsLand = " + orientationIsLand);
-        }
-        if (orientationIsLand) {
-            FragmentChoiceCity choiceCity = (FragmentChoiceCity) getFragmentManager().findFragmentById(R.id.cities);
-
-            if (choiceCity == null) ;
-            choiceCity = new FragmentChoiceCity();
-
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.cities, choiceCity);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-        }
     }
 
     private String getDate(Calendar calendar){
@@ -119,21 +128,4 @@ public class FragmentShowWeatherInCity extends Fragment {
         saveInstanceState.putParcelable(Constants.CITY_EXTRA, currentCity);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-
-        if (savedInstanceState != null){
-            if (Logger.VERBOSE){
-                Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
-            }
-            currentCity = savedInstanceState.getParcelable(Constants.CITY_EXTRA);
-        } else {
-            if (Logger.VERBOSE){
-                Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
-            }
-            currentCity = MyApp.getINSTANCE().getDefaultCity();
-        }
-    }
 }

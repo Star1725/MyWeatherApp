@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity{
     private TextView tvNameCites;
     private TextView tvTemperatureCites;
     private TextView tvUnit;
+    private boolean orientationIsLand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,10 @@ public class MainActivity extends AppCompatActivity{
         if (Logger.VERBOSE) {
             Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate");
         }
+        orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        FragmentShowWeatherInCity fragmentShowWeatherInCity = FragmentShowWeatherInCity.create();
 
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_weather_in_city, fragmentShowWeatherInCity).commit();
 //        Button buttonInfoCity = findViewById(R.id.button_info_city);
 //        imageViewWeatherCites = findViewById(R.id.imageView);
 //        tvNameCites = findViewById(R.id.tvNameCites);
@@ -73,7 +78,11 @@ public class MainActivity extends AppCompatActivity{
 // методы меню/////////////////////////////////
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (orientationIsLand){
+            getMenuInflater().inflate(R.menu.menu_main_land, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+        }
         return true;
     }
 
@@ -95,19 +104,19 @@ public class MainActivity extends AppCompatActivity{
     }
 /////////////////////////////////////////////////
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (Logger.VERBOSE) {
-            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onActivityResult()");
-            Log.d(Logger.TAG, this.getClass().getSimpleName() + " requestCode = " + requestCode);
-        }
-        if (resultCode == RESULT_OK){
-            assert data != null;
-            currentCity = data.getParcelableExtra(Constants.CITY_EXTRA);
-            //settingViews(currentCity);
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (Logger.VERBOSE) {
+//            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onActivityResult()");
+//            Log.d(Logger.TAG, this.getClass().getSimpleName() + " requestCode = " + requestCode);
+//        }
+//        if (resultCode == RESULT_OK){
+//            assert data != null;
+//            currentCity = data.getParcelableExtra(Constants.CITY_EXTRA);
+//            //settingViews(currentCity);
+//        }
+//    }
 
 //    private void settingViews(City city) {
 //        tvNameCites.setText(city.getName());
@@ -136,11 +145,16 @@ public class MainActivity extends AppCompatActivity{
 //    @Override
 //    protected void onRestoreInstanceState(@NonNull Bundle saveInstanceState){
 //        super .onRestoreInstanceState(saveInstanceState);
-//        if (Constants.FLAG_TURN_ON_VERBOSE) {
-//            Log.d(TAG, this.getClass().getSimpleName() + " Повторный запуск!! onRestoreInstanceState()");
+//        if (Logger.VERBOSE) {
+//            Log.d(Logger.TAG, this.getClass().getSimpleName() + " Повторный запуск!! onRestoreInstanceState()");
 //        }
 //        //tvUnit.setText(saveInstanceState.getCharSequence(INSTANCE_KEY_UNIT_TEMP));
-//        currentCity = saveInstanceState.getParcelable(Constants.CITY_EXTRA);
+//        isStarting = saveInstanceState.getBoolean(Constants.STARTING_APP);
+//        if (isStarting){
+//            FragmentShowWeatherInCity details = new FragmentShowWeatherInCity();
+//
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_weather_in_city, details).commit();
+//        }
 //    }
 //    @Override
 //    protected void onPause() {
@@ -152,11 +166,11 @@ public class MainActivity extends AppCompatActivity{
 //    @Override
 //    protected void onSaveInstanceState(@NonNull Bundle saveInstanceState){
 //        super .onSaveInstanceState(saveInstanceState);
-//        if (Constants.FLAG_TURN_ON_VERBOSE) {
-//            Log.d(TAG, this.getClass().getSimpleName() + " onSaveInstanceState()");
+//        if (Logger.VERBOSE) {
+//            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onSaveInstanceState()");
 //        }
 //        //saveInstanceState.putString(INSTANCE_KEY_UNIT_TEMP, tvUnit.getText().toString());
-//        saveInstanceState.putParcelable(Constants.CITY_EXTRA, currentCity);
+//        saveInstanceState.putBoolean(Constants.STARTING_APP, isStarting);
 //    }
 //    @Override
 //    protected void onStop() {

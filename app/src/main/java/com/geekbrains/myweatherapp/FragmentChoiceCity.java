@@ -1,5 +1,6 @@
 package com.geekbrains.myweatherapp;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,11 +26,12 @@ import java.util.stream.Collectors;
 public class FragmentChoiceCity extends Fragment {
 
     private List<City> cityList;
+    private boolean orientationIsLand;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_choiese_city, container, false);
+        return inflater.inflate(R.layout.fragment_choice_city, container, false);
     }
 
     @Override
@@ -36,7 +39,7 @@ public class FragmentChoiceCity extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (Logger.VERBOSE) {
-            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate");
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onViewCreated");
         }
 //RecyclerView необходим менеджер компоновки для управления позиционированием своих элементов
         final RecyclerView rvSites = view.findViewById(R.id.recyclerView_cities);
@@ -79,5 +82,33 @@ public class FragmentChoiceCity extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
+        if (orientationIsLand && (getContext() instanceof MainActivity)){
+            if (Logger.VERBOSE){
+                Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
+            }
+            FragmentShowWeatherInCity weatherInCity = (FragmentShowWeatherInCity) getFragmentManager().findFragmentById(R.id.fragment_weather_in_city);
+            Log.d(Logger.TAG, "weatherInCity = " + (weatherInCity != null));
+            if (weatherInCity == null){
+                weatherInCity = new FragmentShowWeatherInCity();
+            }
+
+            weatherInCity = FragmentShowWeatherInCity.create();
+
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_weather_in_city, weatherInCity);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+        } else {
+            if (Logger.VERBOSE){
+                Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
+            }
+
+        }
     }
 }
