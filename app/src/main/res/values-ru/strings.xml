@@ -32,5 +32,6 @@
     <string name="default_city">Город по умолчанию</string>
     <string name="yandex_weather">яндекс погода</string>
     <string name="current_date">current date</string>
+    <string name="city">City</string>
 
 </resources>

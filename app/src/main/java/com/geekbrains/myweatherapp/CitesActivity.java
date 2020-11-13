@@ -22,7 +22,6 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class CitesActivity extends AppCompatActivity {
-    private static final String TAG = "myLog";
 
     private List<City> cityList;
 
@@ -30,8 +29,8 @@ public class CitesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cites);
-        if (Constants.FLAG_TURN_ON_VERBOSE) {
-            Log.d(TAG, this.getClass().getSimpleName() + " onCreate");
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate");
         }
 //RecyclerView необходим менеджер компоновки для управления позиционированием своих элементов
         final RecyclerView rvSites = (RecyclerView)findViewById(R.id.recyclerView_sitys);
@@ -62,8 +61,8 @@ public class CitesActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (Constants.FLAG_TURN_ON_VERBOSE) {
-                    Log.d(TAG, this.getClass().getSimpleName() + " onCreate() - myAutoCompleteTextView: s = " + s.toString());
+                if (Logger.VERBOSE) {
+                    Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate() - myAutoCompleteTextView: s = " + s.toString());
                 }
                 MyRVAdapter localAdapter = new MyRVAdapter(cityList.stream().filter(city -> city.getName().toLowerCase().startsWith(s.toString().toLowerCase())).collect(Collectors.toList()));
                 rvSites.setAdapter(localAdapter);
@@ -79,57 +78,57 @@ public class CitesActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super .onStart();
-        if (Constants.FLAG_TURN_ON_VERBOSE) {
-            Log.d(TAG, this.getClass().getSimpleName() + " onStart()");
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onStart()");
         }
     }
     @Override
     protected void onRestoreInstanceState(Bundle saveInstanceState){
         super .onRestoreInstanceState(saveInstanceState);
-        if (Constants.FLAG_TURN_ON_VERBOSE) {
-            Log.d(TAG, this.getClass().getSimpleName() + " Повторный запуск!! onRestoreInstanceState()");
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " Повторный запуск!! onRestoreInstanceState()");
         }
     }
     @Override
     protected void onResume() {
         super.onResume();
-        if (Constants.FLAG_TURN_ON_VERBOSE) {
-            Log.d(TAG, this.getClass().getSimpleName() + " onResume()");
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onResume()");
         }
     }
     @Override
     protected void onPause() {
         super .onPause();
-        if (Constants.FLAG_TURN_ON_VERBOSE) {
-            Log.d(TAG, this.getClass().getSimpleName() + " onPause()");
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onPause()");
         }
     }
     @Override
     protected void onSaveInstanceState(Bundle saveInstanceState){
         super .onSaveInstanceState(saveInstanceState);
-        if (Constants.FLAG_TURN_ON_VERBOSE) {
-            Log.d(TAG, this.getClass().getSimpleName() + " onSaveInstanceState()");
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onSaveInstanceState()");
         }
     }
     @Override
     protected void onStop() {
         super .onStop();
-        if (Constants.FLAG_TURN_ON_VERBOSE) {
-            Log.d(TAG, this.getClass().getSimpleName() + " onStop()");
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onStop()");
         }
     }
     @Override
     protected void onRestart() {
         super .onRestart();
-        if (Constants.FLAG_TURN_ON_VERBOSE) {
-            Log.d(TAG, this.getClass().getSimpleName() + " onRestart()");
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onRestart()");
         }
     }
     @Override
     protected void onDestroy() {
         super .onDestroy();
-        if (Constants.FLAG_TURN_ON_VERBOSE) {
-            Log.d(TAG, this.getClass().getSimpleName() + "onDestroy()");
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + "onDestroy()");
         }
     }
 }

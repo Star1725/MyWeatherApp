@@ -24,8 +24,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolder> {
 
-    private static final String TAG = "myLog";
-
     private List<City> cites;
     //Внутри конструктора нашего кастомного ViewHolder, инициализируем View, входящие в RecyclerView.
     public static class CitesViewHolder extends RecyclerView.ViewHolder {
@@ -67,8 +65,8 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
         citesViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Constants.FLAG_TURN_ON_VERBOSE) {
-                    Log.d(TAG, this.getClass().getSimpleName() + "onClick: send " + cites.get(localPos).getName() + " for intent");
+                if (Logger.VERBOSE) {
+                    Log.d(Logger.TAG, this.getClass().getSimpleName() + "onClick: send " + cites.get(localPos).getName() + " for intent");
                 }
                 Intent intentResult = new Intent();
                 intentResult.putExtra(Constants.CITY_EXTRA, cites.get(localPos));

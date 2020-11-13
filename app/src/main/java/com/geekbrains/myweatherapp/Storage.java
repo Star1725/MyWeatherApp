@@ -10,5 +10,4 @@ public class Storage {
     private boolean lightTheme = true;
     private boolean unitC = true;
 
-    private City defaultCity = new City("Moscow", 15, R.drawable.ic_sun_svg);
 }

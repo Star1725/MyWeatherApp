@@ -67,6 +67,7 @@
     </integer-array>
     <string name="cape_town">Capetown</string>
     <string name="current_date">current date</string>
+    <string name="city">City</string>
 
 
 </resources>
