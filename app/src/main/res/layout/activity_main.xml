@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <fragment
-        android:id="@+id/countries"
+        android:id="@+id/fragment_weather_in_city"
         android:name="com.geekbrains.myweatherapp.FragmentShowWeatherInCity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

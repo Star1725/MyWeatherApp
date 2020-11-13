@@ -13,7 +13,7 @@
         android:background="?android:attr/detailsElementBackground"/>
 
     <fragment
-        android:id="@+id/countries"
+        android:id="@+id/cities"
         android:name="com.geekbrains.myweatherapp.FragmentChoiceCity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

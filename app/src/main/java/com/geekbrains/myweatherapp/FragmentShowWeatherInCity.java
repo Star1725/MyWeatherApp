@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.util.Calendar;
 
@@ -73,11 +74,25 @@ public class FragmentShowWeatherInCity extends Fragment {
         buttonInfoCity.setOnClickListener(onClickListener);
     }
 
-    private void settingViews(City city) {
+    private void showWeatherInCity(City city) {
         tvNameCites.setText(city.getName());
         tvTemperatureCites.setText(String.valueOf(city.getTemp()));
         imageViewWeatherCites.setImageResource(city.getImageWeatherID());
         tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
+
+        if (Logger.VERBOSE){
+            Log.d(Logger.TAG, getClass().getSimpleName() + " showImagesCountry(): orientationIsLand = " + orientationIsLand);
+        }
+        if (orientationIsLand) {
+            FragmentChoiceCity choiceCity = (FragmentChoiceCity) getFragmentManager().findFragmentById(R.id.cities);
+
+            if (choiceCity == null) ;
+            choiceCity = new FragmentChoiceCity();
+
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.cities, choiceCity);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+        }
     }
 
     private String getDate(Calendar calendar){
@@ -88,7 +103,7 @@ public class FragmentShowWeatherInCity extends Fragment {
     public void onStart() {
         super .onStart();
         if (currentCity != null){
-            settingViews(currentCity);
+            showWeatherInCity(currentCity);
         }
         if (Logger.VERBOSE) {
             Log.d(Logger.TAG, this.getClass().getSimpleName() + " onStart()");
@@ -119,7 +134,6 @@ public class FragmentShowWeatherInCity extends Fragment {
                 Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
             }
             currentCity = MyApp.getINSTANCE().getDefaultCity();
-            settingViews(currentCity);
         }
     }
 }

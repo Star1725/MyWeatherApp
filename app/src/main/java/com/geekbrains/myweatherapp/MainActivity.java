@@ -82,12 +82,12 @@ public class MainActivity extends AppCompatActivity{
         int id = item.getItemId();
         switch (id){
             case R.id.action_settings:
-                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent1);
                 return true;
             case R.id.choices_city:
-//                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-//                startActivity(intent);
+                Intent intent2 = new Intent(MainActivity.this, CitesActivity.class);
+                startActivity(intent2);
                 return true;
         }
 
