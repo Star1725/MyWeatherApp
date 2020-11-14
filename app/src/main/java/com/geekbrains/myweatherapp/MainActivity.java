@@ -3,6 +3,7 @@ package com.geekbrains.myweatherapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -18,7 +19,10 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity{
+import lombok.Getter;
+
+@Getter
+public class MainActivity extends AppCompatActivity implements FragmentChoiceCity.OnSelectedCityListener{
     private final static int REQUEST_CODE = 1;
     private City currentCity;
 
@@ -36,9 +40,12 @@ public class MainActivity extends AppCompatActivity{
             Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate");
         }
         orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        FragmentShowWeatherInCity fragmentShowWeatherInCity = FragmentShowWeatherInCity.create();
+        if (savedInstanceState == null){
+            FragmentShowWeatherInCity fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_weather_in_city, fragmentShowWeatherInCity).commit();
+        } else {
 
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_weather_in_city, fragmentShowWeatherInCity).commit();
+        }
 //        Button buttonInfoCity = findViewById(R.id.button_info_city);
 //        imageViewWeatherCites = findViewById(R.id.imageView);
 //        tvNameCites = findViewById(R.id.tvNameCites);
@@ -72,9 +79,13 @@ public class MainActivity extends AppCompatActivity{
 //        buttonInfoCity.setOnClickListener(onClickListener);
     }
 
-//    private String getDate(Calendar calendar){
-//        return "today " + calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.YEAR);
-//    }
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        if (fragment instanceof FragmentChoiceCity) {
+            FragmentChoiceCity fragmentChoiceCity = (FragmentChoiceCity) fragment;
+            fragmentChoiceCity.setCallback(this);
+        }
+    }
 // методы меню/////////////////////////////////
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -101,6 +112,16 @@ public class MainActivity extends AppCompatActivity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCitySelected(City city) {
+        FragmentShowWeatherInCity fragmentShowWeatherInCity = (FragmentShowWeatherInCity) getSupportFragmentManager().findFragmentById(R.id.fragment_weather_in_city);
+        if (fragmentShowWeatherInCity != null){
+            fragmentShowWeatherInCity.showWeatherInCity(city);
+        } else {
+
+        }
     }
 /////////////////////////////////////////////////
 

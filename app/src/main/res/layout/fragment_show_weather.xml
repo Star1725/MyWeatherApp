@@ -8,10 +8,10 @@
     <Button
         android:id="@+id/button_info_city"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_height="36dp"
         android:text="@string/yandex_weather"
         android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/tvTemperature" />
@@ -19,10 +19,10 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_height="210dp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_current_date"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNameCites"
         app:srcCompat="@drawable/ic_sun_svg"
@@ -32,11 +32,14 @@
         android:id="@+id/tvNameCites"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:gravity="left"
         android:text="@string/moscow"
         android:textAlignment="center"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,9 +50,11 @@
         android:text="@string/unit_C"
         android:textAlignment="textStart"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTemperature"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toEndOf="@+id/tvTemperature"
-        app:layout_constraintTop_toBottomOf="@+id/tv_current_date" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_current_date"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/tvTemperature"
@@ -59,6 +64,7 @@
         android:text="@string/value"
         android:textAlignment="textEnd"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/button_info_city"
         app:layout_constraintEnd_toStartOf="@+id/tvUnits"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/tv_current_date" />
@@ -66,20 +72,12 @@
     <TextView
         android:id="@+id/tv_current_date"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="4dp"
         android:text="@string/current_date"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

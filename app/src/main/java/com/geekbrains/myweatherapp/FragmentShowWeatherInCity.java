@@ -94,7 +94,7 @@ public class FragmentShowWeatherInCity extends Fragment {
         buttonInfoCity.setOnClickListener(onClickListener);
     }
 
-    private void showWeatherInCity(City city) {
+    public void showWeatherInCity(City city) {
         if (Logger.VERBOSE){
             Log.d(Logger.TAG, getClass().getSimpleName() + " showImagesCountry(): orientationIsLand = " + orientationIsLand);
         }

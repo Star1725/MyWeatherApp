@@ -24,6 +24,15 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class FragmentChoiceCity extends Fragment {
+    public void setCallback(OnSelectedCityListener callback) {
+        this.callback = callback;
+    }
+
+    OnSelectedCityListener callback;
+
+    public interface OnSelectedCityListener{
+        void onCitySelected(City city);
+    }
 
     private List<City> cityList;
     private boolean orientationIsLand;

@@ -2,8 +2,10 @@ package com.geekbrains.myweatherapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -46,8 +50,7 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
     @Override
     public CitesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.name_sity_temp, parent, false);
-        CitesViewHolder citesViewHolder = new CitesViewHolder(v);
-        return citesViewHolder;
+        return new CitesViewHolder(v);
     }
     /*onBindViewHolder определяет содержание каждого элемента из RecyclerView.
      Этот метод очень похож на метод getView  элемента адаптера ListView.
@@ -65,13 +68,25 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
         citesViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Logger.VERBOSE) {
-                    Log.d(Logger.TAG, this.getClass().getSimpleName() + "onClick: send " + cites.get(localPos).getName() + " for intent");
+
+                AppCompatActivity currentActivity = (AppCompatActivity) v.getContext();
+
+                if (v.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                    //Log.d(Logger.TAG, this.getClass().getSimpleName() + "onClick: send " + cites.get(localPos).getName() + ", currentActivity = " + currentActivity.toString());
+                        FragmentChoiceCity fragmentChoiceCity = (FragmentChoiceCity) currentActivity.getSupportFragmentManager().findFragmentById(R.id.cities);
+
+                    if (fragmentChoiceCity != null) {
+                        fragmentChoiceCity.callback.onCitySelected(cites.get(localPos));
+                    }
+                } else {
+                    if (Logger.VERBOSE) {
+                        Log.d(Logger.TAG, this.getClass().getSimpleName() + "onClick: send " + cites.get(localPos).getName() + " for intent");
+                    }
+                    Intent intentResult = new Intent();
+                    intentResult.putExtra(Constants.CITY_EXTRA, cites.get(localPos));
+                    ((Activity)v.getContext()).setResult(Activity.RESULT_OK, intentResult);
+                    ((Activity)v.getContext()).finish();
                 }
-                Intent intentResult = new Intent();
-                intentResult.putExtra(Constants.CITY_EXTRA, cites.get(localPos));
-                ((Activity)v.getContext()).setResult(Activity.RESULT_OK, intentResult);
-                ((Activity)v.getContext()).finish();
             }
         });
     }
