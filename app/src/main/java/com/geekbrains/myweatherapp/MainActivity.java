@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
     private TextView tvTemperatureCites;
     private TextView tvUnit;
     private boolean orientationIsLand;
+    private FragmentChoiceCity fragmentChoiceCity;
+    private FragmentShowWeatherInCity fragmentShowWeatherInCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,54 +41,25 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         if (Logger.VERBOSE) {
             Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate");
         }
+
         orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (savedInstanceState == null){
-            FragmentShowWeatherInCity fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_weather_in_city, fragmentShowWeatherInCity).commit();
-        } else {
-
+            fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragmentShowWeatherInCity).commit();
         }
-//        Button buttonInfoCity = findViewById(R.id.button_info_city);
-//        imageViewWeatherCites = findViewById(R.id.imageView);
-//        tvNameCites = findViewById(R.id.tvNameCites);
-//        tvTemperatureCites = findViewById(R.id.tvTemperature);
-//        tvUnit = findViewById(R.id.tvUnits);
-//
-//        TextView tvCurrentDate = findViewById(R.id.tv_current_date);
-//        Calendar calendar = Calendar.getInstance();
-//        tvCurrentDate.setText(getDate(calendar));
-//
-//        currentCity = MyApp.getINSTANCE().getDefaultCity();
-//        settingViews(currentCity);
-//
-//        View.OnClickListener onClickListener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switch (v.getId()){
-//                    case R.id.button_info_city:
-//                        String url = "https://yandex.ru/pogoda/" + currentCity.getName();
-//                        if (Constants.FLAG_TURN_ON_VERBOSE) {
-//                            Log.d(TAG, this.getClass().getSimpleName() + " onClick(): url = " + url);
-//                        }
-//                        Uri uri = Uri.parse(url);
-//                        Intent intentGET = new Intent(Intent.ACTION_VIEW, uri);
-//                        startActivity(intentGET);
-//                        break;
-//                }
-//            }
-//        };
-//
-//        buttonInfoCity.setOnClickListener(onClickListener);
     }
-
+//подписка на фрагменты ////////////////////////////////////////////////////////////////////////////
     @Override
-    public void onAttachFragment(Fragment fragment) {
+    public void onAttachFragment(@NonNull Fragment fragment) {
         if (fragment instanceof FragmentChoiceCity) {
-            FragmentChoiceCity fragmentChoiceCity = (FragmentChoiceCity) fragment;
+            fragmentChoiceCity = (FragmentChoiceCity) fragment;
+            if (Logger.VERBOSE) {
+                Log.d(Logger.TAG, this.getClass().getSimpleName() + " onAttachFragment(): подписка на fragmentChoiceCity");
+            }
             fragmentChoiceCity.setCallback(this);
         }
     }
-// методы меню/////////////////////////////////
+// методы меню//////////////////////////////////////////////////////////////////////////////////////
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (orientationIsLand){
@@ -106,112 +79,28 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                 startActivity(intent1);
                 return true;
             case R.id.choices_city:
-                Intent intent2 = new Intent(MainActivity.this, CitesActivity.class);
-                startActivity(intent2);
+                fragmentChoiceCity = new FragmentChoiceCity();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).addToBackStack("").commit();
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onCitySelected(City city) {
-        FragmentShowWeatherInCity fragmentShowWeatherInCity = (FragmentShowWeatherInCity) getSupportFragmentManager().findFragmentById(R.id.fragment_weather_in_city);
-        if (fragmentShowWeatherInCity != null){
-            fragmentShowWeatherInCity.showWeatherInCity(city);
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCitySelected(): city = " + city.getName());
+        }
+        if (orientationIsLand) {
+            fragmentShowWeatherInCity = (FragmentShowWeatherInCity) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (fragmentShowWeatherInCity != null){
+                FragmentShowWeatherInCity.setCurrentCity(city);
+                fragmentShowWeatherInCity.showWeatherInCity(city);
+            }
         } else {
+            fragmentShowWeatherInCity = FragmentShowWeatherInCity.create(city);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).commit();
 
         }
     }
-/////////////////////////////////////////////////
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (Logger.VERBOSE) {
-//            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onActivityResult()");
-//            Log.d(Logger.TAG, this.getClass().getSimpleName() + " requestCode = " + requestCode);
-//        }
-//        if (resultCode == RESULT_OK){
-//            assert data != null;
-//            currentCity = data.getParcelableExtra(Constants.CITY_EXTRA);
-//            //settingViews(currentCity);
-//        }
-//    }
-
-//    private void settingViews(City city) {
-//        tvNameCites.setText(city.getName());
-//        tvTemperatureCites.setText(String.valueOf(city.getTemp()));
-//        imageViewWeatherCites.setImageResource(city.getImageWeatherID());
-//        tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if (Constants.FLAG_TURN_ON_VERBOSE) {
-//            Log.d(TAG, this.getClass().getSimpleName() + " onResume()");
-//        }
-//    }
-//    @Override
-//    protected void onStart() {
-//        super .onStart();
-//        if (currentCity != null){
-//            settingViews(currentCity);
-//        }
-//        if (Constants.FLAG_TURN_ON_VERBOSE) {
-//            Log.d(TAG, this.getClass().getSimpleName() + " onStart()");
-//        }
-//    }
-//    @Override
-//    protected void onRestoreInstanceState(@NonNull Bundle saveInstanceState){
-//        super .onRestoreInstanceState(saveInstanceState);
-//        if (Logger.VERBOSE) {
-//            Log.d(Logger.TAG, this.getClass().getSimpleName() + " Повторный запуск!! onRestoreInstanceState()");
-//        }
-//        //tvUnit.setText(saveInstanceState.getCharSequence(INSTANCE_KEY_UNIT_TEMP));
-//        isStarting = saveInstanceState.getBoolean(Constants.STARTING_APP);
-//        if (isStarting){
-//            FragmentShowWeatherInCity details = new FragmentShowWeatherInCity();
-//
-//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_weather_in_city, details).commit();
-//        }
-//    }
-//    @Override
-//    protected void onPause() {
-//        super .onPause();
-//        if (Constants.FLAG_TURN_ON_VERBOSE) {
-//            Log.d(TAG, this.getClass().getSimpleName() + " onPause()");
-//        }
-//    }
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle saveInstanceState){
-//        super .onSaveInstanceState(saveInstanceState);
-//        if (Logger.VERBOSE) {
-//            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onSaveInstanceState()");
-//        }
-//        //saveInstanceState.putString(INSTANCE_KEY_UNIT_TEMP, tvUnit.getText().toString());
-//        saveInstanceState.putBoolean(Constants.STARTING_APP, isStarting);
-//    }
-//    @Override
-//    protected void onStop() {
-//        super .onStop();
-//        if (Constants.FLAG_TURN_ON_VERBOSE) {
-//            Log.d(TAG, this.getClass().getSimpleName() + " onStop()");
-//        }
-//    }
-//    @Override
-//    protected void onRestart() {
-//        super .onRestart();
-//        if (Constants.FLAG_TURN_ON_VERBOSE) {
-//            Log.d(TAG, this.getClass().getSimpleName() + " onRestart()");
-//        }
-//    }
-//    @Override
-//    protected void onDestroy() {
-//        super .onDestroy();
-//        if (Constants.FLAG_TURN_ON_VERBOSE) {
-//            Log.d(TAG, this.getClass().getSimpleName() + " onDestroy()");
-//        }
-//    }
 }

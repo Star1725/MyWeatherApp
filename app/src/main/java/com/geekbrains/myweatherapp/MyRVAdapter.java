@@ -21,7 +21,7 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 
-/*адаптер для RecyclerView, наследуемся от RecyclerView.Adapter. Этот адаптер представляет шаблон проектирования viewholder,
+/*адаптер для RecyclerView, наследуемся от RecyclerView.Adapter. Этот адаптер представляет шаблон проектирования viewHolder,
 подразумевающий использование пользовательского класса, который расширяет RecyclerView.ViewHolder.
 Эта паттерн сводит к минимуму количество обращений к дорогостоящему в плане ресурсов методу findViewById.*/
 
@@ -68,24 +68,19 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
         citesViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 AppCompatActivity currentActivity = (AppCompatActivity) v.getContext();
-
-                if (v.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-                    //Log.d(Logger.TAG, this.getClass().getSimpleName() + "onClick: send " + cites.get(localPos).getName() + ", currentActivity = " + currentActivity.toString());
-                        FragmentChoiceCity fragmentChoiceCity = (FragmentChoiceCity) currentActivity.getSupportFragmentManager().findFragmentById(R.id.cities);
-
-                    if (fragmentChoiceCity != null) {
-                        fragmentChoiceCity.callback.onCitySelected(cites.get(localPos));
-                    }
+                if (currentActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                    FragmentChoiceCity fragmentChoiceCity = (FragmentChoiceCity) currentActivity.getSupportFragmentManager().findFragmentById(R.id.cities);
+                    callBackFragmentChoceCity(fragmentChoiceCity);
                 } else {
-                    if (Logger.VERBOSE) {
-                        Log.d(Logger.TAG, this.getClass().getSimpleName() + "onClick: send " + cites.get(localPos).getName() + " for intent");
-                    }
-                    Intent intentResult = new Intent();
-                    intentResult.putExtra(Constants.CITY_EXTRA, cites.get(localPos));
-                    ((Activity)v.getContext()).setResult(Activity.RESULT_OK, intentResult);
-                    ((Activity)v.getContext()).finish();
+                    FragmentChoiceCity fragmentChoiceCity = (FragmentChoiceCity) currentActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    callBackFragmentChoceCity(fragmentChoiceCity);
+                }
+            }
+
+            private void callBackFragmentChoceCity(FragmentChoiceCity fragmentChoiceCity) {
+                if (fragmentChoiceCity != null) {
+                    fragmentChoiceCity.callback.onCitySelected(cites.get(localPos));
                 }
             }
         });

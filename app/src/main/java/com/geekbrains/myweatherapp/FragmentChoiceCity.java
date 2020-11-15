@@ -24,6 +24,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class FragmentChoiceCity extends Fragment {
+//интерфейс для подписчиков на фрагмент ////////////////////////////////////////////////////////////
     public void setCallback(OnSelectedCityListener callback) {
         this.callback = callback;
     }
@@ -33,20 +34,21 @@ public class FragmentChoiceCity extends Fragment {
     public interface OnSelectedCityListener{
         void onCitySelected(City city);
     }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
     private List<City> cityList;
-    private boolean orientationIsLand;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreateView");
+        }
         return inflater.inflate(R.layout.fragment_choice_city, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         if (Logger.VERBOSE) {
             Log.d(Logger.TAG, this.getClass().getSimpleName() + " onViewCreated");
         }
@@ -63,11 +65,12 @@ public class FragmentChoiceCity extends Fragment {
         for (int i = 0; i < nameCites.length; i++){
             cityList.add(new City(nameCites[i], tempCites[i], imageIDs[randomImage.nextInt(imageIDs.length)]));
         }
+
 //создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites
         MyRVAdapter myRVAdapter = new MyRVAdapter(cityList);
         rvSites.setAdapter(myRVAdapter);
 //автозаполнение
-        AutoCompleteTextView myAutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView_for_cearch);
+        AutoCompleteTextView myAutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView_for_cache);
         myAutoCompleteTextView.setFreezesText(false);
         myAutoCompleteTextView.setAdapter( new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, nameCites));
         //динамически изменяем rvCites через myAutoCompleteTextView
@@ -96,28 +99,23 @@ public class FragmentChoiceCity extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        boolean orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-        if (orientationIsLand && (getContext() instanceof MainActivity)){
+        if (orientationIsLand){
             if (Logger.VERBOSE){
                 Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
             }
-            FragmentShowWeatherInCity weatherInCity = (FragmentShowWeatherInCity) getFragmentManager().findFragmentById(R.id.fragment_weather_in_city);
-            Log.d(Logger.TAG, "weatherInCity = " + (weatherInCity != null));
+            FragmentShowWeatherInCity weatherInCity = (FragmentShowWeatherInCity) getFragmentManager().findFragmentById(R.id.fragment_container);
             if (weatherInCity == null){
-                weatherInCity = new FragmentShowWeatherInCity();
+                weatherInCity = FragmentShowWeatherInCity.create(null);
             }
 
-            weatherInCity = FragmentShowWeatherInCity.create();
-
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_weather_in_city, weatherInCity);
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction().replace(R.id.fragment_container, weatherInCity);
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         } else {
             if (Logger.VERBOSE){
                 Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
             }
-
         }
     }
 }

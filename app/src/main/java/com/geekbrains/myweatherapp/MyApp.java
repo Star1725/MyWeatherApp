@@ -22,8 +22,4 @@ public class MyApp extends Application {
     }
 
     private City defaultCity = new City("Moscow", 15, R.drawable.ic_sun_svg);
-
-//    private City defaultCity = new City(getResources().getStringArray(R.array.name_city)[0],
-//                                        getResources().getIntArray(R.array.temps)[0],
-//                                        R.drawable.ic_sun_svg);
 }
