@@ -42,7 +42,7 @@
         <item>@string/sydney</item>
         <item>@string/berlin</item>
         <item>@string/beijing</item>
-        <item>@string/cape_town</item>
+        <item>@string/capetown</item>
         <item>@string/sao_paulo</item>
         <item>@string/cairo</item>
         <item>@string/nice</item>
@@ -65,9 +65,8 @@
         <item>-2</item>
         <item>0</item>
     </integer-array>
-    <string name="cape_town">Capetown</string>
     <string name="current_date">current date</string>
-    <string name="city">City</string>
+    <string name="city">Choice City</string>
 
 
 </resources>

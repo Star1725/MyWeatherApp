@@ -108,7 +108,9 @@ public class FragmentShowWeatherInCity extends Fragment {
     }
 
     void showWeatherInCity(City city) {
-        if (city == null) city = MyApp.getINSTANCE().getDefaultCity();
+        if (city == null){
+            currentCity = city = MyApp.getINSTANCE().getDefaultCity();
+        }
         if (Logger.VERBOSE){
             Log.d(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + city.getName());
         }

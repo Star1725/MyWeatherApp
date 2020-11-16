@@ -53,9 +53,8 @@
 
         <RadioButton
             android:id="@+id/radioButton_light_theme"
-            android:layout_width="59dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/light"
 
             android:textSize="24sp" />
@@ -64,7 +63,7 @@
             android:id="@+id/radioButton_dark_theme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginStart="20dp"
             android:text="@string/dark"
             android:textSize="24sp" />
 
@@ -84,32 +83,31 @@
 
         <RadioButton
             android:id="@+id/radioButton_celsius"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/unit_C"
             android:textSize="24sp" />
 
         <RadioButton
             android:id="@+id/radioButton_fahrenheit"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginStart="20dp"
             android:text="@string/unit_F"
             android:textSize="24sp" />
     </RadioGroup>
 
     <Spinner
         android:id="@+id/spinnerCites"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:entries="@array/name_city"
         app:layout_constraintBottom_toBottomOf="@+id/textViewTheme2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.012"
         app:layout_constraintStart_toEndOf="@+id/textViewTheme2"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textViewTheme2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
