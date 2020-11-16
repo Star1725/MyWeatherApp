@@ -41,6 +41,8 @@ public class FragmentShowWeatherInCity extends Fragment {
 
         if (city != null){
             currentCity = city;
+        } else {
+            currentCity = city = MyApp.getINSTANCE().getDefaultCity();
         }
 
         if (Logger.VERBOSE){
