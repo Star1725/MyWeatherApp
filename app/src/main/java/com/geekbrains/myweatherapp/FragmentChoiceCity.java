@@ -36,6 +36,8 @@ public class FragmentChoiceCity extends Fragment {
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     private List<City> cityList;
+    private MyRVAdapter myRVAdapter;
+    private RecyclerView rvSites;
 
     @Nullable
     @Override
@@ -53,7 +55,7 @@ public class FragmentChoiceCity extends Fragment {
             Log.d(Logger.TAG, this.getClass().getSimpleName() + " onViewCreated");
         }
 //RecyclerView необходим менеджер компоновки для управления позиционированием своих элементов
-        final RecyclerView rvSites = view.findViewById(R.id.recyclerView_cities);
+        rvSites = view.findViewById(R.id.recyclerView_cities);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         rvSites.setLayoutManager(llm);
 //определяем данные для заполнения rvSites
@@ -67,7 +69,7 @@ public class FragmentChoiceCity extends Fragment {
         }
 
 //создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites
-        MyRVAdapter myRVAdapter = new MyRVAdapter(cityList);
+        myRVAdapter = new MyRVAdapter(cityList);
         rvSites.setAdapter(myRVAdapter);
 //автозаполнение
         AutoCompleteTextView myAutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView_for_cache);
@@ -117,5 +119,11 @@ public class FragmentChoiceCity extends Fragment {
                 Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        myRVAdapter.notifyDataSetChanged();
     }
 }

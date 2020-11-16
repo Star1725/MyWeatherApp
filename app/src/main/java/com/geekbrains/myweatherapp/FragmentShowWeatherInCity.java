@@ -29,11 +29,11 @@ public class FragmentShowWeatherInCity extends Fragment {
     }
 
     private static City currentCity;
+    private static String currentUnitTemp;
 
     private ImageView imageViewWeatherCites;
     private TextView tvNameCites;
     private TextView tvTemperatureCites;
-    private TextView tvUnit;
 
     @NonNull
     static FragmentShowWeatherInCity create(City city){
@@ -78,7 +78,6 @@ public class FragmentShowWeatherInCity extends Fragment {
         imageViewWeatherCites = view.findViewById(R.id.imageView);
         tvNameCites = view.findViewById(R.id.tvNameCites);
         tvTemperatureCites = view.findViewById(R.id.tvTemperature);
-        tvUnit = view.findViewById(R.id.tvUnits);
 
         TextView tvCurrentDate = view.findViewById(R.id.tv_current_date);
         Calendar calendar = Calendar.getInstance();
@@ -117,9 +116,9 @@ public class FragmentShowWeatherInCity extends Fragment {
             Log.d(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + city.getName());
         }
         tvNameCites.setText(city.getName());
-        tvTemperatureCites.setText(String.valueOf(city.getTemp()));
+        currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
+        tvTemperatureCites.setText(String.format("%d %s", city.getTemp(), currentUnitTemp));
         imageViewWeatherCites.setImageResource(city.getImageWeatherID());
-        tvUnit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
     }
 
     private String getDate(Calendar calendar){
@@ -133,5 +132,17 @@ public class FragmentShowWeatherInCity extends Fragment {
             Log.d(Logger.TAG, this.getClass().getSimpleName() + " onSaveInstanceState(): city = " + currentCity.getName());
         }
         saveInstanceState.putParcelable(Constants.CITY_EXTRA, currentCity);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Logger.VERBOSE) {
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onResume()");
+        }
+        if (!currentUnitTemp.equals(MyApp.getINSTANCE().getStorage().getUnitTemp())){
+            currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
+        }
+        showWeatherInCity(currentCity);
     }
 }
