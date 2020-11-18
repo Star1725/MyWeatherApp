@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
@@ -75,6 +76,8 @@ public class FragmentChoiceCity extends Fragment {
         AutoCompleteTextView myAutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView_for_cache);
         myAutoCompleteTextView.setFreezesText(false);
         myAutoCompleteTextView.setAdapter( new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, nameCites));
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM, WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
         //динамически изменяем rvCites через myAutoCompleteTextView
         myAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -102,28 +105,27 @@ public class FragmentChoiceCity extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         boolean orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-
+        if (Logger.VERBOSE){
+            Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
+        }
         if (orientationIsLand){
-            if (Logger.VERBOSE){
-                Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
-            }
-            FragmentShowWeatherInCity weatherInCity = (FragmentShowWeatherInCity) getFragmentManager().findFragmentById(R.id.fragment_container);
-            if (weatherInCity == null){
-                weatherInCity = FragmentShowWeatherInCity.create(null);
+            assert getFragmentManager() != null;
+            Fragment weatherInCity = getFragmentManager().findFragmentById(R.id.fragment_container);
+            if (!(weatherInCity instanceof FragmentShowWeatherInCity)){
+                weatherInCity = new FragmentShowWeatherInCity();
             }
 
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction().replace(R.id.fragment_container, weatherInCity);
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         } else {
-            if (Logger.VERBOSE){
-                Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
-            }
+
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        //обновление MyRv при изменении градусов на форенгейты и обратно
         myRVAdapter.notifyDataSetChanged();
     }
 }

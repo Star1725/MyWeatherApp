@@ -99,8 +99,8 @@ public class FragmentShowWeatherInCity extends Fragment {
                 }
             }
         };
-
         buttonInfoCity.setOnClickListener(onClickListener);
+
         if (currentCity == null || currentCity.equals(citySaved)){
             showWeatherInCity(citySaved);
         } else {
@@ -115,6 +115,7 @@ public class FragmentShowWeatherInCity extends Fragment {
         if (Logger.VERBOSE){
             Log.d(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + city.getName());
         }
+        setCurrentCity(city);
         tvNameCites.setText(city.getName());
         currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
         tvTemperatureCites.setText(String.format("%d %s", city.getTemp(), currentUnitTemp));
@@ -142,7 +143,7 @@ public class FragmentShowWeatherInCity extends Fragment {
         }
         if (!currentUnitTemp.equals(MyApp.getINSTANCE().getStorage().getUnitTemp())){
             currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
+            showWeatherInCity(currentCity);
         }
-        showWeatherInCity(currentCity);
     }
 }

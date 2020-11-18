@@ -38,12 +38,12 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (Logger.VERBOSE) {
-            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate");
+            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand);
         }
 
-        orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        if (savedInstanceState == null){
+        if (!orientationIsLand) {
             fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragmentShowWeatherInCity).commit();
         }
@@ -57,6 +57,11 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                 Log.d(Logger.TAG, this.getClass().getSimpleName() + " onAttachFragment(): подписка на fragmentChoiceCity");
             }
             fragmentChoiceCity.setCallback(this);
+        } else if (fragment instanceof FragmentChoiceCity){
+            fragmentShowWeatherInCity = (FragmentShowWeatherInCity) fragment;
+            if (Logger.VERBOSE) {
+                Log.d(Logger.TAG, this.getClass().getSimpleName() + " onAttachFragment(): подписка на fragmentShowWeatherInCity");
+            }
         }
     }
 // методы меню//////////////////////////////////////////////////////////////////////////////////////
