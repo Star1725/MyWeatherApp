@@ -33,5 +33,6 @@
     <string name="yandex_weather">яндекс погода</string>
     <string name="current_date">текущая дата</string>
     <string name="city">Выбор города</string>
+    <string name="current_time">current time</string>
 
 </resources>

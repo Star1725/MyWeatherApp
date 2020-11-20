@@ -16,8 +16,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import lombok.Setter;
 
@@ -34,6 +40,8 @@ public class FragmentShowWeatherInCity extends Fragment {
     private ImageView imageViewWeatherCites;
     private TextView tvNameCites;
     private TextView tvTemperatureCites;
+    private MyRVAdapterHorizontal myRVAdapterHorizontal;
+    private RecyclerView rvTempHourHorizontal;
 
     @NonNull
     static FragmentShowWeatherInCity create(City city){
@@ -80,8 +88,12 @@ public class FragmentShowWeatherInCity extends Fragment {
         tvTemperatureCites = view.findViewById(R.id.tvTemperature);
 
         TextView tvCurrentDate = view.findViewById(R.id.tv_current_date);
-        Calendar calendar = Calendar.getInstance();
+        //TextView tvCurrentTime = view.findViewById(R.id.tv_current_time);
+        Calendar calendar;
+        calendar = Calendar.getInstance(TimeZone.getTimeZone(""));
         tvCurrentDate.setText(getDate(calendar));
+        //tvCurrentTime.setText(getTime(calendar));
+        rvTempHourHorizontal = view.findViewById(R.id.rv_temp_for_hour);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -109,6 +121,7 @@ public class FragmentShowWeatherInCity extends Fragment {
     }
 
     void showWeatherInCity(City city) {
+        boolean orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (city == null){
             currentCity = city = MyApp.getINSTANCE().getDefaultCity();
         }
@@ -118,12 +131,29 @@ public class FragmentShowWeatherInCity extends Fragment {
         setCurrentCity(city);
         tvNameCites.setText(city.getName());
         currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
-        tvTemperatureCites.setText(String.format("%d %s", city.getTemp(), currentUnitTemp));
+
+        LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        myRVAdapterHorizontal = new MyRVAdapterHorizontal(currentCity.getTempForDay());
         imageViewWeatherCites.setImageResource(city.getImageWeatherID());
+        if (!orientationIsLand){
+
+            rvTempHourHorizontal.setLayoutManager(llmHorizontal);
+            rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);
+            rvTempHourHorizontal.scrollToPosition(6);
+        } else {
+            tvTemperatureCites.setText(String.format("%d %s", city.getTemp(), currentUnitTemp));
+        }
     }
 
     private String getDate(Calendar calendar){
         return "today " + calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.YEAR);
+    }
+
+    private int getTime(){
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.systemDefault()));
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if (hour == 0) return 0;
+        else return 1;
     }
 
     @Override

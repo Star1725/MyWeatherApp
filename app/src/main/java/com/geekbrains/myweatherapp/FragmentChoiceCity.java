@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -64,9 +65,14 @@ public class FragmentChoiceCity extends Fragment {
         String[] nameCites = getResources().getStringArray(R.array.name_city);
         int[] tempCites = getResources().getIntArray(R.array.temps);
         int[] imageIDs = {R.drawable.ic_rain_svg, R.drawable.ic_moon_svg, R.drawable.ic_sun_svg};
+        int[] tempHour = getResources().getIntArray(R.array.temps_for_hour);
+        ArrayList<Integer> listTempHour = new ArrayList<>();
+        for (int i = 0; i < tempHour.length ; i++) {
+            listTempHour.add(tempHour[i]);
+        }
         Random randomImage = new Random();
         for (int i = 0; i < nameCites.length; i++){
-            cityList.add(new City(nameCites[i], tempCites[i], imageIDs[randomImage.nextInt(imageIDs.length)]));
+            cityList.add(new City(nameCites[i], tempCites[i], listTempHour, imageIDs[randomImage.nextInt(imageIDs.length)]));
         }
 
 //создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites

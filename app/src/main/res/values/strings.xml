@@ -15,22 +15,6 @@
     <string name="sao_paulo">Sao-Paulo</string>
     <string name="cairo">Cairo</string>
 
-    <string name="app_name">MyWeatherApp</string>
-    <string name="unit_C">\u2103</string>
-    <string name="unit_F">\u2109</string>
-    <string name="value">40</string>
-    <string name="temperature">Temperature</string>
-    <string name="button_choose_city">Сhoose city</string>
-    <string name="action_settings">Setting</string>
-    <string name="theme">Theme</string>
-    <string name="dark">Dark</string>
-    <string name="light">Light</string>
-    <string name="temperature_units">Temperature units</string>
-    <string name="actv_search_cites">city search</string>
-    <string name="default_name_city">City</string>
-    <string name="default_city">Default city</string>
-    <string name="yandex_weather">yandex weather</string>
-
     <string-array name="name_city">
         <item>@string/moscow</item>
         <item>@string/london</item>
@@ -48,7 +32,7 @@
         <item>@string/nice</item>
     </string-array>
 
-    <!-- Список температур -->
+    <!-- Список температур по городам -->
     <integer-array name="temps">
         <item>20</item>
         <item>18</item>
@@ -65,8 +49,42 @@
         <item>-2</item>
         <item>0</item>
     </integer-array>
+
+    <!--список температур по часам-->
+    <integer-array name="temps_for_hour">
+        <item>0</item>
+        <item>2</item>
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+        <item>10</item>
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+        <item>22</item>
+    </integer-array>
+
+    <string name="app_name">MyWeatherApp</string>
+    <string name="unit_C">\u2103</string>
+    <string name="unit_F">\u2109</string>
+    <string name="value">40</string>
+    <string name="temperature">Temperature</string>
+    <string name="button_choose_city">Сhoose city</string>
+    <string name="action_settings">Setting</string>
+    <string name="theme">Theme</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
+    <string name="temperature_units">Temperature units</string>
+    <string name="actv_search_cites">city search</string>
+    <string name="default_name_city">City</string>
+    <string name="default_city">Default city</string>
+    <string name="yandex_weather">yandex weather</string>
+
     <string name="current_date">current date</string>
     <string name="city">Choice City</string>
+    <string name="current_time">current time</string>
 
 
 </resources>

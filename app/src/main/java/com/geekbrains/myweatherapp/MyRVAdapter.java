@@ -1,20 +1,14 @@
 package com.geekbrains.myweatherapp;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -37,7 +31,7 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
         private ImageView citesWeather;
         public CitesViewHolder(@NonNull View itemView) {
             super(itemView);
-            citesName = (TextView) itemView.findViewById(R.id.tv_name_sity);
+            citesName = (TextView) itemView.findViewById(R.id.tv_hour);
             citesTemp = (TextView) itemView.findViewById(R.id.tv_temp);
             unit = (TextView) itemView.findViewById(R.id.tv_unit);
             citesWeather = (ImageView) itemView.findViewById(R.id.iv_weather_in_cites);
@@ -49,7 +43,7 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
     @NonNull
     @Override
     public CitesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.name_sity_temp, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_for_rv_cities, parent, false);
         return new CitesViewHolder(v);
     }
     /*onBindViewHolder определяет содержание каждого элемента из RecyclerView.
