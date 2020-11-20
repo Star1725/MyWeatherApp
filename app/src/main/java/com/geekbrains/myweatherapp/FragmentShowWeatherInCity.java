@@ -133,10 +133,9 @@ public class FragmentShowWeatherInCity extends Fragment {
         currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
 
         LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        myRVAdapterHorizontal = new MyRVAdapterHorizontal(currentCity.getTempForDay());
+        myRVAdapterHorizontal = new MyRVAdapterHorizontal(currentCity);
         imageViewWeatherCites.setImageResource(city.getImageWeatherID());
         if (!orientationIsLand){
-
             rvTempHourHorizontal.setLayoutManager(llmHorizontal);
             rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);
             rvTempHourHorizontal.scrollToPosition(6);

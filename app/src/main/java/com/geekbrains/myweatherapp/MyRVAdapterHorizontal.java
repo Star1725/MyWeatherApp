@@ -25,10 +25,12 @@ import lombok.AllArgsConstructor;
 public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHorizontal.TempHourViewHolder> {
     String currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
     private List<Integer> listTempHour;
+    private City city;
     private List<Integer> hour = Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22);
 
-    public MyRVAdapterHorizontal( List tempForDay) {
-        listTempHour = tempForDay;
+    public MyRVAdapterHorizontal(City city) {
+        this.city = city;
+        listTempHour = city.getTempForDay();
     }
 
     //Внутри конструктора нашего кастомного ViewHolder, инициализируем View, входящие в RecyclerView.
@@ -57,9 +59,10 @@ public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHoriz
      */
     @Override
     public void onBindViewHolder(@NonNull TempHourViewHolder tempHourViewHolder, int position) {
+        String nameCity = city.getName().substring( 0, 2);
         currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
-        tempHourViewHolder.Temp.setText(String.format("%s %s",String.valueOf(listTempHour.get(position)), currentUnitTemp));
         tempHourViewHolder.Hour.setText(String.format("%d:00",hour.get(position)));
+        tempHourViewHolder.Temp.setText(String.format("%s %s %s",nameCity, String.valueOf(listTempHour.get(position)), currentUnitTemp));
     }
     //метод вернет количество элементов, присутствующих в данных
     @Override

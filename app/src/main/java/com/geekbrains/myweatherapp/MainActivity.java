@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
 
         if (!orientationIsLand) {
             fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragmentShowWeatherInCity).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).commit();
         }
     }
 //подписка на фрагменты ////////////////////////////////////////////////////////////////////////////
