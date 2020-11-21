@@ -19,6 +19,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,14 +80,10 @@ public class FragmentChoiceCity extends Fragment {
 //создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites
         myRVAdapter = new MyRVAdapter(cityList);
         rvSites.setAdapter(myRVAdapter);
-//автозаполнение
-        AutoCompleteTextView myAutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView_for_cache);
-        myAutoCompleteTextView.setFreezesText(false);
-        myAutoCompleteTextView.setAdapter( new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, nameCites));
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM, WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
 
-        //динамически изменяем rvCites через myAutoCompleteTextView
-        myAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
+        TextInputEditText choiceCityName = view.findViewById(R.id.choice_city_name);
+        choiceCityName.setFreezesText(false);
+        choiceCityName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
