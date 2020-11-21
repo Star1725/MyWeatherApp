@@ -1,10 +1,12 @@
 package com.geekbrains.myweatherapp;
 
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,7 +28,7 @@ public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHoriz
     String currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
     private List<Integer> listTempHour;
     private City city;
-    private List<Integer> hour = Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22);
+    private List<Integer> hour = Arrays.asList(0, 3, 6, 9, 12, 15, 18, 21);
 
     public MyRVAdapterHorizontal(City city) {
         this.city = city;
@@ -37,11 +39,13 @@ public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHoriz
     public static class TempHourViewHolder extends RecyclerView.ViewHolder {
         private TextView Temp;
         private TextView Hour;
+        private LinearLayout llTempHour;
 
         public TempHourViewHolder(@NonNull View itemView) {
             super(itemView);
             Temp = itemView.findViewById(R.id.tv_temp_for_hour);
             Hour = itemView.findViewById(R.id.tv_hour);
+            llTempHour = itemView.findViewById(R.id.linearLayout_temp_hour);
         }
     }
     /*метод вызывается, когда кастомный ViewHolder должен быть инициализирован.
@@ -51,6 +55,8 @@ public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHoriz
     @Override
     public TempHourViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_for_rv_temp_hour, parent, false);
+        v.getLayoutParams().width = Resources.getSystem().getDisplayMetrics().widthPixels/3;
+        v.requestLayout();
         return new TempHourViewHolder(v);
     }
     /*onBindViewHolder определяет содержание каждого элемента из RecyclerView.
@@ -59,10 +65,9 @@ public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHoriz
      */
     @Override
     public void onBindViewHolder(@NonNull TempHourViewHolder tempHourViewHolder, int position) {
-        String nameCity = city.getName().substring( 0, 2);
         currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
         tempHourViewHolder.Hour.setText(String.format("%d:00",hour.get(position)));
-        tempHourViewHolder.Temp.setText(String.format("%s %s %s",nameCity, String.valueOf(listTempHour.get(position)), currentUnitTemp));
+        tempHourViewHolder.Temp.setText(String.format("%s %s", String.valueOf(listTempHour.get(position)), currentUnitTemp));
     }
     //метод вернет количество элементов, присутствующих в данных
     @Override

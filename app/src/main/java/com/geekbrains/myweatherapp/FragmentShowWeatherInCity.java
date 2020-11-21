@@ -88,11 +88,9 @@ public class FragmentShowWeatherInCity extends Fragment {
         tvTemperatureCites = view.findViewById(R.id.tvTemperature);
 
         TextView tvCurrentDate = view.findViewById(R.id.tv_current_date);
-        //TextView tvCurrentTime = view.findViewById(R.id.tv_current_time);
         Calendar calendar;
         calendar = Calendar.getInstance(TimeZone.getTimeZone(""));
         tvCurrentDate.setText(getDate(calendar));
-        //tvCurrentTime.setText(getTime(calendar));
         rvTempHourHorizontal = view.findViewById(R.id.rv_temp_for_hour);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -128,17 +126,17 @@ public class FragmentShowWeatherInCity extends Fragment {
         if (Logger.VERBOSE){
             Log.d(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + city.getName());
         }
-        setCurrentCity(city);
-        tvNameCites.setText(city.getName());
         currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
+        setCurrentCity(city);
 
+        tvNameCites.setText(city.getName());
         LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         myRVAdapterHorizontal = new MyRVAdapterHorizontal(currentCity);
         imageViewWeatherCites.setImageResource(city.getImageWeatherID());
         if (!orientationIsLand){
             rvTempHourHorizontal.setLayoutManager(llmHorizontal);
             rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);
-            rvTempHourHorizontal.scrollToPosition(6);
+            rvTempHourHorizontal.scrollToPosition(getCurrentHour());
         } else {
             tvTemperatureCites.setText(String.format("%d %s", city.getTemp(), currentUnitTemp));
         }
@@ -148,11 +146,19 @@ public class FragmentShowWeatherInCity extends Fragment {
         return "today " + calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.YEAR);
     }
 
-    private int getTime(){
+    private int getCurrentHour(){
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.systemDefault()));
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if (hour == 0) return 0;
-        else return 1;
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int pos = 0;
+        for (int i = 3; i <= 23; i += 3){
+            if (i == 23){
+                pos = 7;
+            }
+            else if (currentHour >= (i - 1) && currentHour <= (i+1)){
+                pos = i/3;
+            }
+        }
+        return pos;
     }
 
     @Override
