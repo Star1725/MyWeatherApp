@@ -150,7 +150,7 @@ public class FragmentShowWeatherInCity extends Fragment {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.systemDefault()));
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         int pos = 0;
-        for (int i = 3; i <= 23; i += 3){
+        for (int i = 3; i <= 23; i+=3){
             if (i == 23){
                 pos = 7;
             }

@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.Calendar;
 
 import lombok.Getter;
@@ -24,12 +26,7 @@ import lombok.Getter;
 @Getter
 public class MainActivity extends AppCompatActivity implements FragmentChoiceCity.OnSelectedCityListener{
     private final static int REQUEST_CODE = 1;
-    private City currentCity;
 
-    private ImageView imageViewWeatherCites;
-    private TextView tvNameCites;
-    private TextView tvTemperatureCites;
-    private TextView tvUnit;
     private boolean orientationIsLand;
     private FragmentChoiceCity fragmentChoiceCity;
     private FragmentShowWeatherInCity fragmentShowWeatherInCity;
@@ -101,11 +98,14 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             if (fragmentShowWeatherInCity != null){
                 FragmentShowWeatherInCity.setCurrentCity(city);
                 fragmentShowWeatherInCity.showWeatherInCity(city);
+
+                Snackbar.make(fragmentShowWeatherInCity.getView(), "Вы выбрали " + city.getName(), Snackbar.LENGTH_LONG).setDuration(5000).show();
             }
         } else {
             fragmentShowWeatherInCity = FragmentShowWeatherInCity.create(city);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).commit();
 
+            Snackbar.make(findViewById(R.id.fragment_container), "Вы выбрали " + city.getName(), Snackbar.LENGTH_LONG).setDuration(5000).show();
         }
     }
 }
