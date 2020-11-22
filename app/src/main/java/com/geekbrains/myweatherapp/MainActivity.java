@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                 return true;
             case R.id.choices_city:
                 fragmentChoiceCity = new FragmentChoiceCity();
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).addToBackStack("").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).commit();
                 return true;
         }
         return super.onOptionsItemSelected(item);
