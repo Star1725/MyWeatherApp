@@ -12,6 +12,7 @@
         android:layout_height="36dp"
         android:text="@string/yandex_weather"
         android:textSize="10sp"
+        app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintHorizontal_bias="0.49"
