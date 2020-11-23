@@ -30,11 +30,8 @@ import lombok.Setter;
 public class FragmentShowWeatherInCity extends Fragment {
     private boolean orientationIsLand;
 
-    public static void setCurrentCity(City currentCity) {
-        FragmentShowWeatherInCity.currentCity = currentCity;
-    }
 
-    private static City currentCity;
+    private City currentCity;
     private static String currentUnitTemp;
 
     private ImageView imageViewWeatherCites;
@@ -44,7 +41,7 @@ public class FragmentShowWeatherInCity extends Fragment {
     private RecyclerView rvTempHourHorizontal;
 
     @NonNull
-    static FragmentShowWeatherInCity create(City city){
+    public FragmentShowWeatherInCity create(City city){
         FragmentShowWeatherInCity fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
 
         if (city != null){
@@ -54,7 +51,7 @@ public class FragmentShowWeatherInCity extends Fragment {
         }
 
         if (Logger.VERBOSE){
-            Log.d(Logger.TAG, FragmentShowWeatherInCity.class.getSimpleName() +  " create(): city = " + city.getName());
+            Log.d(Logger.TAG, FragmentShowWeatherInCity.class.getSimpleName() +  " create(): city = " + currentCity.getName());
         }
         return fragmentShowWeatherInCity;
     }
@@ -121,24 +118,25 @@ public class FragmentShowWeatherInCity extends Fragment {
     void showWeatherInCity(City city) {
         boolean orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (city == null){
-            currentCity = city = MyApp.getINSTANCE().getDefaultCity();
+            currentCity = MyApp.getINSTANCE().getDefaultCity();
+        } else {
+            currentCity = city;
         }
         if (Logger.VERBOSE){
-            Log.d(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + city.getName());
+            Log.d(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + currentCity.getName());
         }
         currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
-        setCurrentCity(city);
 
-        tvNameCites.setText(city.getName());
+        tvNameCites.setText(currentCity.getName());
         LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         myRVAdapterHorizontal = new MyRVAdapterHorizontal(currentCity);
-        imageViewWeatherCites.setImageResource(city.getImageWeatherID());
+        imageViewWeatherCites.setImageResource(currentCity.getImageWeatherID());
         if (!orientationIsLand){
             rvTempHourHorizontal.setLayoutManager(llmHorizontal);
             rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);
             rvTempHourHorizontal.scrollToPosition(getCurrentHour());
         } else {
-            tvTemperatureCites.setText(String.format("%d %s", city.getTemp(), currentUnitTemp));
+            tvTemperatureCites.setText(String.format("%d %s", currentCity.getTemp(), currentUnitTemp));
         }
     }
 

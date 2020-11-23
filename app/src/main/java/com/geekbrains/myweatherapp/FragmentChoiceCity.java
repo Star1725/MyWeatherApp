@@ -108,27 +108,6 @@ public class FragmentChoiceCity extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        boolean orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        if (Logger.VERBOSE){
-            Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
-        }
-        if (orientationIsLand){
-            assert getFragmentManager() != null;
-            Fragment weatherInCity = getFragmentManager().findFragmentById(R.id.fragment_container);
-            if (!(weatherInCity instanceof FragmentShowWeatherInCity)){
-                weatherInCity = new FragmentShowWeatherInCity();
-            }
-
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction().replace(R.id.fragment_container, weatherInCity);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-        } else {
-
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         //обновление MyRv при изменении градусов на форенгейты и обратно
