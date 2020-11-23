@@ -39,8 +39,8 @@ public class SettingActivity extends AppCompatActivity {
         adapterForSpinner.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinnerCites.setAdapter(adapterForSpinner);
 
-        if(MyApp.getINSTANCE().getStorage().isLightTheme()){radioButtonLight.setChecked(true);}
-        else {radioButtonDark.setChecked(true);}
+        radioButtonLight.setChecked(MyApp.getINSTANCE().isLightTheme());
+        radioButtonDark.setChecked(!MyApp.getINSTANCE().isLightTheme());
         if (MyApp.getINSTANCE().getStorage().isUnitC()){radioButtonC.setChecked(true);}
         else {radioButtonF.setChecked(true);}
 
@@ -51,11 +51,11 @@ public class SettingActivity extends AppCompatActivity {
                 switch (checkedId){
                     case R.id.radioButton_dark_theme:
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        MyApp.getINSTANCE().getStorage().setLightTheme(false);
+                        MyApp.getINSTANCE().setLightTheme(false);
                         break;
                     case R.id.radioButton_light_theme:
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        MyApp.getINSTANCE().getStorage().setLightTheme(true);
+                        MyApp.getINSTANCE().setLightTheme(true);
                         break;
                 }
             }
