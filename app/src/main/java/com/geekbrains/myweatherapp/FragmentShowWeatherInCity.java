@@ -24,29 +24,27 @@ import lombok.Setter;
 public class FragmentShowWeatherInCity extends Fragment {
     private boolean orientationIsLand;
 
-    public static void setCurrentCity(City currentCity) {
-        FragmentShowWeatherInCity.currentCity = currentCity;
-    }
-
-    private static City currentCity;
-    private static String currentUnitTemp;
+    private City currentCity;
+    private String currentUnitTemp;
 
     private ImageView imageViewWeatherCites;
     private TextView tvNameCites;
     private TextView tvTemperatureCites;
 
     @NonNull
-    static FragmentShowWeatherInCity create(City city){
+    public FragmentShowWeatherInCity create(City city){
         FragmentShowWeatherInCity fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
 
         if (city != null){
+            if (Logger.VERBOSE){
+                Log.d(Logger.TAG, FragmentShowWeatherInCity.class.getSimpleName() +  " create(): city = " + city.getName());
+            }
             currentCity = city;
         } else {
+            if (Logger.VERBOSE){
+                Log.d(Logger.TAG, FragmentShowWeatherInCity.class.getSimpleName() +  " create(): city = null");
+            }
             currentCity = city = MyApp.getINSTANCE().getDefaultCity();
-        }
-
-        if (Logger.VERBOSE){
-            Log.d(Logger.TAG, FragmentShowWeatherInCity.class.getSimpleName() +  " create(): city = " + city.getName());
         }
         return fragmentShowWeatherInCity;
     }
@@ -110,16 +108,17 @@ public class FragmentShowWeatherInCity extends Fragment {
 
     void showWeatherInCity(City city) {
         if (city == null){
-            currentCity = city = MyApp.getINSTANCE().getDefaultCity();
+            currentCity =  MyApp.getINSTANCE().getDefaultCity();
+        } else {
+            currentCity = city;
         }
         if (Logger.VERBOSE){
-            Log.d(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + city.getName());
+            Log.d(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + currentCity.getName());
         }
-        setCurrentCity(city);
-        tvNameCites.setText(city.getName());
+        tvNameCites.setText(currentCity.getName());
         currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
-        tvTemperatureCites.setText(String.format("%d %s", city.getTemp(), currentUnitTemp));
-        imageViewWeatherCites.setImageResource(city.getImageWeatherID());
+        tvTemperatureCites.setText(String.format("%d %s", currentCity.getTemp(), currentUnitTemp));
+        imageViewWeatherCites.setImageResource(currentCity.getImageWeatherID());
     }
 
     private String getDate(Calendar calendar){

@@ -87,9 +87,6 @@ public class FragmentChoiceCity extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (Logger.VERBOSE) {
-                    Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate() - myAutoCompleteTextView: s = " + s.toString());
-                }
                 MyRVAdapter localAdapter = new MyRVAdapter(cityList.stream().filter(city -> city.getName().toLowerCase().startsWith(s.toString().toLowerCase())).collect(Collectors.toList()));
                 rvSites.setAdapter(localAdapter);
             }
@@ -101,26 +98,6 @@ public class FragmentChoiceCity extends Fragment {
         });
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        boolean orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        if (Logger.VERBOSE){
-            Log.d(Logger.TAG, getClass().getSimpleName() + " onActivityCreated(): savedInstanceState = " + (savedInstanceState != null) + " orientationIsLand = " + orientationIsLand);
-        }
-        if (orientationIsLand){
-            assert getFragmentManager() != null;
-            Fragment weatherInCity = getFragmentManager().findFragmentById(R.id.fragment_container);
-            if (!(weatherInCity instanceof FragmentShowWeatherInCity)){
-                weatherInCity = new FragmentShowWeatherInCity();
-            }
-
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction().replace(R.id.fragment_container, weatherInCity);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-        } else {
-
-        }
-    }
 
     @Override
     public void onResume() {
