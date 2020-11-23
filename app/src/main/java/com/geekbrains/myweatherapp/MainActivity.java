@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -41,8 +42,36 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         }
 
         if (!orientationIsLand) {
-            fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).commit();
+            if (fragmentShowWeatherInCity == null){
+                if (Logger.VERBOSE) {
+                    Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientation - no Land(): fragmentShowWeatherInCity == null");
+                }
+                fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).commit();
+            } else {
+                if (Logger.VERBOSE) {
+                    Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientation - no Land(): fragmentShowWeatherInCity != null");
+                }
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).commit();
+            }
+        } else {
+            Fragment weatherInCity = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (!(weatherInCity instanceof FragmentShowWeatherInCity)){
+                if (Logger.VERBOSE) {
+                    Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientation - Land(): weatherInCity != fragmentShowWeatherInCity");
+                }
+                weatherInCity = fragmentShowWeatherInCity;
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, weatherInCity);
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+            } else {
+                if (Logger.VERBOSE) {
+                    Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientation - Land(): weatherInCity = fragmentShowWeatherInCity");
+                }
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, weatherInCity);
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+            }
+
+
         }
     }
 //подписка на фрагменты ////////////////////////////////////////////////////////////////////////////
@@ -54,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                 Log.d(Logger.TAG, this.getClass().getSimpleName() + " onAttachFragment(): подписка на fragmentChoiceCity");
             }
             fragmentChoiceCity.setCallback(this);
-        } else if (fragment instanceof FragmentChoiceCity){
+        } else if (fragment instanceof FragmentShowWeatherInCity){
             fragmentShowWeatherInCity = (FragmentShowWeatherInCity) fragment;
             if (Logger.VERBOSE) {
                 Log.d(Logger.TAG, this.getClass().getSimpleName() + " onAttachFragment(): подписка на fragmentShowWeatherInCity");
@@ -96,14 +125,13 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         if (orientationIsLand) {
             fragmentShowWeatherInCity = (FragmentShowWeatherInCity) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             if (fragmentShowWeatherInCity != null){
-                FragmentShowWeatherInCity.setCurrentCity(city);
                 fragmentShowWeatherInCity.showWeatherInCity(city);
 
                 Snackbar.make(fragmentShowWeatherInCity.getView(), "Вы выбрали " + city.getName(), Snackbar.LENGTH_LONG).setDuration(5000).show();
             }
         } else {
-            fragmentShowWeatherInCity = FragmentShowWeatherInCity.create(city);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).commit();
+            fragmentShowWeatherInCity.create(city);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
 
             Snackbar.make(findViewById(R.id.fragment_container), "Вы выбрали " + city.getName(), Snackbar.LENGTH_LONG).setDuration(5000).show();
         }
