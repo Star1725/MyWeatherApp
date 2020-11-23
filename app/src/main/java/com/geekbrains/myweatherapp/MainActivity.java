@@ -3,6 +3,7 @@ package com.geekbrains.myweatherapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -113,6 +114,9 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                 fragmentChoiceCity = new FragmentChoiceCity();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).commit();
                 return true;
+            case R.id.info:
+                DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(getString(R.string.about));
+                dialogFragmentInfo.show(getSupportFragmentManager(), "dialogInfo" );
         }
         return super.onOptionsItemSelected(item);
     }

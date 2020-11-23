@@ -34,5 +34,7 @@
     <string name="current_date">текущая дата</string>
     <string name="city">Выбор города</string>
     <string name="current_time">current time</string>
+    <string name="info">info</string>
+    <string name="about">Разработчик: Старовойтов Сергей Александрович</string>
 
 </resources>
