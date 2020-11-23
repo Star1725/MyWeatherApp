@@ -124,7 +124,7 @@ public class FragmentShowWeatherInCity extends Fragment {
         if (Logger.VERBOSE){
             Log.d(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + currentCity.getName());
         }
-        currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
+        currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
 
         tvNameCites.setText(currentCity.getName());
         LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -173,8 +173,8 @@ public class FragmentShowWeatherInCity extends Fragment {
         if (Logger.VERBOSE) {
             Log.d(Logger.TAG, this.getClass().getSimpleName() + " onResume()");
         }
-        if (!currentUnitTemp.equals(MyApp.getINSTANCE().getStorage().getUnitTemp())){
-            currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
+        if (!currentUnitTemp.equals(MyApp.getINSTANCE().getUnitTemp())){
+            currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
             showWeatherInCity(currentCity);
         }
     }

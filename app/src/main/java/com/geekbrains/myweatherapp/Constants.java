@@ -6,4 +6,5 @@ class Constants {
 
     static final String NAME_SHARED_PREFERENCE = "MyAppPreference";
     static final String IS_LIGHT_THEME = "IsLightTheme";
+    static final String IS_UNIT_C = "IsUnitC";
 }

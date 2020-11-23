@@ -25,7 +25,7 @@ import lombok.AllArgsConstructor;
 Эта паттерн сводит к минимуму количество обращений к дорогостоящему в плане ресурсов методу findViewById.*/
 @AllArgsConstructor
 public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHorizontal.TempHourViewHolder> {
-    String currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
+    String currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
     private List<Integer> listTempHour;
     private City city;
     private List<Integer> hour = Arrays.asList(0, 3, 6, 9, 12, 15, 18, 21);
@@ -65,7 +65,7 @@ public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHoriz
      */
     @Override
     public void onBindViewHolder(@NonNull TempHourViewHolder tempHourViewHolder, int position) {
-        currentUnitTemp = MyApp.getINSTANCE().getStorage().getUnitTemp();
+        currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
         tempHourViewHolder.Hour.setText(String.format("%d:00",hour.get(position)));
         tempHourViewHolder.Temp.setText(String.format("%s %s", String.valueOf(listTempHour.get(position)), currentUnitTemp));
     }

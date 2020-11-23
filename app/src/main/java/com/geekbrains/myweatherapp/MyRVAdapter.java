@@ -54,7 +54,7 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
     public void onBindViewHolder(@NonNull CitesViewHolder citesViewHolder, int position) {
         citesViewHolder.citesName.setText(cites.get(position).getName());
         citesViewHolder.citesTemp.setText(String.valueOf(cites.get(position).getTemp()));
-        citesViewHolder.unit.setText(MyApp.getINSTANCE().getStorage().getUnitTemp());
+        citesViewHolder.unit.setText(MyApp.getINSTANCE().getUnitTemp());
         citesViewHolder.citesWeather.setImageResource(cites.get(position).getImageWeatherID());
 
         final int localPos = position;

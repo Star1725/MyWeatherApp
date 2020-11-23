@@ -18,7 +18,8 @@ public class MyApp extends Application {
     private static final String TAG = "myLog";
     private static MyApp INSTANCE;
     private Storage storage = new Storage();
-    private boolean lightTheme = true;
+    private String unitTemp = "\u2103";
+
 
     @Override
     public void onCreate() {
@@ -29,6 +30,7 @@ public class MyApp extends Application {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
+        unitTemp = getUnit();
 
     }
 
@@ -37,11 +39,24 @@ public class MyApp extends Application {
         SharedPreferences preferences = getSharedPreferences(Constants.NAME_SHARED_PREFERENCE, MODE_PRIVATE);
         return preferences.getBoolean(Constants.IS_LIGHT_THEME, true);
     }
-    //сохранение настироек
+    //чтение настроек единиц измерения температуры
+    protected String getUnit(){
+        SharedPreferences preferences = getSharedPreferences(Constants.NAME_SHARED_PREFERENCE, MODE_PRIVATE);
+        return preferences.getString(Constants.IS_UNIT_C, "\u2103");
+    }
+
+    //сохранение настироек темы
     protected void setLightTheme(boolean isLightTheme){
         SharedPreferences preferences = getSharedPreferences(Constants.NAME_SHARED_PREFERENCE, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(Constants.IS_LIGHT_THEME, isLightTheme);
+        editor.apply();
+    }
+    //сохранение настироек единиц измерения температуры
+    protected void setUnit(String UnitTemp){
+        SharedPreferences preferences = getSharedPreferences(Constants.NAME_SHARED_PREFERENCE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Constants.IS_UNIT_C, UnitTemp);
         editor.apply();
     }
 

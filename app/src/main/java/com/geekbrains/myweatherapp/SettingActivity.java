@@ -41,8 +41,8 @@ public class SettingActivity extends AppCompatActivity {
 
         radioButtonLight.setChecked(MyApp.getINSTANCE().isLightTheme());
         radioButtonDark.setChecked(!MyApp.getINSTANCE().isLightTheme());
-        if (MyApp.getINSTANCE().getStorage().isUnitC()){radioButtonC.setChecked(true);}
-        else {radioButtonF.setChecked(true);}
+        radioButtonC.setChecked(MyApp.getINSTANCE().getUnit().equals(getResources().getString(R.string.unit_C)));
+        radioButtonF.setChecked(MyApp.getINSTANCE().getUnit().equals(getResources().getString(R.string.unit_F)));
 
         RadioGroup radioGroupTheme = findViewById(R.id.radioGroup_theme);
         radioGroupTheme.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -67,12 +67,12 @@ public class SettingActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
                     case R.id.radioButton_celsius:
-                        MyApp.getINSTANCE().getStorage().setUnitTemp(String.valueOf(getText(R.string.unit_C)));
-                        MyApp.getINSTANCE().getStorage().setUnitC(true);
+                        MyApp.getINSTANCE().setUnitTemp(String.valueOf(getText(R.string.unit_C)));
+                        MyApp.getINSTANCE().setUnit(String.valueOf(getText(R.string.unit_C)));
                         break;
                     case R.id.radioButton_fahrenheit:
-                        MyApp.getINSTANCE().getStorage().setUnitTemp(String.valueOf(getText(R.string.unit_F)));
-                        MyApp.getINSTANCE().getStorage().setUnitC(false);
+                        MyApp.getINSTANCE().setUnitTemp(String.valueOf(getText(R.string.unit_F)));
+                        MyApp.getINSTANCE().setUnit(String.valueOf(getText(R.string.unit_F)));
                         break;
                 }
             }
