@@ -65,14 +65,14 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
                 AppCompatActivity currentActivity = (AppCompatActivity) v.getContext();
                 if (currentActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
                     FragmentChoiceCity fragmentChoiceCity = (FragmentChoiceCity) currentActivity.getSupportFragmentManager().findFragmentById(R.id.cities);
-                    callBackFragmentChoceCity(fragmentChoiceCity);
+                    callBackFragmentChoiceCity(fragmentChoiceCity);
                 } else {
                     FragmentChoiceCity fragmentChoiceCity = (FragmentChoiceCity) currentActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                    callBackFragmentChoceCity(fragmentChoiceCity);
+                    callBackFragmentChoiceCity(fragmentChoiceCity);
                 }
             }
 
-            private void callBackFragmentChoceCity(FragmentChoiceCity fragmentChoiceCity) {
+            private void callBackFragmentChoiceCity(FragmentChoiceCity fragmentChoiceCity) {
                 if (fragmentChoiceCity != null) {
                     fragmentChoiceCity.callback.onCitySelected(cites.get(localPos));
                 }

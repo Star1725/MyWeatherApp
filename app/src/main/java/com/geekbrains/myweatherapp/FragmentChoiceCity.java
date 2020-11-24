@@ -47,7 +47,7 @@ public class FragmentChoiceCity extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (Logger.VERBOSE) {
-            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreateView");
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreateView");
         }
         return inflater.inflate(R.layout.fragment_choice_city, container, false);
     }
@@ -56,7 +56,7 @@ public class FragmentChoiceCity extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (Logger.VERBOSE) {
-            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onViewCreated");
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onViewCreated");
         }
 //RecyclerView необходим менеджер компоновки для управления позиционированием своих элементов
         rvSites = view.findViewById(R.id.recyclerView_cities);
@@ -92,7 +92,7 @@ public class FragmentChoiceCity extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (Logger.VERBOSE) {
-                    Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate() - myAutoCompleteTextView: s = " + s.toString());
+                    Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate() - myAutoCompleteTextView: s = " + s.toString());
                 }
                 MyRVAdapter localAdapter = new MyRVAdapter(cityList.stream().filter(city -> city.getName().toLowerCase().startsWith(s.toString().toLowerCase())).collect(Collectors.toList()));
                 rvSites.setAdapter(localAdapter);
