@@ -41,40 +41,25 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         setContentView(R.layout.activity_main);
         orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (Logger.VERBOSE) {
-            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand);
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand);
         }
 
         if (!orientationIsLand) {
             if (fragmentShowWeatherInCity == null){
-                if (Logger.VERBOSE) {
-                    Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientation - no Land(): fragmentShowWeatherInCity == null");
-                }
                 fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).commit();
-            } else {
-                if (Logger.VERBOSE) {
-                    Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientation - no Land(): fragmentShowWeatherInCity != null");
-                }
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).commit();
             }
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
+
         } else {
             Fragment weatherInCity = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-            if (!(weatherInCity instanceof FragmentShowWeatherInCity)){
-                if (Logger.VERBOSE) {
-                    Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientation - Land(): weatherInCity != fragmentShowWeatherInCity");
-                }
-                weatherInCity = fragmentShowWeatherInCity;
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, weatherInCity);
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-            } else {
-                if (Logger.VERBOSE) {
-                    Log.d(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientation - Land(): weatherInCity = fragmentShowWeatherInCity");
-                }
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, weatherInCity);
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+            if (fragmentShowWeatherInCity == null) {
+                fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
             }
-
-
+            if (!(weatherInCity instanceof FragmentShowWeatherInCity)){
+                weatherInCity = fragmentShowWeatherInCity;
+            }
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, weatherInCity);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         }
     }
 //подписка на фрагменты ////////////////////////////////////////////////////////////////////////////
