@@ -14,16 +14,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class FragmentShowWeatherInCity extends Fragment implements ResultRequestCallback {
-    private boolean orientationIsLand;
 
     private City currentCity;
     private static String currentUnitTemp;
@@ -47,9 +49,6 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
             currentCity = null;
         }
 
-        if (Logger.VERBOSE){
-            Log.v(Logger.TAG, FragmentShowWeatherInCity.class.getSimpleName() +  " create(): city = " + currentCity.getName());
-        }
         return fragmentShowWeatherInCity;
     }
 
@@ -71,9 +70,6 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
         City citySaved = null;
         if (savedInstanceState != null){
             citySaved = savedInstanceState.getParcelable(Constants.CITY_EXTRA);
-            if (Logger.VERBOSE){
-                Log.v(Logger.TAG, getClass().getSimpleName() + "                 citySaved = " + citySaved.getName());
-            }
         }
 
         Button buttonInfoCity = view.findViewById(R.id.button_info_city);
@@ -85,7 +81,7 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
 
         tvCurrentDate = view.findViewById(R.id.tv_current_date);
 
-        WorkNetHandler.registerObserverCallback(this::callingBack);//регистрируемся на прослушивание результатов запросов к серверу
+        WorkNetHandler.registerObserverCallback(this);//регистрируемся на прослушивание результатов запросов к серверу для погоды на конкретный город
 
         rvTempHourHorizontal = view.findViewById(R.id.rv_temp_for_hour);
 
@@ -125,9 +121,9 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    tvCurrentDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(new Date (city.getDt())));
+                    tvCurrentDate.setText(new SimpleDateFormat("dd.MM.yyyy").format(new Date (city.getDt())));
                     tvNameCites.setText(city.getName());
-                    tvPressureCites.setText(String.valueOf(city.getPressure()));
+                    tvPressureCites.setText(String.valueOf(Math.round(city.getPressure()/1.33)));
                     tvHumidityCites.setText(String.valueOf(city.getHumidity()));
                     LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
                     myRVAdapterHorizontal = new MyRVAdapterHorizontal(city);
@@ -135,7 +131,7 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
                     if (!orientationIsLand){
                         rvTempHourHorizontal.setLayoutManager(llmHorizontal);
                         rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);
-                        //rvTempHourHorizontal.scrollToPosition(getCurrentHour(city));
+                        rvTempHourHorizontal.scrollToPosition(getCurrentHour(city));
                     } else {
                         tvTemperatureCites.setText(String.format("%d %s", city.getCurrentTemp(), currentUnitTemp));
                     }
@@ -145,14 +141,10 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
     }
 
     private int getCurrentHour(City city){
-        Calendar calendar = null;
+        Calendar calendar = Calendar.getInstance();
         Date date = new Date(city.getDt());
         calendar.setTime(date);
-
-        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int pos = currentHour;
-
-        return pos;
+        return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
     @Override
@@ -176,12 +168,22 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
         }
     }
 
-
+    @Override
+    public void callingBackCity(City city, String status) {
+        if (city == null){
+            if (Logger.VERBOSE) {
+                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBack(): " + status);
+            }
+            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
+            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
+        } else {
+            currentCity = city;
+            showWeatherInCity(city);
+        }
+    }
 
     @Override
-    public void callingBack(City city, String status) {
-        currentCity = city;
-        showWeatherInCity(city);
+    public void callingBackArrayCities(List<City> cities, String status) {
 
     }
 }

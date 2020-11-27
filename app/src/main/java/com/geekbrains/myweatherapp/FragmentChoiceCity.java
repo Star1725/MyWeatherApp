@@ -14,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,21 +32,45 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class FragmentChoiceCity extends Fragment {
+public class FragmentChoiceCity extends Fragment implements ResultRequestCallback{
 //интерфейс для подписчиков на фрагмент ////////////////////////////////////////////////////////////
     public void setCallback(OnSelectedCityListener callback) {
         this.callback = callback;
     }
-
     OnSelectedCityListener callback;
-
     public interface OnSelectedCityListener{
         void onCitySelected(City city);
     }
+
+    @Override
+    public void callingBackCity(City city, String status) {
+
+    }
+
+    @Override
+    public void callingBackArrayCities(List<City> cities, String status) {
+        if (cities == null){
+            if (Logger.VERBOSE) {
+                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackArrayCities(): " + status);
+            }
+            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
+            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
+        } else {
+            cityList = cities;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showListCities(cities);
+                }
+            });
+        }
+    }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     private List<City> cityList;
     private MyRVAdapter myRVAdapter;
     private RecyclerView rvSites;
+    private TextInputEditText choiceCityName;
 
     @Nullable
     @Override
@@ -61,28 +87,26 @@ public class FragmentChoiceCity extends Fragment {
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onViewCreated");
         }
+        WorkNetHandler.registerObserverCallback(this);
 //RecyclerView необходим менеджер компоновки для управления позиционированием своих элементов
         rvSites = view.findViewById(R.id.recyclerView_cities);
+        choiceCityName = view.findViewById(R.id.choice_city_name);
+
+        showListCities(cityList);
+    }
+
+    private void showListCities(List<City> cities){
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         rvSites.setLayoutManager(llm);
 //определяем данные для заполнения rvSites
-        cityList = new ArrayList<>();
-        String[] nameCites = getResources().getStringArray(R.array.name_city);
-        int[] tempCites = getResources().getIntArray(R.array.id_city);
-        int[] imageIDs = {R.drawable.ic_rain_svg, R.drawable.ic_moon_svg, R.drawable.ic_sun_svg};
-        int[] tempHour = getResources().getIntArray(R.array.temps_for_hour);
-        List<Double> listTempHour = new ArrayList<>();
-
-        Random randomImage = new Random();
-        for (int i = 0; i < nameCites.length; i++){
-            cityList.add(new City("?", 1, 0.2, 1, 1, listTempHour, imageIDs[randomImage.nextInt(imageIDs.length)]));
+        if (cities == null){
+            cities = new ArrayList<City>(Collections.singleton(new City(0, "?", 0, 0, 0, 0, null, R.drawable.ic_sun_svg)));
         }
 
 //создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites
-        myRVAdapter = new MyRVAdapter(cityList);
+        myRVAdapter = new MyRVAdapter(cities);
         rvSites.setAdapter(myRVAdapter);
 
-        TextInputEditText choiceCityName = view.findViewById(R.id.choice_city_name);
         choiceCityName.setFreezesText(false);
         choiceCityName.addTextChangedListener(new TextWatcher() {
             @Override

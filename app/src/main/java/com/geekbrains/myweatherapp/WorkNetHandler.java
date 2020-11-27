@@ -11,13 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -29,18 +24,11 @@ public class WorkNetHandler {
         resultRequestCallback = result;
     }
 
-    private CurrentWeatherRequest currentWeatherRequest;
-    private HistoryWeatherRequest historyWeatherRequest1;
-    private HistoryWeatherRequest historyWeatherRequest2;
-
-    private City city;
-
-
-    public City getCityWithWeather(int idCity){
-
+    public void getCityWithWeather(int idCity){
         if (Logger.VERBOSE){
-            Log.v(Logger.TAG, this.getClass().getSimpleName() + " getWeather(): idCity = " + idCity);
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " getCityWithWeather(): idCity = " + idCity);
         }
+        final CurrentWeatherRequest[] currentWeatherRequest = new CurrentWeatherRequest[1];
         try {
             final URL uri1 = new URL(Constants.START_FOR_URL_WEATHER + Constants.ID_CITY + idCity + Constants.END_FOR_ALL_URL + BuildConfig.WEATHER_API_KEY);
 
@@ -48,6 +36,9 @@ public class WorkNetHandler {
                 @Override
                 public void run() {
                     HttpsURLConnection httpsURLConnection = null;
+                    HistoryWeatherRequest historyWeatherRequest1;
+                    HistoryWeatherRequest historyWeatherRequest2;
+                    CurrentWeatherRequest currentWeatherRequest;
                     try {
                         httpsURLConnection = (HttpsURLConnection)uri1.openConnection();
                         httpsURLConnection.setRequestMethod("GET");
@@ -61,16 +52,8 @@ public class WorkNetHandler {
                         String cityName = currentWeatherRequest.getName();
                         double lat = currentWeatherRequest.getCoord().getLat();
                         double lon = currentWeatherRequest.getCoord().getLon();
-                        if (Logger.VERBOSE) {
-                            Log.v(Logger.TAG, this.getClass().getSimpleName() + " getWeather(): current weather in city = " + currentWeatherRequest.getName() + "\n" +
-                                    "getWeather(): current coord for city: lat = " + lat + "\n" +
-                                    "getWeather(): current coord for city: lon = " + lon
-                            );
-                        }
 
-                        httpsURLConnection.disconnect();
-
-                        final URL uri2 = new URL(Constants.START_FOR_URL_ONECALL + Constants.COORD_LAT + lat + Constants.COORD_LON + lon + Constants.MIDDLE_FOR_URL_ONECALL + Constants.END_FOR_ALL_URL + BuildConfig.WEATHER_API_KEY);
+                        URL uri2 = new URL(Constants.START_FOR_URL_ONECALL + Constants.COORD_LAT + lat + Constants.COORD_LON + lon + Constants.MIDDLE_FOR_URL_ONECALL + Constants.END_FOR_ALL_URL + BuildConfig.WEATHER_API_KEY);
                         httpsURLConnection = (HttpsURLConnection)uri2.openConnection();
                         httpsURLConnection.setRequestMethod("GET");
                         httpsURLConnection.setReadTimeout(10000);
@@ -82,48 +65,29 @@ public class WorkNetHandler {
                         double currentTemp = historyWeatherRequest1.getHourly()[0].getTemp();
                         int currentPressure = historyWeatherRequest1.getHourly()[0].getPressure();
                         int currentHumidity = historyWeatherRequest1.getHourly()[0].getHumidity();
-                        if (Logger.VERBOSE) {
-                            for (int i = 0; i < historyWeatherRequest1.getHourly().length; i++) {
-                                Log.v(Logger.TAG, this.getClass().getSimpleName() +
-                                        " getWeather(): current time in city = " +
-                                        new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date ((historyWeatherRequest1.getHourly()[i].getDt() + historyWeatherRequest1.getTimezone_offset())*1000)) + " temp = " + historyWeatherRequest1.getHourly()[i].getTemp());
-                            }
-                            Log.v(Logger.TAG, this.getClass().getSimpleName() +
-                                    " getWeather(): historyWeatherRequest.getHourly().length = " + historyWeatherRequest1.getHourly().length);
-                        }
 
                         URL uri3 = new URL(Constants.START_FOR_URL_ONECALL_TIMEMACHINE + Constants.COORD_LAT + lat + Constants.COORD_LON + lon  + Constants.MIDDLE_FOR_URL_ONECALL_TIMEMACHINE + currentDate/1000 + Constants.END_FOR_ALL_URL + BuildConfig.WEATHER_API_KEY);
-
-                        httpsURLConnection.disconnect();
-
                         httpsURLConnection = (HttpsURLConnection)uri3.openConnection();
                         httpsURLConnection.setRequestMethod("GET");
-                        httpsURLConnection.setReadTimeout(10000);
+                        httpsURLConnection.setReadTimeout(5000);
                         in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
                         result = getLines(in);
                         historyWeatherRequest2 = gson.fromJson(result, HistoryWeatherRequest.class);
-                        if (Logger.VERBOSE) {
-                            for (int i = 0; i < historyWeatherRequest2.getHourly().length; i++) {
-                                Log.v(Logger.TAG, this.getClass().getSimpleName() +
-                                        " getWeather(): время до in city = " +
-                                        new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date ((historyWeatherRequest2.getHourly()[i].getDt() + historyWeatherRequest2.getTimezone_offset())*1000)) + " temp = " + historyWeatherRequest2.getHourly()[i].getTemp());
-                            }
-                            Log.v(Logger.TAG, this.getClass().getSimpleName() +
-                                    " getWeather(): historyWeatherRequest.getHourly().length = " + historyWeatherRequest2.getHourly().length);
-                        }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                        //из двух запросов формируем список температуры за текущий день
                         List<Double> tempForDate = new ArrayList<>();
-                        for (int i = 0; i < historyWeatherRequest2.getHourly().length - 1; i++) {
+                        for (int i = 0; i < historyWeatherRequest2.getHourly().length; i++) {
                             tempForDate.add(historyWeatherRequest2.getHourly()[i].getTemp());
                         }
-                        for (int i = 0; i < 24 - historyWeatherRequest2.getHourly().length - 1; i++) {
+                        for (int i = 1; i < 25 - historyWeatherRequest2.getHourly().length; i++) {
                             tempForDate.add(historyWeatherRequest1.getHourly()[i].getTemp());
                         }
 
-                        city = new City(cityName, currentDate, currentTemp, currentPressure, currentHumidity, tempForDate, R.drawable.ic_sun_svg);
-                        resultRequestCallback.callingBack(city, "OK");
+                        City city = new City(0, cityName, currentDate, currentTemp, currentPressure, currentHumidity, tempForDate, R.drawable.ic_sun_svg);
+                        resultRequestCallback.callingBackCity(city, "OK");
                     } catch (IOException e) {
-                        Log. e ( Logger.TAG , "Fail connection" , e);
+                        Log. e ( Logger.TAG , Constants.FAIL_CONNECTION, e);
+                        resultRequestCallback.callingBackCity(null, Constants.FAIL_CONNECTION);
                         e.printStackTrace();
                     } finally {
                         if (httpsURLConnection != null) {
@@ -135,8 +99,54 @@ public class WorkNetHandler {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+    }
 
-        return city;
+    public void getListCitiesWithTemp(List<Integer> idCities){
+        if (Logger.VERBOSE){
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " getListCitiesWithTemp()");
+        }
+        List<City> cities = new ArrayList<>();
+        for (int i = 0; i < idCities.size(); i++) {
+            try {
+                final URL uri1 = new URL(Constants.START_FOR_URL_WEATHER + Constants.ID_CITY + idCities.get(i) + Constants.END_FOR_ALL_URL + BuildConfig.WEATHER_API_KEY);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        HttpsURLConnection httpsURLConnection = null;
+                        CurrentWeatherRequest currentWeatherRequest;
+                        try {
+                            httpsURLConnection = (HttpsURLConnection) uri1.openConnection();
+                            httpsURLConnection.setRequestMethod("GET");
+                            httpsURLConnection.setReadTimeout(10000);
+                            BufferedReader in = null;
+                            in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
+                            String result = getLines(in);
+                            in.close();
+                            Gson gson = new Gson();
+                            currentWeatherRequest = gson.fromJson(result, CurrentWeatherRequest.class);
+                            String cityName = currentWeatherRequest.getName();
+                            int id = currentWeatherRequest.getId();
+                            double currentTemp = currentWeatherRequest.getMain().getTemp();
+
+                            cities.add(new City(id, cityName, 0, currentTemp, 0, 0, null, R.drawable.ic_sun_svg));
+
+                            resultRequestCallback.callingBackArrayCities(cities, "OK");
+
+                        } catch (IOException e) {
+                            Log.e(Logger.TAG, Constants.FAIL_CONNECTION, e);
+                            resultRequestCallback.callingBackArrayCities(null, Constants.FAIL_CONNECTION);
+                            e.printStackTrace();
+                        } finally {
+                            if (httpsURLConnection != null) {
+                                httpsURLConnection.disconnect();
+                            }
+                        }
+                    }
+                }).start();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private String getLines(BufferedReader in){

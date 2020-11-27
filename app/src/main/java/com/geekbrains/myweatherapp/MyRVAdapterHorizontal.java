@@ -30,7 +30,7 @@ import lombok.AllArgsConstructor;
 public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHorizontal.TempHourViewHolder> {
     String currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
     private List<Double> tempForDate;
-    private int[] hour = {0, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23};
+    private List<Integer> hour = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
 
     public MyRVAdapterHorizontal(City city) {
         tempForDate = city.getTempForDate();
@@ -67,12 +67,13 @@ public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHoriz
     @Override
     public void onBindViewHolder(@NonNull TempHourViewHolder tempHourViewHolder, int position) {
         currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
-        tempHourViewHolder.Hour.setText(String.format("%d:00",hour.);
-        tempHourViewHolder.Temp.setText(String.format("%s %s", String.valueOf(tempForDate.get(position)), currentUnitTemp));
+        tempHourViewHolder.Hour.setText(String.format("%d:00",hour.get(position)));
+        tempHourViewHolder.Temp.setText(String.format("%s %s", String.valueOf(Math.round(tempForDate.get(position))), currentUnitTemp));
+
     }
     //метод вернет количество элементов, присутствующих в данных
     @Override
     public int getItemCount() {
-        return tempForDate.size();
+        return hour.size();
     }
 }

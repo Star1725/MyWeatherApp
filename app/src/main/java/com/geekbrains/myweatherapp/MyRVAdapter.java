@@ -53,7 +53,7 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
     @Override
     public void onBindViewHolder(@NonNull CitesViewHolder citesViewHolder, int position) {
         citesViewHolder.citesName.setText(cites.get(position).getName());
-        citesViewHolder.citesTemp.setText(String.valueOf(cites.get(position).getCurrentTemp()));
+        citesViewHolder.citesTemp.setText(String.valueOf(Math.round(cites.get(position).getCurrentTemp())));
         citesViewHolder.unit.setText(MyApp.getINSTANCE().getUnitTemp());
         citesViewHolder.citesWeather.setImageResource(cites.get(position).getImageWeatherID());
 

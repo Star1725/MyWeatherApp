@@ -16,4 +16,5 @@ public class CurrentWeatherRequest {
     private Wind wind ;
     private Clouds clouds ;
     private String name;
+    private int id;
 }

@@ -17,6 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class City implements Parcelable {
+    private int id;
     private String name;
     private long dt;
     private double currentTemp;
@@ -26,6 +27,7 @@ public class City implements Parcelable {
     private int imageWeatherID;
 
     protected City(Parcel in) {
+        id = in.readInt();
         name = in.readString();
         dt = in.readLong();
         currentTemp = in.readDouble();
@@ -54,6 +56,7 @@ public class City implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(name);
         dest.writeLong(dt);
         dest.writeDouble(currentTemp);

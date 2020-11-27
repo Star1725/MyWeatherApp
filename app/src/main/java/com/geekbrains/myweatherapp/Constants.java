@@ -18,4 +18,6 @@ class Constants {
     static final String COORD_LAT = "lat=";
     static final String COORD_LON = "&lon=";
     static final String ID_CITY = "id=";
+
+    static final String FAIL_CONNECTION = "Fail connection";
 }

@@ -44,18 +44,6 @@
         <item>5376959</item>
     </integer-array>
 
-    <!--список температур по часам-->
-    <integer-array name="temps_for_hour">
-        <item>0</item>
-        <item>3</item>
-        <item>6</item>
-        <item>9</item>
-        <item>12</item>
-        <item>15</item>
-        <item>18</item>
-        <item>21</item>
-    </integer-array>
-
     <string name="app_name">MyWeatherApp</string>
     <string name="unit_C">\u2103</string>
     <string name="unit_F">\u2109</string>

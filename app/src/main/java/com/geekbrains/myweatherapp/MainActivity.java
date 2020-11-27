@@ -21,7 +21,12 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.Getter;
 
@@ -42,8 +47,6 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand);
         }
-
-
 
         if (!orientationIsLand) {
             workNetHandler.getCityWithWeather(MyApp.getINSTANCE().getIDdefaultCity());
@@ -100,8 +103,9 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                 startActivity(intent1);
                 return true;
             case R.id.choices_city:
+                workNetHandler.getListCitiesWithTemp(Arrays.stream(getResources().getIntArray(R.array.id_city)).boxed().collect(Collectors.toList()));
                 fragmentChoiceCity = new FragmentChoiceCity();
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).addToBackStack("").commit();
                 return true;
             case R.id.info:
                 DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(getString(R.string.about));
@@ -118,11 +122,13 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         if (orientationIsLand) {
             fragmentShowWeatherInCity = (FragmentShowWeatherInCity) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             if (fragmentShowWeatherInCity != null){
-                fragmentShowWeatherInCity.showWeatherInCity(city);
+                workNetHandler.getCityWithWeather(city.getId());
+                //fragmentShowWeatherInCity.showWeatherInCity(city);
                 showSnackbar(city, "Вы выбрали ");
             }
         } else {
-            fragmentShowWeatherInCity.create(city);
+            workNetHandler.getCityWithWeather(city.getId());
+            fragmentShowWeatherInCity.create(null);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
             showSnackbar(city, "Вы выбрали ");
         }
