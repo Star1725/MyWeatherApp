@@ -64,6 +64,6 @@ public class MyApp extends Application {
         return INSTANCE;
     }
 
-    private City defaultCity = new City("Moscow", 15, new ArrayList<>(Arrays.asList(0, 3, 6, 9, 12, 15, 18, 21)), R.drawable.ic_sun_svg);
+    private int IDdefaultCity = 524894;
 
 }

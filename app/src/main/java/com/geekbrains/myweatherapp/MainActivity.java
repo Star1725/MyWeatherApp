@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
     private boolean orientationIsLand;
     private FragmentChoiceCity fragmentChoiceCity;
     private FragmentShowWeatherInCity fragmentShowWeatherInCity;
+    private static WorkNetHandler workNetHandler = new WorkNetHandler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,10 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand);
         }
 
+
+
         if (!orientationIsLand) {
+            workNetHandler.getCityWithWeather(MyApp.getINSTANCE().getIDdefaultCity());
             if (fragmentShowWeatherInCity == null){
                 fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
             }
@@ -115,16 +119,16 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             fragmentShowWeatherInCity = (FragmentShowWeatherInCity) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             if (fragmentShowWeatherInCity != null){
                 fragmentShowWeatherInCity.showWeatherInCity(city);
-                showSnackbar(city, "Вы выбрали");
+                showSnackbar(city, "Вы выбрали ");
             }
         } else {
             fragmentShowWeatherInCity.create(city);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
-            showSnackbar(city, "Вы выбрали");
+            showSnackbar(city, "Вы выбрали ");
         }
     }
 
     private void showSnackbar(City city, String msg) {
-        Snackbar.make(findViewById(R.id.fragment_container), msg + city.getName(), Snackbar.LENGTH_LONG).setDuration(5000).show();
+        Snackbar.make(findViewById(R.id.fragment_container), msg + city.getName(), Snackbar.LENGTH_LONG).setDuration(3000).show();
     }
 }

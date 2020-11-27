@@ -4,7 +4,7 @@
     <string name="london">London</string>
     <string name="paris">Paris</string>
     <string name="tokyo">Tokyo</string>
-    <string name="new_york">New-York</string>
+    <string name="new_york">New York</string>
     <string name="krasnoyarsk">Krasnoyarsk</string>
     <string name="irkutsk">Irkutsk</string>
     <string name="sydney">Sydney</string>
@@ -12,8 +12,6 @@
     <string name="beijing">Beijing</string>
     <string name="capetown">Сapetown</string>
     <string name="nice">Nice</string>
-    <string name="sao_paulo">Sao-Paulo</string>
-    <string name="cairo">Cairo</string>
 
     <string-array name="name_city">
         <item>@string/moscow</item>
@@ -27,27 +25,23 @@
         <item>@string/berlin</item>
         <item>@string/beijing</item>
         <item>@string/capetown</item>
-        <item>@string/sao_paulo</item>
-        <item>@string/cairo</item>
         <item>@string/nice</item>
     </string-array>
 
     <!-- Список температур по городам -->
-    <integer-array name="temps">
-        <item>20</item>
-        <item>18</item>
-        <item>-10</item>
-        <item>0</item>
-        <item>15</item>
-        <item>35</item>
-        <item>-20</item>
-        <item>12</item>
-        <item>-3</item>
-        <item>6</item>
-        <item>17</item>
-        <item>25</item>
-        <item>-2</item>
-        <item>0</item>
+    <integer-array name="id_city">
+        <item>524894</item>
+        <item>1006984</item>
+        <item>2968815</item>
+        <item>1850147</item>
+        <item>5128638</item>
+        <item>1502026</item>
+        <item>2023469</item>
+        <item>2147714</item>
+        <item>2950158</item>
+        <item>2038349</item>
+        <item>3369157</item>
+        <item>5376959</item>
     </integer-array>
 
     <!--список температур по часам-->
@@ -83,6 +77,7 @@
     <string name="current_time">current time</string>
     <string name="info">info</string>
     <string name="about">Разработчик: Старовойтов Сергей Александрович</string>
+    <string name="no_name">\?</string>
 
 
 </resources>

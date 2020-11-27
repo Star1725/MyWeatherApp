@@ -15,19 +15,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.TimeZone;
+import java.util.Date;
 
-import lombok.Setter;
-
-public class FragmentShowWeatherInCity extends Fragment {
+public class FragmentShowWeatherInCity extends Fragment implements ResultRequestCallback {
     private boolean orientationIsLand;
 
     private City currentCity;
@@ -36,8 +31,11 @@ public class FragmentShowWeatherInCity extends Fragment {
     private ImageView imageViewWeatherCites;
     private TextView tvNameCites;
     private TextView tvTemperatureCites;
+    private TextView tvPressureCites;
+    private TextView tvHumidityCites;
     private MyRVAdapterHorizontal myRVAdapterHorizontal;
     private RecyclerView rvTempHourHorizontal;
+    private TextView tvCurrentDate;
 
     @NonNull
     public FragmentShowWeatherInCity create(City city){
@@ -46,11 +44,11 @@ public class FragmentShowWeatherInCity extends Fragment {
         if (city != null){
             currentCity = city;
         } else {
-            currentCity = city = MyApp.getINSTANCE().getDefaultCity();
+            currentCity = null;
         }
 
         if (Logger.VERBOSE){
-            Log.d(Logger.TAG, FragmentShowWeatherInCity.class.getSimpleName() +  " create(): city = " + currentCity.getName());
+            Log.v(Logger.TAG, FragmentShowWeatherInCity.class.getSimpleName() +  " create(): city = " + currentCity.getName());
         }
         return fragmentShowWeatherInCity;
     }
@@ -59,7 +57,7 @@ public class FragmentShowWeatherInCity extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (Logger.VERBOSE){
-            Log.d(Logger.TAG, getClass().getSimpleName() + " onCreateView()");
+            Log.v(Logger.TAG, getClass().getSimpleName() + " onCreateView()");
         }
         return inflater.inflate(R.layout.fragment_show_weather, container, false);
     }
@@ -68,13 +66,13 @@ public class FragmentShowWeatherInCity extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (Logger.VERBOSE){
-            Log.d(Logger.TAG, getClass().getSimpleName() + " onViewCreated():");
+            Log.v(Logger.TAG, getClass().getSimpleName() + " onViewCreated():");
         }
         City citySaved = null;
         if (savedInstanceState != null){
             citySaved = savedInstanceState.getParcelable(Constants.CITY_EXTRA);
             if (Logger.VERBOSE){
-                Log.d(Logger.TAG, getClass().getSimpleName() + "                 citySaved = " + citySaved.getName());
+                Log.v(Logger.TAG, getClass().getSimpleName() + "                 citySaved = " + citySaved.getName());
             }
         }
 
@@ -82,11 +80,13 @@ public class FragmentShowWeatherInCity extends Fragment {
         imageViewWeatherCites = view.findViewById(R.id.imageView);
         tvNameCites = view.findViewById(R.id.tvNameCites);
         tvTemperatureCites = view.findViewById(R.id.tvTemperature);
+        tvPressureCites = view.findViewById(R.id.textView_pressure);
+        tvHumidityCites = view.findViewById(R.id.textView_humidity);
 
-        TextView tvCurrentDate = view.findViewById(R.id.tv_current_date);
-        Calendar calendar;
-        calendar = Calendar.getInstance(TimeZone.getTimeZone(""));
-        tvCurrentDate.setText(getDate(calendar));
+        tvCurrentDate = view.findViewById(R.id.tv_current_date);
+
+        WorkNetHandler.registerObserverCallback(this::callingBack);//регистрируемся на прослушивание результатов запросов к серверу
+
         rvTempHourHorizontal = view.findViewById(R.id.rv_temp_for_hour);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -96,7 +96,7 @@ public class FragmentShowWeatherInCity extends Fragment {
                     case R.id.button_info_city:
                         String url = "https://yandex.ru/pogoda/" + currentCity.getName();
                         if (Logger.VERBOSE) {
-                            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onClick(): url = " + url);
+                            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onClick(): url = " + url);
                         }
                         Uri uri = Uri.parse(url);
                         Intent intentGET = new Intent(Intent.ACTION_VIEW, uri);
@@ -116,45 +116,42 @@ public class FragmentShowWeatherInCity extends Fragment {
 
     void showWeatherInCity(City city) {
         boolean orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        if (city == null){
-            currentCity = MyApp.getINSTANCE().getDefaultCity();
-        } else {
-            currentCity = city;
-        }
-        if (Logger.VERBOSE){
-            Log.d(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + currentCity.getName());
-        }
         currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
 
-        tvNameCites.setText(currentCity.getName());
-        LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        myRVAdapterHorizontal = new MyRVAdapterHorizontal(currentCity);
-        imageViewWeatherCites.setImageResource(currentCity.getImageWeatherID());
-        if (!orientationIsLand){
-            rvTempHourHorizontal.setLayoutManager(llmHorizontal);
-            rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);
-            rvTempHourHorizontal.scrollToPosition(getCurrentHour());
-        } else {
-            tvTemperatureCites.setText(String.format("%d %s", currentCity.getTemp(), currentUnitTemp));
+        if (city != null){
+            if (Logger.VERBOSE){
+                Log.v(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + city.getName());
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tvCurrentDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(new Date (city.getDt())));
+                    tvNameCites.setText(city.getName());
+                    tvPressureCites.setText(String.valueOf(city.getPressure()));
+                    tvHumidityCites.setText(String.valueOf(city.getHumidity()));
+                    LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                    myRVAdapterHorizontal = new MyRVAdapterHorizontal(city);
+                    imageViewWeatherCites.setImageResource(city.getImageWeatherID());
+                    if (!orientationIsLand){
+                        rvTempHourHorizontal.setLayoutManager(llmHorizontal);
+                        rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);
+                        //rvTempHourHorizontal.scrollToPosition(getCurrentHour(city));
+                    } else {
+                        tvTemperatureCites.setText(String.format("%d %s", city.getCurrentTemp(), currentUnitTemp));
+                    }
+                }
+            });
         }
     }
 
-    private String getDate(Calendar calendar){
-        return "today " + calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.YEAR);
-    }
+    private int getCurrentHour(City city){
+        Calendar calendar = null;
+        Date date = new Date(city.getDt());
+        calendar.setTime(date);
 
-    private int getCurrentHour(){
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.systemDefault()));
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int pos = 0;
-        for (int i = 3; i <= 23; i+=3){
-            if (i == 23){
-                pos = 7;
-            }
-            else if (currentHour >= (i - 1) && currentHour <= (i+1)){
-                pos = i/3;
-            }
-        }
+        int pos = currentHour;
+
         return pos;
     }
 
@@ -162,7 +159,7 @@ public class FragmentShowWeatherInCity extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle saveInstanceState){
         super .onSaveInstanceState(saveInstanceState);
         if (Logger.VERBOSE) {
-            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onSaveInstanceState(): city = " + currentCity.getName());
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onSaveInstanceState(): city = " + currentCity.getName());
         }
         saveInstanceState.putParcelable(Constants.CITY_EXTRA, currentCity);
     }
@@ -171,11 +168,20 @@ public class FragmentShowWeatherInCity extends Fragment {
     public void onResume() {
         super.onResume();
         if (Logger.VERBOSE) {
-            Log.d(Logger.TAG, this.getClass().getSimpleName() + " onResume()");
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onResume()");
         }
         if (!currentUnitTemp.equals(MyApp.getINSTANCE().getUnitTemp())){
             currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
             showWeatherInCity(currentCity);
         }
+    }
+
+
+
+    @Override
+    public void callingBack(City city, String status) {
+        currentCity = city;
+        showWeatherInCity(city);
+
     }
 }
