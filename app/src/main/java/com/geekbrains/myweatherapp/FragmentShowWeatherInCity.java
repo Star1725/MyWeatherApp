@@ -1,5 +1,6 @@
 package com.geekbrains.myweatherapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,7 +27,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class FragmentShowWeatherInCity extends Fragment implements ResultRequestCallback {
+public class FragmentShowWeatherInCity extends Fragment {
+
+    private Context context;
 
     private City currentCity;
     private static String currentUnitTemp;
@@ -58,6 +62,7 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
         if (Logger.VERBOSE){
             Log.v(Logger.TAG, getClass().getSimpleName() + " onCreateView()");
         }
+        context = inflater.getContext();
         return inflater.inflate(R.layout.fragment_show_weather, container, false);
     }
 
@@ -72,7 +77,6 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
             citySaved = savedInstanceState.getParcelable(Constants.CITY_EXTRA);
         }
 
-        Button buttonInfoCity = view.findViewById(R.id.button_info_city);
         imageViewWeatherCites = view.findViewById(R.id.imageView);
         tvNameCites = view.findViewById(R.id.tvNameCites);
         tvTemperatureCites = view.findViewById(R.id.tvTemperature);
@@ -81,27 +85,9 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
 
         tvCurrentDate = view.findViewById(R.id.tv_current_date);
 
-        WorkNetHandler.registerObserverCallback(this);//регистрируемся на прослушивание результатов запросов к серверу для погоды на конкретный город
+        //WorkNetHandler.registerObserverCallback(this);//регистрируемся на прослушивание результатов запросов к серверу для погоды на конкретный город
 
         rvTempHourHorizontal = view.findViewById(R.id.rv_temp_for_hour);
-
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()){
-                    case R.id.button_info_city:
-                        String url = "https://yandex.ru/pogoda/" + currentCity.getName();
-                        if (Logger.VERBOSE) {
-                            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onClick(): url = " + url);
-                        }
-                        Uri uri = Uri.parse(url);
-                        Intent intentGET = new Intent(Intent.ACTION_VIEW, uri);
-                        startActivity(intentGET);
-                        break;
-                }
-            }
-        };
-        buttonInfoCity.setOnClickListener(onClickListener);
 
         if (currentCity == null || currentCity.equals(citySaved)){
             showWeatherInCity(citySaved);
@@ -111,29 +97,29 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
     }
 
     void showWeatherInCity(City city) {
-        boolean orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
 
         if (city != null){
             if (Logger.VERBOSE){
                 Log.v(Logger.TAG, getClass().getSimpleName() + " showWeatherInCity(): city = " + city.getName());
             }
-            getActivity().runOnUiThread(new Runnable() {
+            currentCity = city;
+            ((AppCompatActivity) tvNameCites.getContext()).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    tvCurrentDate.setText(new SimpleDateFormat("dd.MM.yyyy").format(new Date (city.getDt())));
+                    tvCurrentDate.setText(new java.text.SimpleDateFormat("dd.MM.yyyy").format(new Date (city.getDt()*1000)));
                     tvNameCites.setText(city.getName());
                     tvPressureCites.setText(String.valueOf(Math.round(city.getPressure()/1.33)));
                     tvHumidityCites.setText(String.valueOf(city.getHumidity()));
                     LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
                     myRVAdapterHorizontal = new MyRVAdapterHorizontal(city);
                     imageViewWeatherCites.setImageResource(city.getImageWeatherID());
-                    if (!orientationIsLand){
+                    if (!MainActivity.orientationIsLand){
                         rvTempHourHorizontal.setLayoutManager(llmHorizontal);
                         rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);
                         rvTempHourHorizontal.scrollToPosition(getCurrentHour(city));
                     } else {
-                        tvTemperatureCites.setText(String.format("%d %s", city.getCurrentTemp(), currentUnitTemp));
+                        tvTemperatureCites.setText(String.format("%d %s", Math.round(city.getCurrentTemp()), currentUnitTemp));
                     }
                 }
             });
@@ -142,7 +128,7 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
 
     private int getCurrentHour(City city){
         Calendar calendar = Calendar.getInstance();
-        Date date = new Date(city.getDt());
+        Date date = new Date(city.getDt()*1000);
         calendar.setTime(date);
         return calendar.get(Calendar.HOUR_OF_DAY);
     }
@@ -168,22 +154,36 @@ public class FragmentShowWeatherInCity extends Fragment implements ResultRequest
         }
     }
 
-    @Override
-    public void callingBackCity(City city, String status) {
-        if (city == null){
-            if (Logger.VERBOSE) {
-                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBack(): " + status);
-            }
-            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
-            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
-        } else {
-            currentCity = city;
-            showWeatherInCity(city);
-        }
-    }
+//    @Override
+//    public void callingBackCity(City city, String status) {
+//        if (city == null){
+//            if (Logger.VERBOSE) {
+//                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBack(): " + status);
+//            }
+//            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
+//            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
+//        } else {
+//            currentCity = city;
+//            showWeatherInCity(city);
+//        }
+//    }
+//
+//    @Override
+//    public void callingBackArrayCities(List<City> cities, String status) {
+//
+//    }
 
-    @Override
-    public void callingBackArrayCities(List<City> cities, String status) {
-
-    }
+//    @Override
+//    public void callingBackData(City city, List<City> cityList, String status) {
+//        if (city == null){
+//            if (Logger.VERBOSE) {
+//                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackData(): " + status);
+//            }
+//            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
+//            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
+//        } else {
+//            currentCity = city;
+//            showWeatherInCity(city);
+//        }
+//    }
 }

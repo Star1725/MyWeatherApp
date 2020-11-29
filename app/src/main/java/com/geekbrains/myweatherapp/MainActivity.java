@@ -31,12 +31,14 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
-public class MainActivity extends AppCompatActivity implements FragmentChoiceCity.OnSelectedCityListener{
+public class MainActivity extends AppCompatActivity implements FragmentChoiceCity.OnSelectedCityListener, WorkNetHandler.ResultRequestCallback{
     private final static int REQUEST_CODE = 1;
 
-    private boolean orientationIsLand;
+    static boolean orientationIsLand;
     private FragmentChoiceCity fragmentChoiceCity;
+    private List<City> cityList;
     private FragmentShowWeatherInCity fragmentShowWeatherInCity;
+    private City currentCity;
     private static WorkNetHandler workNetHandler = new WorkNetHandler();
 
     @Override
@@ -47,9 +49,15 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand);
         }
-
-        if (!orientationIsLand) {
+        WorkNetHandler.registerObserverCallback(this);
+        if (currentCity == null){
             workNetHandler.getCityWithWeather(MyApp.getINSTANCE().getIDdefaultCity());
+        } else {
+            workNetHandler.getCityWithWeather(currentCity.getId());
+        }
+        workNetHandler.getListCitiesWithTemp(Arrays.stream(getResources().getIntArray(R.array.id_city)).boxed().collect(Collectors.toList()));
+        if (!orientationIsLand) {
+
             if (fragmentShowWeatherInCity == null){
                 fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
             }
@@ -83,7 +91,14 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             }
         }
     }
-// методы меню//////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
+
+    // методы меню//////////////////////////////////////////////////////////////////////////////////////
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (orientationIsLand){
@@ -103,8 +118,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                 startActivity(intent1);
                 return true;
             case R.id.choices_city:
-                workNetHandler.getListCitiesWithTemp(Arrays.stream(getResources().getIntArray(R.array.id_city)).boxed().collect(Collectors.toList()));
-                fragmentChoiceCity = new FragmentChoiceCity();
+                fragmentChoiceCity = FragmentChoiceCity.create(cityList);
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).addToBackStack("").commit();
                 return true;
             case R.id.info:
@@ -136,5 +150,40 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
 
     private void showSnackbar(City city, String msg) {
         Snackbar.make(findViewById(R.id.fragment_container), msg + city.getName(), Snackbar.LENGTH_LONG).setDuration(3000).show();
+    }
+
+    @Override
+    public void callingBackCity(City city, String status) {
+        if (Logger.VERBOSE) {
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackCity(): " + status + " " + (city != null));
+        }
+        if (status.equals(Constants.FAIL_CONNECTION)){
+            showDialogError(status);
+        } else if(city != null){
+            currentCity = city;
+            if (fragmentShowWeatherInCity.isResumed()){
+                fragmentShowWeatherInCity.showWeatherInCity(city);
+            }
+        }
+    }
+
+    @Override
+    public void callingBackListCity(List<City> cityList, String status) {
+        if (Logger.VERBOSE) {
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackListCity(): " + status + " " + (cityList != null));
+        }
+        if (status.equals(Constants.FAIL_CONNECTION)){
+            showDialogError(status);
+        } else if(cityList != null){
+            this.cityList = cityList;
+            if (fragmentChoiceCity != null && fragmentChoiceCity.isResumed()){
+                fragmentChoiceCity.showListCities(cityList);
+            }
+        }
+    }
+
+    private void showDialogError(String status){
+        DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
+        dialogFragmentInfo.show(getSupportFragmentManager(), "dialogError" );
     }
 }

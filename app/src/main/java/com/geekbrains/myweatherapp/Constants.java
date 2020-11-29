@@ -19,5 +19,6 @@ class Constants {
     static final String COORD_LON = "&lon=";
     static final String ID_CITY = "id=";
 
-    static final String FAIL_CONNECTION = "Fail connection";
+    static final String FAIL_CONNECTION = "fail connection";
+    static final String CONNECTION = "connection";
 }

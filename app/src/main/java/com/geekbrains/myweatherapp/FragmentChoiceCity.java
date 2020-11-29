@@ -14,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -32,7 +33,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class FragmentChoiceCity extends Fragment implements ResultRequestCallback{
+public class FragmentChoiceCity extends Fragment {
 //интерфейс для подписчиков на фрагмент ////////////////////////////////////////////////////////////
     public void setCallback(OnSelectedCityListener callback) {
         this.callback = callback;
@@ -42,35 +43,65 @@ public class FragmentChoiceCity extends Fragment implements ResultRequestCallbac
         void onCitySelected(City city);
     }
 
-    @Override
-    public void callingBackCity(City city, String status) {
+//    @Override
+//    public void callingBackData(City city, List<City> cityList, String status) {
+//        if (cityList == null){
+//            if (Logger.VERBOSE) {
+//                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackData(): " + status);
+//            }
+//            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
+//            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
+//        } else {
+//            this.cityList = cityList;
+//            getActivity().runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    showListCities(cityList);
+//                }
+//            });
+//        }
+//    }
 
-    }
 
-    @Override
-    public void callingBackArrayCities(List<City> cities, String status) {
-        if (cities == null){
-            if (Logger.VERBOSE) {
-                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackArrayCities(): " + status);
-            }
-            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
-            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
-        } else {
-            cityList = cities;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    showListCities(cities);
-                }
-            });
-        }
-    }
+//    @Override
+//    public void callingBackCity(City city, String status) {
+//
+//    }
+//
+//    @Override
+//    public void callingBackArrayCities(List<City> cities, String status) {
+//        if (cities == null){
+//            if (Logger.VERBOSE) {
+//                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackArrayCities(): " + status);
+//            }
+//            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
+//            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
+//        } else {
+//            cityList = cities;
+//            getActivity().runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    showListCities(cities);
+//                }
+//            });
+//        }
+//    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private List<City> cityList;
+    private static List<City> cities;
     private MyRVAdapter myRVAdapter;
     private RecyclerView rvSites;
     private TextInputEditText choiceCityName;
+
+    static FragmentChoiceCity create(List<City> cityList){
+
+        if (cityList == null){
+            cities = new ArrayList<City>(Collections.singleton(new City(0, "?", 0, 0, 0, 0, null, R.drawable.ic_sun_svg)));
+        } else {
+            cities = cityList;
+        }
+        return new FragmentChoiceCity();
+    }
 
     @Nullable
     @Override
@@ -87,16 +118,16 @@ public class FragmentChoiceCity extends Fragment implements ResultRequestCallbac
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onViewCreated");
         }
-        WorkNetHandler.registerObserverCallback(this);
+        //WorkNetHandler.registerObserverCallback(this);
 //RecyclerView необходим менеджер компоновки для управления позиционированием своих элементов
         rvSites = view.findViewById(R.id.recyclerView_cities);
         choiceCityName = view.findViewById(R.id.choice_city_name);
 
-        showListCities(cityList);
+        showListCities(cities);
     }
 
-    private void showListCities(List<City> cities){
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+    void showListCities(List<City> cities){
+        LinearLayoutManager llm = new LinearLayoutManager((AppCompatActivity) rvSites.getContext());
         rvSites.setLayoutManager(llm);
 //определяем данные для заполнения rvSites
         if (cities == null){
@@ -108,6 +139,7 @@ public class FragmentChoiceCity extends Fragment implements ResultRequestCallbac
         rvSites.setAdapter(myRVAdapter);
 
         choiceCityName.setFreezesText(false);
+        List<City> finalCities = cities;
         choiceCityName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -119,7 +151,7 @@ public class FragmentChoiceCity extends Fragment implements ResultRequestCallbac
                 if (Logger.VERBOSE) {
                     Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate() - myAutoCompleteTextView: s = " + s.toString());
                 }
-                MyRVAdapter localAdapter = new MyRVAdapter(cityList.stream().filter(city -> city.getName().toLowerCase().startsWith(s.toString().toLowerCase())).collect(Collectors.toList()));
+                MyRVAdapter localAdapter = new MyRVAdapter(finalCities.stream().filter(city -> city.getName().toLowerCase().startsWith(s.toString().toLowerCase())).collect(Collectors.toList()));
                 rvSites.setAdapter(localAdapter);
             }
 

@@ -11,17 +11,31 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class WorkNetHandler {
+    interface ResultRequestCallback {
+        void callingBackCity(City city, String status);
+        void callingBackListCity(List<City> cityList, String status);
+    }
 
-    private static ResultRequestCallback resultRequestCallback;
-    public static void registerObserverCallback(ResultRequestCallback result){
-        resultRequestCallback = result;
+    private static ArrayList<ResultRequestCallback> callbacks = new ArrayList<>();
+    public static void registerObserverCallback(ResultRequestCallback callback){
+        callbacks.add(callback);
+    }
+
+    void notifyCallBacks(City city, List<City> cityList, String status){
+        for (ResultRequestCallback callback : callbacks) {
+            callback.callingBackCity(city, status);
+            callback.callingBackListCity(cityList, status);
+
+        }
     }
 
     public void getCityWithWeather(int idCity){
@@ -61,12 +75,23 @@ public class WorkNetHandler {
                         result = getLines(in);
                         historyWeatherRequest1 = gson.fromJson(result, HistoryWeatherRequest.class);
 
-                        long currentDate = (historyWeatherRequest1.getHourly()[0].getDt() - historyWeatherRequest1.getTimezone_offset())*1000;
+                        long currentDateCity = (historyWeatherRequest1.getHourly()[0].getDt() + historyWeatherRequest1.getTimezone_offset());
+                        long currentDateUTC = (historyWeatherRequest1.getHourly()[0].getDt());
+                        String timeZone = historyWeatherRequest1.getTimezone();
                         double currentTemp = historyWeatherRequest1.getHourly()[0].getTemp();
                         int currentPressure = historyWeatherRequest1.getHourly()[0].getPressure();
                         int currentHumidity = historyWeatherRequest1.getHourly()[0].getHumidity();
+                        if (Logger.VERBOSE){
+                            Log.v(Logger.TAG, this.getClass().getSimpleName() + " getCityWithWeather():" + "\n" +
+                                    "   cityName = " + cityName + "\n" +
+                                    "   timeZone = " + timeZone + "\n" +
+                                    "   Timezone_offset = " + historyWeatherRequest1.getTimezone_offset() + "\n" +
+                                    "   currentDateCity = " + new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date(currentDateCity*1000))
+                            );
+                        }
 
-                        URL uri3 = new URL(Constants.START_FOR_URL_ONECALL_TIMEMACHINE + Constants.COORD_LAT + lat + Constants.COORD_LON + lon  + Constants.MIDDLE_FOR_URL_ONECALL_TIMEMACHINE + currentDate/1000 + Constants.END_FOR_ALL_URL + BuildConfig.WEATHER_API_KEY);
+
+                        URL uri3 = new URL(Constants.START_FOR_URL_ONECALL_TIMEMACHINE + Constants.COORD_LAT + lat + Constants.COORD_LON + lon  + Constants.MIDDLE_FOR_URL_ONECALL_TIMEMACHINE + currentDateUTC + Constants.END_FOR_ALL_URL + BuildConfig.WEATHER_API_KEY);
                         httpsURLConnection = (HttpsURLConnection)uri3.openConnection();
                         httpsURLConnection.setRequestMethod("GET");
                         httpsURLConnection.setReadTimeout(5000);
@@ -83,12 +108,11 @@ public class WorkNetHandler {
                             tempForDate.add(historyWeatherRequest1.getHourly()[i].getTemp());
                         }
 
-                        City city = new City(0, cityName, currentDate, currentTemp, currentPressure, currentHumidity, tempForDate, R.drawable.ic_sun_svg);
-                        resultRequestCallback.callingBackCity(city, "OK");
+                        City city = new City(0, cityName, currentDateCity, currentTemp, currentPressure, currentHumidity, tempForDate, R.drawable.ic_sun_svg);
+                        notifyCallBacks(city, null,"OK");
                     } catch (IOException e) {
                         Log. e ( Logger.TAG , Constants.FAIL_CONNECTION, e);
-                        resultRequestCallback.callingBackCity(null, Constants.FAIL_CONNECTION);
-                        e.printStackTrace();
+                        printException(e);
                     } finally {
                         if (httpsURLConnection != null) {
                             httpsURLConnection.disconnect();
@@ -130,12 +154,9 @@ public class WorkNetHandler {
 
                             cities.add(new City(id, cityName, 0, currentTemp, 0, 0, null, R.drawable.ic_sun_svg));
 
-                            resultRequestCallback.callingBackArrayCities(cities, "OK");
-
                         } catch (IOException e) {
                             Log.e(Logger.TAG, Constants.FAIL_CONNECTION, e);
-                            resultRequestCallback.callingBackArrayCities(null, Constants.FAIL_CONNECTION);
-                            e.printStackTrace();
+                            printException(e);
                         } finally {
                             if (httpsURLConnection != null) {
                                 httpsURLConnection.disconnect();
@@ -147,6 +168,12 @@ public class WorkNetHandler {
                 e.printStackTrace();
             }
         }
+        notifyCallBacks(null, cities, "OK");
+    }
+
+    private void printException(IOException e) {
+        notifyCallBacks(null, null, Constants.FAIL_CONNECTION);
+        e.printStackTrace();
     }
 
     private String getLines(BufferedReader in){
