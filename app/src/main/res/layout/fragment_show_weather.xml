@@ -8,20 +8,21 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
-        android:layout_height="210dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/tv_current_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNameCites"
-        app:srcCompat="@drawable/ic_sun_svg"
-        tools:srcCompat="@drawable/ic_sun_svg" />
+        app:srcCompat="@drawable/ic_noimages_svg"
+        tools:srcCompat="@drawable/ic_noimages_svg" />
 
     <TextView
         android:id="@+id/tvNameCites"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:gravity="left"
         android:text="@string/no_name"
         android:textAlignment="center"
@@ -86,6 +87,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:text="мм р.с."
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toStartOf="@+id/imageView" />
@@ -94,6 +96,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="Вл. в %"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintStart_toEndOf="@+id/imageView" />

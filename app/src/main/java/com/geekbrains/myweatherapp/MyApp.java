@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +20,7 @@ public class MyApp extends Application {
     private static MyApp INSTANCE;
     private Storage storage = new Storage();
     private String unitTemp;
+    private HashMap<String, Integer> mapImages;
 
 
     @Override
@@ -30,6 +33,7 @@ public class MyApp extends Application {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
         unitTemp = getUnit();
+        mapImages = initMap();
 
     }
 
@@ -64,5 +68,28 @@ public class MyApp extends Application {
     }
 
     private int IDdefaultCity = 524894;
+
+    private HashMap<String, Integer> initMap(){
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("01d", R.drawable.ic_01d);
+        map.put("01n", R.drawable.ic_01n);
+        map.put("02d", R.drawable.ic_02d);
+        map.put("02n", R.drawable.ic_02n);
+        map.put("03d", R.drawable.ic_03d);
+        map.put("03n", R.drawable.ic_03d);
+        map.put("04d", R.drawable.ic_04d);
+        map.put("04n", R.drawable.ic_04d);
+        map.put("09d", R.drawable.ic_09d);
+        map.put("09n", R.drawable.ic_09d);
+        map.put("10d", R.drawable.ic_10d);
+        map.put("10n", R.drawable.ic_10n);
+        map.put("11d", R.drawable.ic_11d);
+        map.put("11n", R.drawable.ic_11d);
+        map.put("13d", R.drawable.ic_13d);
+        map.put("13n", R.drawable.ic_13d);
+        map.put("50d", R.drawable.ic_50d);
+        map.put("50n", R.drawable.ic_50d);
+        return map;
+    }
 
 }

@@ -22,10 +22,12 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand + "\n" +
                     "fragmentShowWeatherInCity = " + (fragmentShowWeatherInCity != null) + "\n" +

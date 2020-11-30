@@ -21,10 +21,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class FragmentShowWeatherInCity extends Fragment {
@@ -42,6 +45,7 @@ public class FragmentShowWeatherInCity extends Fragment {
     private MyRVAdapterHorizontal myRVAdapterHorizontal;
     private RecyclerView rvTempHourHorizontal;
     private TextView tvCurrentDate;
+    private HashMap<String, Integer> mapImages;
 
     @NonNull
     public FragmentShowWeatherInCity create(City city){
@@ -113,7 +117,8 @@ public class FragmentShowWeatherInCity extends Fragment {
                     tvHumidityCites.setText(String.valueOf(city.getHumidity()));
                     LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
                     myRVAdapterHorizontal = new MyRVAdapterHorizontal(city);
-                    imageViewWeatherCites.setImageResource(city.getImageWeatherID());
+                    imageViewWeatherCites.setImageResource(MyApp.getINSTANCE().getMapImages().get(city.getIcon()));
+                    //Picasso.get().load(Constants.START_URL_FOR_DOWNLOAD_ICON + city.getIcon() + Constants.END_URL_FOR_DOWNLOAD_ICON).into(imageViewWeatherCites);
                     if (!MainActivity.orientationIsLand){
                         rvTempHourHorizontal.setLayoutManager(llmHorizontal);
                         rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);

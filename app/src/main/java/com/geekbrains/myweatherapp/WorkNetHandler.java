@@ -45,6 +45,8 @@ public class WorkNetHandler {
 
         }
     }
+
+    private String iconImageWeather;
     //запрос подробной информации о погоде в городе по ID
     public void getCityWithWeather(int idCity){
         if (Logger.VERBOSE){
