@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -55,7 +57,8 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
         citesViewHolder.citesName.setText(cites.get(position).getName());
         citesViewHolder.citesTemp.setText(String.valueOf(Math.round(cites.get(position).getCurrentTemp())));
         citesViewHolder.unit.setText(MyApp.getINSTANCE().getUnitTemp());
-        citesViewHolder.citesWeather.setImageResource(cites.get(position).getImageWeatherID());
+        //citesViewHolder.citesWeather.setImageResource(cites.get(position).getImageWeatherID());
+        Picasso.get().load(Constants.START_URL_FOR_DOWNLOAD_ICON + cites.get(position).getIcon() + Constants.END_URL_FOR_DOWNLOAD_ICON).into(citesViewHolder.citesWeather);
 
         final int localPos = position;
 

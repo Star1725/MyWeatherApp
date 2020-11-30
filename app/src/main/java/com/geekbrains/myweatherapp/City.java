@@ -24,6 +24,7 @@ public class City implements Parcelable {
     private int pressure;
     private int humidity;
     private List<Double> TempForDate;
+    private String icon;
     private int imageWeatherID;
 
     protected City(Parcel in) {
@@ -34,6 +35,7 @@ public class City implements Parcelable {
         pressure = in.readInt();
         humidity = in.readInt();
         TempForDate = (List<Double>) in.readSerializable();
+        icon = name = in.readString();
         imageWeatherID = in.readInt();
     }
 
@@ -63,6 +65,7 @@ public class City implements Parcelable {
         dest.writeInt(pressure);
         dest.writeInt(humidity);
         dest.writeSerializable((Serializable) TempForDate);
+        dest.writeString(icon);
         dest.writeInt(imageWeatherID);
     }
 }

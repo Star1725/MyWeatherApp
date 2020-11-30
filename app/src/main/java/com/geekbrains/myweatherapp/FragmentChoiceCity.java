@@ -51,7 +51,7 @@ public class FragmentChoiceCity extends Fragment {
 
     static FragmentChoiceCity create(List<City> cityList){
         if (cityList == null){
-            cities = new ArrayList<City>(Collections.singleton(new City(0, "?", 0, 0, 0, 0, null, R.drawable.ic_sun_svg)));
+            cities = new ArrayList<City>(Collections.singleton(new City(0, "?", 0, 0, 0, 0, null, "?", R.drawable.ic_sun_svg)));
         } else {
             cities = cityList;
         }
@@ -89,7 +89,7 @@ public class FragmentChoiceCity extends Fragment {
 
     void showListCities(List<City> cities){
         if (cities == null){
-            cities = new ArrayList<City>(Collections.singleton(new City(0, "?", 0, 0, 0, 0, null, R.drawable.ic_sun_svg)));
+            cities = new ArrayList<City>(Collections.singleton(new City(0, "?", 0, 0, 0, 0, null, "?", R.drawable.ic_sun_svg)));
         }
 
         List<City> finalCities = cities;
