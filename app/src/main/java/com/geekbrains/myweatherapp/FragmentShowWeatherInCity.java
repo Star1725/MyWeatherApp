@@ -153,37 +153,4 @@ public class FragmentShowWeatherInCity extends Fragment {
             showWeatherInCity(currentCity);
         }
     }
-
-//    @Override
-//    public void callingBackCity(City city, String status) {
-//        if (city == null){
-//            if (Logger.VERBOSE) {
-//                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBack(): " + status);
-//            }
-//            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
-//            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
-//        } else {
-//            currentCity = city;
-//            showWeatherInCity(city);
-//        }
-//    }
-//
-//    @Override
-//    public void callingBackArrayCities(List<City> cities, String status) {
-//
-//    }
-
-//    @Override
-//    public void callingBackData(City city, List<City> cityList, String status) {
-//        if (city == null){
-//            if (Logger.VERBOSE) {
-//                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackData(): " + status);
-//            }
-//            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
-//            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
-//        } else {
-//            currentCity = city;
-//            showWeatherInCity(city);
-//        }
-//    }
 }

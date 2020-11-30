@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
 
     static boolean orientationIsLand;
     private FragmentChoiceCity fragmentChoiceCity;
-    private List<City> cityList;
+    static List<City> cityList;
     private FragmentShowWeatherInCity fragmentShowWeatherInCity;
     private City currentCity;
     private static WorkNetHandler workNetHandler = new WorkNetHandler();
@@ -47,32 +48,43 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         setContentView(R.layout.activity_main);
         orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (Logger.VERBOSE) {
-            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand);
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand + "\n" +
+                    "fragmentShowWeatherInCity = " + (fragmentShowWeatherInCity != null) + "\n" +
+                    "fragmentChoiceCity = " + (fragmentChoiceCity != null));
         }
-        WorkNetHandler.registerObserverCallback(this);
-        if (currentCity == null){
+        WorkNetHandler.registerObserverCallback(this);//подписываемся на ответы от сервера
+        if (savedInstanceState == null){
+            //делаем запросы на сервер, чтобы получить погоду в дефотном городе и список городов с текущими температурами
             workNetHandler.getCityWithWeather(MyApp.getINSTANCE().getIDdefaultCity());
+            workNetHandler.getListCitiesWithTemp(Arrays.stream(getResources().getIntArray(R.array.id_city)).boxed().collect(Collectors.toList()));
         } else {
-            workNetHandler.getCityWithWeather(currentCity.getId());
+            currentCity = savedInstanceState.getParcelable(Constants.CITY_EXTRA);
         }
-        workNetHandler.getListCitiesWithTemp(Arrays.stream(getResources().getIntArray(R.array.id_city)).boxed().collect(Collectors.toList()));
+        //в портретной ориентации начальный фрагмент - fragmentShowWeatherInCity
         if (!orientationIsLand) {
-
             if (fragmentShowWeatherInCity == null){
                 fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
-
+        //в горизонтальной ориентации начальный экран - два фрагмента (FragmentShowWeatherInCity - динамический и FragmentChoiceCity - статический)
         } else {
+            //находим динамический контейнер
             Fragment weatherInCity = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            //создаём fragmentShowWeatherInCity
             if (fragmentShowWeatherInCity == null) {
                 fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
             }
+            //проверяем динамический контейнер, если он пустой или содержит другой фрагмент
             if (!(weatherInCity instanceof FragmentShowWeatherInCity)){
                 weatherInCity = fragmentShowWeatherInCity;
             }
+            //через транзакцию заменяем фрагмент
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, weatherInCity);
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+            //для статического фрагмента загружаем список городов
+            if (fragmentChoiceCity != null){
+                fragmentChoiceCity.showListCities(cityList);
+            }
         }
     }
 //подписка на фрагменты ////////////////////////////////////////////////////////////////////////////
@@ -95,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        outState.putParcelable(Constants.CITY_EXTRA, currentCity);
     }
 
     // методы меню//////////////////////////////////////////////////////////////////////////////////////
@@ -118,8 +130,11 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                 startActivity(intent1);
                 return true;
             case R.id.choices_city:
-                fragmentChoiceCity = FragmentChoiceCity.create(cityList);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).addToBackStack("").commit();
+                Fragment weatherFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                if (!(weatherFragment instanceof FragmentChoiceCity)){
+                    fragmentChoiceCity = FragmentChoiceCity.create(cityList);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).addToBackStack("").commit();
+                }
                 return true;
             case R.id.info:
                 DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(getString(R.string.about));
@@ -134,12 +149,8 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCitySelected(): city = " + city.getName());
         }
         if (orientationIsLand) {
-            fragmentShowWeatherInCity = (FragmentShowWeatherInCity) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-            if (fragmentShowWeatherInCity != null){
                 workNetHandler.getCityWithWeather(city.getId());
-                //fragmentShowWeatherInCity.showWeatherInCity(city);
                 showSnackbar(city, "Вы выбрали ");
-            }
         } else {
             workNetHandler.getCityWithWeather(city.getId());
             fragmentShowWeatherInCity.create(null);

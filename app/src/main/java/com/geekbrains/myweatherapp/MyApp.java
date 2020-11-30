@@ -15,10 +15,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MyApp extends Application {
-    private static final String TAG = "myLog";
     private static MyApp INSTANCE;
     private Storage storage = new Storage();
-    private String unitTemp = "\u2103";
+    private String unitTemp;
 
 
     @Override

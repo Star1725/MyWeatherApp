@@ -2,6 +2,7 @@ package com.geekbrains.myweatherapp;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -43,58 +44,12 @@ public class FragmentChoiceCity extends Fragment {
         void onCitySelected(City city);
     }
 
-//    @Override
-//    public void callingBackData(City city, List<City> cityList, String status) {
-//        if (cityList == null){
-//            if (Logger.VERBOSE) {
-//                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackData(): " + status);
-//            }
-//            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
-//            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
-//        } else {
-//            this.cityList = cityList;
-//            getActivity().runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    showListCities(cityList);
-//                }
-//            });
-//        }
-//    }
-
-
-//    @Override
-//    public void callingBackCity(City city, String status) {
-//
-//    }
-//
-//    @Override
-//    public void callingBackArrayCities(List<City> cities, String status) {
-//        if (cities == null){
-//            if (Logger.VERBOSE) {
-//                Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackArrayCities(): " + status);
-//            }
-//            DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
-//            dialogFragmentInfo.show(getActivity().getSupportFragmentManager(), "dialogError" );
-//        } else {
-//            cityList = cities;
-//            getActivity().runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    showListCities(cities);
-//                }
-//            });
-//        }
-//    }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
     private static List<City> cities;
     private MyRVAdapter myRVAdapter;
     private RecyclerView rvSites;
     private TextInputEditText choiceCityName;
 
     static FragmentChoiceCity create(List<City> cityList){
-
         if (cityList == null){
             cities = new ArrayList<City>(Collections.singleton(new City(0, "?", 0, 0, 0, 0, null, R.drawable.ic_sun_svg)));
         } else {
@@ -118,7 +73,13 @@ public class FragmentChoiceCity extends Fragment {
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onViewCreated");
         }
-        //WorkNetHandler.registerObserverCallback(this);
+        if (cities == null){
+            cities = new ArrayList<>();
+        }
+
+        if (savedInstanceState != null){
+            cities = savedInstanceState.getParcelableArrayList(Constants.CITIES_EXTRA);
+        }
 //RecyclerView необходим менеджер компоновки для управления позиционированием своих элементов
         rvSites = view.findViewById(R.id.recyclerView_cities);
         choiceCityName = view.findViewById(R.id.choice_city_name);
@@ -127,39 +88,42 @@ public class FragmentChoiceCity extends Fragment {
     }
 
     void showListCities(List<City> cities){
-        LinearLayoutManager llm = new LinearLayoutManager((AppCompatActivity) rvSites.getContext());
-        rvSites.setLayoutManager(llm);
-//определяем данные для заполнения rvSites
         if (cities == null){
             cities = new ArrayList<City>(Collections.singleton(new City(0, "?", 0, 0, 0, 0, null, R.drawable.ic_sun_svg)));
         }
 
-//создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites
-        myRVAdapter = new MyRVAdapter(cities);
-        rvSites.setAdapter(myRVAdapter);
-
-        choiceCityName.setFreezesText(false);
         List<City> finalCities = cities;
-        choiceCityName.addTextChangedListener(new TextWatcher() {
+        ((AppCompatActivity) rvSites.getContext()).runOnUiThread(new Runnable() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void run() {
+                LinearLayoutManager llm = new LinearLayoutManager((AppCompatActivity) rvSites.getContext());
+                rvSites.setLayoutManager(llm);
+//создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites
+                myRVAdapter = new MyRVAdapter(finalCities);
+                rvSites.setAdapter(myRVAdapter);
 
-            }
+                choiceCityName.setFreezesText(false);
+                choiceCityName.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (Logger.VERBOSE) {
-                    Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate() - myAutoCompleteTextView: s = " + s.toString());
-                }
-                MyRVAdapter localAdapter = new MyRVAdapter(finalCities.stream().filter(city -> city.getName().toLowerCase().startsWith(s.toString().toLowerCase())).collect(Collectors.toList()));
-                rvSites.setAdapter(localAdapter);
-            }
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (Logger.VERBOSE) {
+                            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate() - myAutoCompleteTextView: s = " + s.toString());
+                        }
+                        MyRVAdapter localAdapter = new MyRVAdapter(finalCities.stream().filter(city -> city.getName().toLowerCase().startsWith(s.toString().toLowerCase())).collect(Collectors.toList()));
+                        rvSites.setAdapter(localAdapter);
+                    }
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
+                    }
+                });
             }
         });
+
     }
 
     @Override
@@ -167,5 +131,11 @@ public class FragmentChoiceCity extends Fragment {
         super.onResume();
         //обновление MyRv при изменении градусов на форенгейты и обратно
         myRVAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle saveInstanceState){
+        super .onSaveInstanceState(saveInstanceState);
+        saveInstanceState.putParcelableArrayList(Constants.CITIES_EXTRA, (ArrayList<? extends Parcelable>) cities);
     }
 }

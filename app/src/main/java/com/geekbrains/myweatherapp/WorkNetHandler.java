@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -130,45 +132,59 @@ public class WorkNetHandler {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " getListCitiesWithTemp()");
         }
         List<City> cities = new ArrayList<>();
-        for (int i = 0; i < idCities.size(); i++) {
-            try {
-                final URL uri1 = new URL(Constants.START_FOR_URL_WEATHER + Constants.ID_CITY + idCities.get(i) + Constants.END_FOR_ALL_URL + BuildConfig.WEATHER_API_KEY);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        HttpsURLConnection httpsURLConnection = null;
-                        CurrentWeatherRequest currentWeatherRequest;
-                        try {
-                            httpsURLConnection = (HttpsURLConnection) uri1.openConnection();
-                            httpsURLConnection.setRequestMethod("GET");
-                            httpsURLConnection.setReadTimeout(10000);
-                            BufferedReader in = null;
-                            in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
-                            String result = getLines(in);
-                            in.close();
-                            Gson gson = new Gson();
-                            currentWeatherRequest = gson.fromJson(result, CurrentWeatherRequest.class);
-                            String cityName = currentWeatherRequest.getName();
-                            int id = currentWeatherRequest.getId();
-                            double currentTemp = currentWeatherRequest.getMain().getTemp();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CountDownLatch countDownLatch = new CountDownLatch(idCities.size());
+                for (int i = 0; i < idCities.size(); i++) {
+                    try {
+                        final URL uri1 = new URL(Constants.START_FOR_URL_WEATHER + Constants.ID_CITY + idCities.get(i) + Constants.END_FOR_ALL_URL + BuildConfig.WEATHER_API_KEY);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                HttpsURLConnection httpsURLConnection = null;
+                                CurrentWeatherRequest currentWeatherRequest;
+                                try {
+                                    httpsURLConnection = (HttpsURLConnection) uri1.openConnection();
+                                    httpsURLConnection.setRequestMethod("GET");
+                                    httpsURLConnection.setReadTimeout(10000);
+                                    BufferedReader in = null;
+                                    in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
+                                    String result = getLines(in);
+                                    in.close();
+                                    Gson gson = new Gson();
+                                    currentWeatherRequest = gson.fromJson(result, CurrentWeatherRequest.class);
+                                    String cityName = currentWeatherRequest.getName();
+                                    int id = currentWeatherRequest.getId();
+                                    double currentTemp = currentWeatherRequest.getMain().getTemp();
 
-                            cities.add(new City(id, cityName, 0, currentTemp, 0, 0, null, R.drawable.ic_sun_svg));
-
-                        } catch (IOException e) {
-                            Log.e(Logger.TAG, Constants.FAIL_CONNECTION, e);
-                            printException(e);
-                        } finally {
-                            if (httpsURLConnection != null) {
-                                httpsURLConnection.disconnect();
+                                    cities.add(new City(id, cityName, 0, currentTemp, 0, 0, null, R.drawable.ic_sun_svg));
+                                    countDownLatch.countDown();
+                                } catch (IOException e) {
+                                    Log.e(Logger.TAG, Constants.FAIL_CONNECTION, e);
+                                    printException(e);
+                                } finally {
+                                    if (httpsURLConnection != null) {
+                                        httpsURLConnection.disconnect();
+                                    }
+                                }
                             }
-                        }
+                        }).start();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
                     }
-                }).start();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+                }
+                try {
+                    countDownLatch.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (Logger.VERBOSE){
+                    Log.v(Logger.TAG, this.getClass().getSimpleName() + " getListCitiesWithTemp(): cities.get(0).getName()" + cities.get(0).getName());
+                }
+                notifyCallBacks(null, cities, "OK");
             }
-        }
-        notifyCallBacks(null, cities, "OK");
+        }).start();
     }
 
     private void printException(IOException e) {
