@@ -37,5 +37,6 @@
     <string name="info">info</string>
     <string name="about">Разработчик: Старовойтов Сергей Александрович</string>
     <string name="no_name">\?</string>
+    <string name="dialog_snackbar">\"Вы выбрали \"</string>
 
 </resources>

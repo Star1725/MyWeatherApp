@@ -153,17 +153,12 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         }
         if (orientationIsLand) {
                 workNetHandler.getCityWithWeather(city.getId());
-                showSnackbar(city, "Вы выбрали ");
         } else {
             workNetHandler.getCityWithWeather(city.getId());
             fragmentShowWeatherInCity.create(null);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
-            showSnackbar(city, "Вы выбрали ");
+            Snackbar.make(findViewById(R.id.fragment_container), R.string.dialog_snackbar + city.getName(), Snackbar.LENGTH_LONG).setDuration(3000).show();
         }
-    }
-
-    private void showSnackbar(City city, String msg) {
-        Snackbar.make(findViewById(R.id.fragment_container), msg + city.getName(), Snackbar.LENGTH_LONG).setDuration(3000).show();
     }
 
     @Override
@@ -189,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         if (status.equals(Constants.FAIL_CONNECTION)){
             showDialogError(status);
         } else if(cityList != null){
-            this.cityList = cityList;
+            MainActivity.cityList = cityList;
             if (fragmentChoiceCity != null && fragmentChoiceCity.isResumed()){
                 fragmentChoiceCity.showListCities(cityList);
             }

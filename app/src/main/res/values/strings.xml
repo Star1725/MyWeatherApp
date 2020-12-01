@@ -64,8 +64,9 @@
     <string name="city">Choice City</string>
     <string name="current_time">current time</string>
     <string name="info">info</string>
-    <string name="about">Разработчик: Старовойтов Сергей Александрович</string>
+    <string name="about">Developer: Starovoytov Sergey</string>
     <string name="no_name">\?</string>
+    <string name="dialog_snackbar">\"You choosed \"</string>
 
 
 </resources>
