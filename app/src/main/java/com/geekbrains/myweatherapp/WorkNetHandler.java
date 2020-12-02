@@ -153,7 +153,7 @@ public class WorkNetHandler {
         if (Logger.VERBOSE){
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " getListCitiesWithTemp()");
         }
-        List<City> cities = new ArrayList<>();
+        List<City> cities = new CopyOnWriteArrayList<>();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -180,6 +180,14 @@ public class WorkNetHandler {
                                     int id = currentWeatherRequest.getId();
                                     double currentTemp = currentWeatherRequest.getMain().getTemp();
                                     String weatherIcon = currentWeatherRequest.getWeather()[0].getIcon();
+
+                                    if (Logger.VERBOSE){
+                                        Log.v(Logger.TAG, this.getClass().getSimpleName() + " getCityWithWeather():" + "\n" +
+                                                "   cityName = " + cityName + "\n" +
+                                                "   weatherIcon = " + weatherIcon +
+                                                "   currentTemp = " + currentTemp
+                                        );
+                                    }
 
                                     cities.add(new City(id, cityName, 0, currentTemp, 0, 0, null, weatherIcon, R.drawable.ic_sun_svg));
                                     countDownLatch.countDown();
