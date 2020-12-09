@@ -1,7 +1,6 @@
 package com.geekbrains.myweatherapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -9,25 +8,17 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.geekbrains.myweatherapp.fragments.FragmentChoiceCity;
+import com.geekbrains.myweatherapp.fragments.FragmentShowWeatherInCity;
+import com.geekbrains.myweatherapp.fragments.MyDialogFragment;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.nio.DoubleBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +28,7 @@ import lombok.Getter;
 public class MainActivity extends AppCompatActivity implements FragmentChoiceCity.OnSelectedCityListener, WorkNetHandler.ResultRequestCallback{
     private final static int REQUEST_CODE = 1;
 
-    static boolean orientationIsLand;
+    public static boolean orientationIsLand;
     private FragmentChoiceCity fragmentChoiceCity;
     static List<City> cityList;
     private FragmentShowWeatherInCity fragmentShowWeatherInCity;

@@ -1,25 +1,21 @@
-package com.geekbrains.myweatherapp;
+package com.geekbrains.myweatherapp.adapters;
 
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import com.geekbrains.myweatherapp.City;
+import com.geekbrains.myweatherapp.MyApp;
+import com.geekbrains.myweatherapp.R;
+
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import lombok.AllArgsConstructor;
 

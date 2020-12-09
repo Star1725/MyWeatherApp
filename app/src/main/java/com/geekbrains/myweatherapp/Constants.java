@@ -1,9 +1,9 @@
 package com.geekbrains.myweatherapp;
 
-class Constants {
-    static final String CITY_EXTRA = "city_extra";
-    static final String CITIES_EXTRA = "cities_extra";
-    static final String INFO = "info";
+public class Constants {
+    public static final String CITY_EXTRA = "city_extra";
+    public static final String CITIES_EXTRA = "cities_extra";
+    public static final String INFO = "info";
 
     static final String NAME_SHARED_PREFERENCE = "MyAppPreference";
     static final String IS_LIGHT_THEME = "IsLightTheme";
@@ -31,8 +31,8 @@ class Constants {
     static final String UNITS = "&units=metric";
 
     //http://openweathermap.org/img/wn/10d@2x.png
-    static final String START_URL_FOR_DOWNLOAD_ICON = "http://openweathermap.org/img/wn/";
-    static final String END_URL_FOR_DOWNLOAD_ICON = "@2x.png";
+    public static final String START_URL_FOR_DOWNLOAD_ICON = "http://openweathermap.org/img/wn/";
+    public static final String END_URL_FOR_DOWNLOAD_ICON = "@2x.png";
     //URL = START_URL_FOR_DOWNLOAD_ICON + icon + END_URL_FOR_DOWNLOAD_ICON (icon - String)
 
 

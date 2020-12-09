@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/cities"
-        android:name="com.geekbrains.myweatherapp.FragmentChoiceCity"
+        android:name="com.geekbrains.myweatherapp.fragments.FragmentChoiceCity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1" />

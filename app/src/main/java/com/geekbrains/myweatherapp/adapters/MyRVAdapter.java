@@ -1,4 +1,4 @@
-package com.geekbrains.myweatherapp;
+package com.geekbrains.myweatherapp.adapters;
 
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
@@ -11,6 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.geekbrains.myweatherapp.City;
+import com.geekbrains.myweatherapp.Constants;
+import com.geekbrains.myweatherapp.MyApp;
+import com.geekbrains.myweatherapp.R;
+import com.geekbrains.myweatherapp.fragments.FragmentChoiceCity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

@@ -1,34 +1,32 @@
-package com.geekbrains.myweatherapp;
+package com.geekbrains.myweatherapp.fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.geekbrains.myweatherapp.City;
+import com.geekbrains.myweatherapp.Constants;
+import com.geekbrains.myweatherapp.Logger;
+import com.geekbrains.myweatherapp.MainActivity;
+import com.geekbrains.myweatherapp.MyApp;
+import com.geekbrains.myweatherapp.adapters.MyRVAdapterHorizontal;
+import com.geekbrains.myweatherapp.R;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 public class FragmentShowWeatherInCity extends Fragment {
 
@@ -100,7 +98,7 @@ public class FragmentShowWeatherInCity extends Fragment {
         }
     }
 
-    void showWeatherInCity(City city) {
+    public void showWeatherInCity(City city) {
         currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
 
         if (city != null){
@@ -141,7 +139,7 @@ public class FragmentShowWeatherInCity extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle saveInstanceState){
         super .onSaveInstanceState(saveInstanceState);
-        if (Logger.VERBOSE) {
+        if (Logger.VERBOSE && currentCity != null) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onSaveInstanceState(): city = " + currentCity.getName());
         }
         saveInstanceState.putParcelable(Constants.CITY_EXTRA, currentCity);

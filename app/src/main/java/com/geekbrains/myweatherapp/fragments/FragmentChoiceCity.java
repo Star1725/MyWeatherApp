@@ -1,6 +1,5 @@
-package com.geekbrains.myweatherapp;
+package com.geekbrains.myweatherapp.fragments;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
@@ -9,29 +8,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.geekbrains.myweatherapp.City;
+import com.geekbrains.myweatherapp.Constants;
+import com.geekbrains.myweatherapp.Logger;
+import com.geekbrains.myweatherapp.adapters.MyRVAdapter;
+import com.geekbrains.myweatherapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class FragmentChoiceCity extends Fragment {
@@ -39,7 +33,7 @@ public class FragmentChoiceCity extends Fragment {
     public void setCallback(OnSelectedCityListener callback) {
         this.callback = callback;
     }
-    OnSelectedCityListener callback;
+    public OnSelectedCityListener callback;
     public interface OnSelectedCityListener{
         void onCitySelected(City city);
     }
@@ -49,7 +43,7 @@ public class FragmentChoiceCity extends Fragment {
     private RecyclerView rvSites;
     private TextInputEditText choiceCityName;
 
-    static FragmentChoiceCity create(List<City> cityList){
+    public static FragmentChoiceCity create(List<City> cityList){
         if (cityList == null){
             cities = new ArrayList<City>(Collections.singleton(new City(0, "?", 0, 0, 0, 0, null, "?", R.drawable.ic_sun_svg)));
         } else {
@@ -87,7 +81,7 @@ public class FragmentChoiceCity extends Fragment {
         showListCities(cities);
     }
 
-    void showListCities(List<City> cities){
+    public void showListCities(List<City> cities){
         if (cities == null){
             cities = new ArrayList<City>(Collections.singleton(new City(0, "?", 0, 0, 0, 0, null, "?", R.drawable.ic_sun_svg)));
         }
