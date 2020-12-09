@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        Toolbar toolbar = initToolbar();
+        initDrawer(toolbar);
 
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand + "\n" +
@@ -89,6 +91,13 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             }
         }
     }
+
+    private Toolbar initToolbar(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        return toolbar;
+    }
+
 //подписка на фрагменты ////////////////////////////////////////////////////////////////////////////
     @Override
     public void onAttachFragment(@NonNull Fragment fragment) {
