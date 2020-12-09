@@ -24,6 +24,7 @@ import com.geekbrains.myweatherapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -130,6 +131,7 @@ public class FragmentChoiceCity extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle saveInstanceState){
         super .onSaveInstanceState(saveInstanceState);
-        saveInstanceState.putParcelableArrayList(Constants.CITIES_EXTRA, (ArrayList<? extends Parcelable>) cities);
+        saveInstanceState.putParcelableArrayList(Constants.CITIES_EXTRA, new ArrayList<>(cities));
+
     }
 }
