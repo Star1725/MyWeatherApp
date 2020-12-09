@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -127,6 +128,21 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             getMenuInflater().inflate(R.menu.menu_main_land, menu);
         } else {
             getMenuInflater().inflate(R.menu.menu_main, menu);
+            MenuItem search = menu.findItem(R.id.action_search);
+            final SearchView searchView = (SearchView) search.getActionView();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    Snackbar.make(searchView, query, Snackbar.LENGTH_LONG).show();
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    Snackbar.make(searchView, newText, Snackbar.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
         }
         return true;
     }
