@@ -69,4 +69,24 @@
     <string name="dialog_snackbar">\"You choosed \"</string>
 
 
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="add">Add</string >
+    <string name="update">Update</string >
+    <string name="remove">Remove</string >
+    <string name="clear">Clear</string >
+    <string name="search">Search</string >
+
+    <string name="menu_tools">Tools</string >
+    <string name="menu_share">Share</string >
+    <string name="menu_send">Send</string >
+    <string name="menu_search">Search</string >
+
+    <string name="home_second">Home Second</string>
+    <string name="custom_item_data">Элемент %d</string>
+
+
 </resources>
