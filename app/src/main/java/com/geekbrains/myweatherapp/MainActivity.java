@@ -15,18 +15,23 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.geekbrains.myweatherapp.fragments.FragmentChoiceCity;
+import com.geekbrains.myweatherapp.fragments.FragmentHistoryCity;
 import com.geekbrains.myweatherapp.fragments.FragmentShowWeatherInCity;
 import com.geekbrains.myweatherapp.fragments.MyDialogFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -34,12 +39,14 @@ import lombok.Getter;
 @Getter
 public class MainActivity extends AppCompatActivity implements FragmentChoiceCity.OnSelectedCityListener,
         WorkNetHandler.ResultRequestCallback,
-        NavigationView.OnNavigationItemSelectedListener{
+        NavigationView.OnNavigationItemSelectedListener, FragmentHistoryCity.OnSelectedCityListener {
     private final static int REQUEST_CODE = 1;
 
     public static boolean orientationIsLand;
     private FragmentChoiceCity fragmentChoiceCity;
     static List<City> cityList;
+    private FragmentHistoryCity fragmentHistoryCity;
+    static Set<City> historyCitiesSet;
     private FragmentShowWeatherInCity fragmentShowWeatherInCity;
     private City currentCity;
     private static WorkNetHandler workNetHandler = new WorkNetHandler();
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         Toolbar toolbar = initToolbar();
         initDrawer(toolbar);
+        historyCitiesSet = new LinkedHashSet<>();
 
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand + "\n" +
@@ -90,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             if (fragmentChoiceCity != null){
                 fragmentChoiceCity.showListCities(cityList);
             }
+            if (fragmentHistoryCity != null){
+                fragmentHistoryCity.showListCities(historyCitiesSet);
+            }
         }
     }
 
@@ -113,6 +124,12 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             if (Logger.VERBOSE) {
                 Log.v(Logger.TAG, this.getClass().getSimpleName() + " onAttachFragment(): подписка на fragmentShowWeatherInCity");
             }
+        } else if (fragment instanceof FragmentHistoryCity) {
+            fragmentHistoryCity = (FragmentHistoryCity) fragment;
+            if (Logger.VERBOSE) {
+                Log.v(Logger.TAG, this.getClass().getSimpleName() + " onAttachFragment(): подписка на fragmentChoiceCity");
+            }
+            fragmentHistoryCity.setCallback(this);
         }
     }
 
@@ -120,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(Constants.CITY_EXTRA, currentCity);
+        outState.putParcelable(Constants.SET_HISTORY, (Parcelable) historyCitiesSet);
     }
 ////// методы меню//////////////////////////////////////////////////////////////////////////////////////
     @Override
@@ -155,13 +173,6 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                 Intent intent1 = new Intent(MainActivity.this, SettingActivity.class);
                 startActivity(intent1);
                 return true;
-            case R.id.choices_city:
-                Fragment weatherFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                if (!(weatherFragment instanceof FragmentChoiceCity)){
-                    fragmentChoiceCity = FragmentChoiceCity.create(cityList);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).addToBackStack("").commit();
-                }
-                return true;
             case R.id.info:
                 DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(getString(R.string.about));
                 dialogFragmentInfo.show(getSupportFragmentManager(), "dialogInfo" );
@@ -183,20 +194,28 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.nav_gallery:
-
+            case R.id.nav_weather_in_city:
+                Fragment weatherFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                if (!(weatherFragment instanceof FragmentShowWeatherInCity)){
+                    if (fragmentShowWeatherInCity == null) {
+                        fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
+                    }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).addToBackStack("").commit();
+                }
                 return true;
-            case R.id.nav_home:
-
+            case R.id.nav_cities:
+                Fragment weatherFragment2 = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                if (!(weatherFragment2 instanceof FragmentChoiceCity)){
+                    fragmentChoiceCity = FragmentChoiceCity.create(cityList);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).addToBackStack("").commit();
+                }
                 break;
-            case R.id.nav_slideshow:
-
-                break;
-            case R.id.nav_share:
-
-                break;
-            case R.id.nav_send:
-
+            case R.id.nav_history:
+                Fragment weatherFragment1 = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                if (!(weatherFragment1 instanceof FragmentHistoryCity)){
+                    fragmentHistoryCity = FragmentHistoryCity.create(historyCitiesSet);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentHistoryCity).addToBackStack("").commit();
+                }
                 break;
         }
 
@@ -214,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             super.onBackPressed();
         }
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+//обработка выбора города в fragmentChoiceCity или fragmentHistoryCity//////////////////////////////
     @Override
     public void onCitySelected(City city) {
         if (Logger.VERBOSE) {
@@ -228,8 +247,11 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
             Snackbar.make(findViewById(R.id.fragment_container), R.string.dialog_snackbar + city.getName(), Snackbar.LENGTH_LONG).setDuration(3000).show();
         }
+        historyCitiesSet.add(city);
+
     }
 
+    //методы, которые срабатывают, когда приходят данные с сервера
     @Override
     public void callingBackCity(City city, String status) {
         if (Logger.VERBOSE) {

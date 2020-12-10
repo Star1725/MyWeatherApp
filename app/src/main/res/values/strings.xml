@@ -57,6 +57,7 @@
     <string name="temperature_units">Temperature units</string>
     <string name="actv_search_cites">city search</string>
     <string name="default_name_city">City</string>
+    <string name="history">History</string>
     <string name="default_city">Default city</string>
     <string name="yandex_weather">yandex weather</string>
 
@@ -75,9 +76,9 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_cities">cities</string>
+    <string name="menu_weather_in_city">Weather in city</string>
+    <string name="menu_history">History</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
