@@ -96,6 +96,6 @@ public class FragmentHistoryCity extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle saveInstanceState){
         super .onSaveInstanceState(saveInstanceState);
-        saveInstanceState.putParcelable(Constants.SET_HISTORY, (Parcelable) citiesSet);
+        saveInstanceState.putParcelableArrayList(Constants.SET_HISTORY, new ArrayList<>(citiesSet));
     }
 }

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         Toolbar toolbar = initToolbar();
         initDrawer(toolbar);
-        historyCitiesSet = new LinkedHashSet<>();
+
 
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand + "\n" +
@@ -70,8 +70,10 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             //делаем запросы на сервер, чтобы получить погоду в дефотном городе и список городов с текущими температурами
             workNetHandler.getCityWithWeather(MyApp.getINSTANCE().getIDdefaultCity());
             workNetHandler.getListCitiesWithTemp(Arrays.stream(getResources().getIntArray(R.array.id_city)).boxed().collect(Collectors.toList()));
+            historyCitiesSet = new LinkedHashSet<>();
         } else {
             currentCity = savedInstanceState.getParcelable(Constants.CITY_EXTRA);
+            historyCitiesSet = new LinkedHashSet<>(savedInstanceState.getParcelableArrayList(Constants.SET_HISTORY));
         }
         //в портретной ориентации начальный фрагмент - fragmentShowWeatherInCity
         if (!orientationIsLand) {
@@ -97,9 +99,6 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             //для статического фрагмента загружаем список городов
             if (fragmentChoiceCity != null){
                 fragmentChoiceCity.showListCities(cityList);
-            }
-            if (fragmentHistoryCity != null){
-                fragmentHistoryCity.showListCities(historyCitiesSet);
             }
         }
     }
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(Constants.CITY_EXTRA, currentCity);
-        outState.putParcelable(Constants.SET_HISTORY, (Parcelable) historyCitiesSet);
+        outState.putParcelableArrayList(Constants.SET_HISTORY, new ArrayList<>(historyCitiesSet));
     }
 ////// методы меню//////////////////////////////////////////////////////////////////////////////////////
     @Override
@@ -200,9 +199,9 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                     if (fragmentShowWeatherInCity == null) {
                         fragmentShowWeatherInCity = new FragmentShowWeatherInCity();
                     }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentChoiceCity).addToBackStack("").commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
                 }
-                return true;
+                break;
             case R.id.nav_cities:
                 Fragment weatherFragment2 = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 if (!(weatherFragment2 instanceof FragmentChoiceCity)){
