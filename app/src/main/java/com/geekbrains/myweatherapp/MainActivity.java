@@ -12,13 +12,20 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+
+
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.geekbrains.myweatherapp.fragments.FragmentChoiceCity;
 import com.geekbrains.myweatherapp.fragments.FragmentHistoryCity;
@@ -146,18 +153,39 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         } else {
             getMenuInflater().inflate(R.menu.menu_main, menu);
             MenuItem search = menu.findItem(R.id.action_search);
+
             final SearchView searchView = (SearchView) search.getActionView();
+
+            final SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete)searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+            searchAutoComplete.setBackgroundColor(Color.BLUE);
+            searchAutoComplete.setTextColor(Color.GREEN);
+            searchAutoComplete.setDropDownBackgroundResource(android.R.color.holo_blue_light);
+
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    Snackbar.make(searchView, query, Snackbar.LENGTH_LONG).show();
+                    City city = cityList.stream().filter(city1 -> city1.getName().equals(query)).findAny().get();
+                    workNetHandler.getCityWithWeather(city.getId());
+                    historyCitiesSet.add(city);
                     return true;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    Snackbar.make(searchView, newText, Snackbar.LENGTH_SHORT).show();
+                    List<String> nameCity = cityList.stream().map(City::getName).collect(Collectors.toList());
+                    nameCity.stream().filter(name -> name.toLowerCase().startsWith(newText.toLowerCase())).collect(Collectors.toList());
+
+                    ArrayAdapter<String> newsAdapter = new ArrayAdapter<String>(searchView.getContext(), android.R.layout.simple_dropdown_item_1line, nameCity);
+                    searchAutoComplete.setAdapter(newsAdapter);
                     return true;
+                }
+            });
+
+            searchAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int itemIndex, long id) {
+                    String queryString=(String)adapterView.getItemAtPosition(itemIndex);
+                    searchAutoComplete.setText("" + queryString);
                 }
             });
         }
@@ -244,10 +272,8 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             workNetHandler.getCityWithWeather(city.getId());
             fragmentShowWeatherInCity.create(null);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
-            Snackbar.make(findViewById(R.id.fragment_container), R.string.dialog_snackbar + city.getName(), Snackbar.LENGTH_LONG).setDuration(3000).show();
         }
         historyCitiesSet.add(city);
-
     }
 
     //методы, которые срабатывают, когда приходят данные с сервера
