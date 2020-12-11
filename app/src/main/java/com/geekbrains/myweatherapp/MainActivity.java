@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         Toolbar toolbar = initToolbar();
         initDrawer(toolbar);
-
 
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate: orientationIsLand = " + orientationIsLand + "\n" +
@@ -164,9 +164,14 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    City city = cityList.stream().filter(city1 -> city1.getName().equals(query)).findAny().get();
-                    workNetHandler.getCityWithWeather(city.getId());
-                    historyCitiesSet.add(city);
+                    try {
+                        City city = cityList.stream().filter(city1 -> city1.getName().equals(query)).findAny().get();
+                        workNetHandler.getCityWithWeather(city.getId());
+                        historyCitiesSet.add(city);
+                    } catch (NoSuchElementException e){
+                        DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(getString(R.string.faild_search));
+                        dialogFragmentInfo.show(getSupportFragmentManager(), "dialogInfo" );
+                    }
                     return true;
                 }
 
