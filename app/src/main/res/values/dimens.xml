@@ -7,4 +7,6 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="list_item_text_size">30sp</dimen>
+    <dimen name="thermometer_height">150</dimen>
+    <dimen name="thermometer_width">30</dimen>
 </resources>

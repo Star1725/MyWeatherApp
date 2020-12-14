@@ -2,6 +2,7 @@ package com.geekbrains.myweatherapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
@@ -13,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
-
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -39,6 +40,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             historyCitiesSet = new LinkedHashSet<>();
         } else {
             currentCity = savedInstanceState.getParcelable(Constants.CITY_EXTRA);
-            historyCitiesSet = new LinkedHashSet<>(savedInstanceState.getParcelableArrayList(Constants.SET_HISTORY));
+            historyCitiesSet = new LinkedHashSet<>(Objects.requireNonNull(savedInstanceState.getParcelableArrayList(Constants.SET_HISTORY)));
         }
         //в портретной ориентации начальный фрагмент - fragmentShowWeatherInCity
         if (!orientationIsLand) {
@@ -169,8 +171,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                         workNetHandler.getCityWithWeather(city.getId());
                         historyCitiesSet.add(city);
                     } catch (NoSuchElementException e){
-                        DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(getString(R.string.faild_search));
-                        dialogFragmentInfo.show(getSupportFragmentManager(), "dialogInfo" );
+                        showDialog(getString(R.string.faild_search), getString(R.string.error));
                     }
                     return true;
                 }
@@ -206,8 +207,10 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                 startActivity(intent1);
                 return true;
             case R.id.info:
-                DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(getString(R.string.about));
-                dialogFragmentInfo.show(getSupportFragmentManager(), "dialogInfo" );
+//                DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(getString(R.string.about));
+//                dialogFragmentInfo.show(getSupportFragmentManager(), "dialogInfo" );
+                showDialog(getString(R.string.about), getString(R.string.information));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -288,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackCity(): " + status + " " + (city != null));
         }
         if (status.equals(Constants.FAIL_CONNECTION)){
-            showDialogError(status);
+            showDialog(status, getString(R.string.error));
         } else if(city != null){
             currentCity = city;
             if (fragmentShowWeatherInCity.isResumed()){
@@ -303,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackListCity(): " + status + " " + (cityList != null));
         }
         if (status.equals(Constants.FAIL_CONNECTION)){
-            showDialogError(status);
+            showDialog(status, getString(R.string.error));
         } else if(cityList != null){
             MainActivity.cityList = cityList;
             if (fragmentChoiceCity != null && fragmentChoiceCity.isResumed()){
@@ -312,8 +315,22 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         }
     }
 
-    private void showDialogError(String status){
-        DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(status);
-        dialogFragmentInfo.show(getSupportFragmentManager(), "dialogError" );
+    private void showDialog(String message, String type){
+//        DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(message);
+//        dialogFragmentInfo.show(getSupportFragmentManager(), "dialogError" );
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(type)
+                .setMessage(message)
+                .setIcon(android.R.drawable.ic_menu_info_details)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

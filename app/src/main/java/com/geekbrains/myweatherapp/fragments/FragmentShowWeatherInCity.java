@@ -21,6 +21,7 @@ import com.geekbrains.myweatherapp.Constants;
 import com.geekbrains.myweatherapp.Logger;
 import com.geekbrains.myweatherapp.MainActivity;
 import com.geekbrains.myweatherapp.MyApp;
+import com.geekbrains.myweatherapp.MyThermometer;
 import com.geekbrains.myweatherapp.adapters.MyRVAdapterHorizontal;
 import com.geekbrains.myweatherapp.R;
 
@@ -43,7 +44,7 @@ public class FragmentShowWeatherInCity extends Fragment {
     private MyRVAdapterHorizontal myRVAdapterHorizontal;
     private RecyclerView rvTempHourHorizontal;
     private TextView tvCurrentDate;
-    private HashMap<String, Integer> mapImages;
+    private MyThermometer myThermometer;
 
     @NonNull
     public FragmentShowWeatherInCity create(City city){
@@ -85,6 +86,7 @@ public class FragmentShowWeatherInCity extends Fragment {
         tvPressureCites = view.findViewById(R.id.textView_pressure);
         tvHumidityCites = view.findViewById(R.id.textView_humidity);
 
+        myThermometer = view.findViewById(R.id.myThermometer);
         tvCurrentDate = view.findViewById(R.id.tv_current_date);
 
         //WorkNetHandler.registerObserverCallback(this);//регистрируемся на прослушивание результатов запросов к серверу для погоды на конкретный город
@@ -113,11 +115,14 @@ public class FragmentShowWeatherInCity extends Fragment {
                     tvNameCites.setText(city.getName());
                     tvPressureCites.setText(String.valueOf(Math.round(city.getPressure()/1.33)));
                     tvHumidityCites.setText(String.valueOf(city.getHumidity()));
+
                     LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
                     myRVAdapterHorizontal = new MyRVAdapterHorizontal(city);
                     imageViewWeatherCites.setImageResource(MyApp.getINSTANCE().getMapImages().get(city.getIcon()));
                     //Picasso.get().load(Constants.START_URL_FOR_DOWNLOAD_ICON + city.getIcon() + Constants.END_URL_FOR_DOWNLOAD_ICON).into(imageViewWeatherCites);
                     if (!MainActivity.orientationIsLand){
+                        myThermometer.setLevelTemp((int)Math.round(city.getCurrentTemp()));
+                        myThermometer.invalidate();
                         rvTempHourHorizontal.setLayoutManager(llmHorizontal);
                         rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);
                         rvTempHourHorizontal.scrollToPosition(getCurrentHour(city));

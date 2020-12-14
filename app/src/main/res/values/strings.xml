@@ -59,7 +59,9 @@
     <string name="default_name_city">City</string>
     <string name="history">History</string>
     <string name="default_city">Default city</string>
-    <string name="yandex_weather">yandex weather</string>
+    <string name="error">Error</string>
+    <string name="information">Information</string>
+    <string name="ok">Ok</string>
 
     <string name="current_date">current date</string>
     <string name="city">Choice City</string>
