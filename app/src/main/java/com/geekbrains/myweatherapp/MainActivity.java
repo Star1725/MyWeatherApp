@@ -316,8 +316,11 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
     }
 
     private void showDialog(String message, String type){
+        //вывод ошибки через мой кастомный dialogFragment
 //        DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(message);
 //        dialogFragmentInfo.show(getSupportFragmentManager(), "dialogError" );
+
+        //вывод ошибки через мой кастомный AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle(type)
                 .setMessage(message)

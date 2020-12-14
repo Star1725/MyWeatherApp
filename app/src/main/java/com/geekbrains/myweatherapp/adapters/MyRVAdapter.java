@@ -73,13 +73,13 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
             @Override
             public void onClick(View v) {
                 AppCompatActivity currentActivity = (AppCompatActivity) v.getContext();
+                Fragment fragment = null;
                 if (currentActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-                    Fragment fragment = currentActivity.getSupportFragmentManager().findFragmentById(R.id.cities);
-                    callBackFragment(fragment);
+                    fragment = currentActivity.getSupportFragmentManager().findFragmentById(R.id.cities);
                 } else {
-                    Fragment fragment = currentActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                    callBackFragment(fragment);
+                    fragment = currentActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 }
+                callBackFragment(fragment);
             }
 
             private void callBackFragment(Fragment fragment) {
