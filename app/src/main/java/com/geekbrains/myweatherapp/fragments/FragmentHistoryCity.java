@@ -39,16 +39,17 @@ public class FragmentHistoryCity extends Fragment {
         void onCitySelected(City city);
     }
 
-    private static List<City> cities;
-    private static Set<City> citiesSet;
     private MyRVAdapter myRVAdapter;
     private RecyclerView rvSites;
 
     public static FragmentHistoryCity create(Set<City> set){
+        Bundle bundle =new Bundle();
+        bundle.putParcelableArrayList(Constants.CITIES_HISTORY, new ArrayList<>(set));
 
-        citiesSet = set;
+        FragmentHistoryCity fragmentHistoryCity = new FragmentHistoryCity();
+        fragmentHistoryCity.setArguments(bundle);
 
-        return new FragmentHistoryCity();
+        return fragmentHistoryCity;
     }
 
     @Nullable
@@ -64,22 +65,25 @@ public class FragmentHistoryCity extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//RecyclerView необходим менеджер компоновки для управления позиционированием своих элементов
         rvSites = view.findViewById(R.id.recyclerView_cities);
 
-        showListCities(citiesSet);
+        Bundle args = getArguments();
+        if (args != null){
+            ArrayList<City> cities = getArguments().getParcelableArrayList(Constants.CITIES_HISTORY);
+            showListCities(cities);
+        }
     }
 
-    public void showListCities(Set<City> cities){
+    public void showListCities(List<City> cities){
         if (cities != null){
-            List<City> finalCities = new ArrayList<>(cities);
+
             ((AppCompatActivity) rvSites.getContext()).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     LinearLayoutManager llm = new LinearLayoutManager((AppCompatActivity) rvSites.getContext());
                     rvSites.setLayoutManager(llm);
 //создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites
-                    myRVAdapter = new MyRVAdapter(finalCities);
+                    myRVAdapter = new MyRVAdapter(cities);
                     rvSites.setAdapter(myRVAdapter);
                 }
             });
@@ -90,12 +94,14 @@ public class FragmentHistoryCity extends Fragment {
     public void onResume() {
         super.onResume();
         //обновление MyRv при изменении градусов на форенгейты и обратно
-        myRVAdapter.notifyDataSetChanged();
+        if (myRVAdapter != null){
+            myRVAdapter.notifyDataSetChanged();
+        }
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle saveInstanceState){
-        super .onSaveInstanceState(saveInstanceState);
-        saveInstanceState.putParcelableArrayList(Constants.SET_HISTORY, new ArrayList<>(citiesSet));
-    }
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle saveInstanceState){
+//        super .onSaveInstanceState(saveInstanceState);
+//        saveInstanceState.putParcelableArrayList(Constants.SET_HISTORY, new ArrayList<>(citiesSet));
+//    }
 }

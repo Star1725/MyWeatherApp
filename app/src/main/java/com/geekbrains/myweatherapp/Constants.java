@@ -2,6 +2,7 @@ package com.geekbrains.myweatherapp;
 
 public class Constants {
     public static final String CITY_EXTRA = "city_extra";
+    public static final String CITIES_HISTORY = "cities_history";
     public static final String SET_HISTORY = "set_history";
     public static final String CITIES_EXTRA = "cities_extra";
     public static final String INFO = "info";
