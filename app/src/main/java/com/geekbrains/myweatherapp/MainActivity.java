@@ -291,7 +291,12 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackCity(): " + status + " " + (city != null));
         }
         if (status.equals(Constants.FAIL_CONNECTION)){
-            showDialog(status, getString(R.string.error));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showDialog(status, getString(R.string.error));
+                }
+            });
         } else if(city != null){
             currentCity = city;
             if (fragmentShowWeatherInCity.isResumed()){
@@ -306,7 +311,12 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackListCity(): " + status + " " + (cityList != null));
         }
         if (status.equals(Constants.FAIL_CONNECTION)){
-            showDialog(status, getString(R.string.error));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showDialog(status, getString(R.string.error));
+                }
+            });
         } else if(cityList != null){
             MainActivity.cityList = cityList;
             if (fragmentChoiceCity != null && fragmentChoiceCity.isResumed()){
