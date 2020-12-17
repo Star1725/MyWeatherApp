@@ -17,4 +17,6 @@ public class CurrentWeatherRequest {
     private Clouds clouds ;
     private String name;
     private int id;
+    private long dt;
+    private int timezone;
 }
