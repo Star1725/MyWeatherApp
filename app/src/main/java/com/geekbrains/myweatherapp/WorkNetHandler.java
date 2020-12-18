@@ -24,10 +24,10 @@ import javax.net.ssl.HttpsURLConnection;
 public class WorkNetHandler {
     interface ResultRequestCallback {
         void callingBackCity(City city, String status);
-        void callingBackListCity(List<City> cityList, String status);
+        void callingBackListCities(List<City> cityList, String status);
     }
 
-    private static ArrayList<ResultRequestCallback> callbacks = new ArrayList<>();
+    private static final ArrayList<ResultRequestCallback> callbacks = new ArrayList<>();
     public static void registerObserverCallback(ResultRequestCallback callback){
         callbacks.add(callback);
     }
@@ -41,7 +41,7 @@ public class WorkNetHandler {
 
     private void notifyCallBacksForCityList(List<City> cityList, String status){
         for (ResultRequestCallback callback : callbacks) {
-            callback.callingBackListCity(cityList, status);
+            callback.callingBackListCities(cityList, status);
 
         }
     }
@@ -155,7 +155,7 @@ public class WorkNetHandler {
                     try {
                         httpsURLConnection = (HttpsURLConnection)uri1.openConnection();
                         httpsURLConnection.setRequestMethod("GET");
-                        httpsURLConnection.setReadTimeout(10000);
+                        httpsURLConnection.setReadTimeout(100000000);
                         BufferedReader in = null;
                         in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
                         String result = getLines(in);
@@ -183,7 +183,7 @@ public class WorkNetHandler {
                                 Constants.APPID + BuildConfig.WEATHER_API_KEY);
                         httpsURLConnection = (HttpsURLConnection)uri2.openConnection();
                         httpsURLConnection.setRequestMethod("GET");
-                        httpsURLConnection.setReadTimeout(10000);
+                        httpsURLConnection.setReadTimeout(10000000);
                         in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
                         result = getLines(in);
                         historyWeatherRequest1 = gson.fromJson(result, HistoryWeatherRequest.class);
@@ -211,7 +211,7 @@ public class WorkNetHandler {
                                 Constants.APPID + BuildConfig.WEATHER_API_KEY);
                         httpsURLConnection = (HttpsURLConnection)uri3.openConnection();
                         httpsURLConnection.setRequestMethod("GET");
-                        httpsURLConnection.setReadTimeout(5000);
+                        httpsURLConnection.setReadTimeout(50000000);
                         in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
                         result = getLines(in);
                         historyWeatherRequest2 = gson.fromJson(result, HistoryWeatherRequest.class);
@@ -243,7 +243,7 @@ public class WorkNetHandler {
     }
 
     //запрос информации о текущей погоде и температуре в городах
-    public void getListCitiesWithTemp(List<Integer> idCities){
+    public void getListCitiesWithTemp(int[] idCities){
         if (Logger.VERBOSE){
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " getListCitiesWithTemp()");
         }
@@ -251,11 +251,11 @@ public class WorkNetHandler {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                CountDownLatch countDownLatch = new CountDownLatch(idCities.size());
-                for (int i = 0; i < idCities.size(); i++) {
+                CountDownLatch countDownLatch = new CountDownLatch(idCities.length);
+                for (int i = 0; i < idCities.length; i++) {
                     try {
                         final URL uri1 = new URL(Constants.START_FOR_URL_WEATHER +
-                                Constants.ID_CITY + idCities.get(i) +
+                                Constants.ID_CITY + idCities[i] +
                                 Constants.UNITS +
                                 Constants.APPID +
                                 BuildConfig.WEATHER_API_KEY);
@@ -267,7 +267,7 @@ public class WorkNetHandler {
                                 try {
                                     httpsURLConnection = (HttpsURLConnection) uri1.openConnection();
                                     httpsURLConnection.setRequestMethod("GET");
-                                    httpsURLConnection.setReadTimeout(10000);
+                                    httpsURLConnection.setReadTimeout(100000000);
                                     BufferedReader in = null;
                                     in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
                                     String result = getLines(in);

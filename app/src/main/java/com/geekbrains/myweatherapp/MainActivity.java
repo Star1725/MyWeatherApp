@@ -14,11 +14,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
@@ -32,6 +35,7 @@ import com.geekbrains.myweatherapp.fragments.FragmentChoiceCity;
 import com.geekbrains.myweatherapp.fragments.FragmentHistoryCity;
 import com.geekbrains.myweatherapp.fragments.FragmentShowWeatherInCity;
 import com.geekbrains.myweatherapp.fragments.MyDialogFragment;
+import com.geekbrains.myweatherapp.services.RequestService;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -45,6 +49,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
+
+import static com.geekbrains.myweatherapp.Constants.CITIES_EXTRA;
+import static com.geekbrains.myweatherapp.Constants.CITY_EXTRA;
+import static com.geekbrains.myweatherapp.Constants.CODE_FOR_CITIES_LIST;
+import static com.geekbrains.myweatherapp.Constants.CODE_FOR_CITY;
+import static com.geekbrains.myweatherapp.Constants.ID_CITIES_EXTRA;
+import static com.geekbrains.myweatherapp.Constants.ID_CITY_EXTRA;
+import static com.geekbrains.myweatherapp.Constants.STATUS_FINISH;
+import static com.geekbrains.myweatherapp.Constants.STATUS_START;
 
 @Getter
 public class MainActivity extends AppCompatActivity implements FragmentChoiceCity.OnSelectedCityListener,
@@ -60,11 +73,19 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
     private FragmentShowWeatherInCity fragmentShowWeatherInCity;
     private City currentCity;
     private static WorkNetHandler workNetHandler = new WorkNetHandler();
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private boolean isBound = false ;
+    private RequestService.ServiceBinder requestService;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         orientationIsLand = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         Toolbar toolbar = initToolbar();
         initDrawer(toolbar);
@@ -74,11 +95,19 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                     "fragmentShowWeatherInCity = " + (fragmentShowWeatherInCity != null) + "\n" +
                     "fragmentChoiceCity = " + (fragmentChoiceCity != null));
         }
+
         WorkNetHandler.registerObserverCallback(this);//подписываемся на ответы от сервера
         if (savedInstanceState == null){
-            //делаем запросы на сервер, чтобы получить погоду в дефотном городе и список городов с текущими температурами
-            workNetHandler.getCityWithWeather(MyApp.getINSTANCE().getIDdefaultCity());
-            workNetHandler.getListCitiesWithTemp(Arrays.stream(getResources().getIntArray(R.array.id_city)).boxed().collect(Collectors.toList()));
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
+            //соединяемся с сервисом и через интент передаём данные для запросов серверу
+            Intent intent = new Intent(MainActivity.this, RequestService.class);
+            intent.putExtra(ID_CITY_EXTRA, MyApp.getINSTANCE().getIDdefaultCity());
+            int [] ids = getResources().getIntArray(R.array.id_city);
+            intent.putExtra(Constants.ID_CITIES_EXTRA, ids);
+            bindService(intent, requestServiceConnection, BIND_AUTO_CREATE);
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
             historyCitiesSet = new LinkedHashSet<>();
         } else {
             currentCity = savedInstanceState.getParcelable(Constants.CITY_EXTRA);
@@ -140,6 +169,75 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             fragmentHistoryCity.setCallback(this);
         }
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Обработка соединения с сервисом
+    private final ServiceConnection requestServiceConnection = new ServiceConnection() {
+        // При соединении с сервисом
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            requestService = (RequestService.ServiceBinder) service;
+            isBound = requestService != null;
+        }
+
+        // При разрыве соединения с сервисом
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isBound = false;
+            requestService = null;
+        }
+    };
+
+    @Override
+    protected void onStop() {
+        super .onStop();
+
+        if ( isBound ) {
+            unbindService(requestServiceConnection);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (Logger.VERBOSE) {
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onActivityResult(): requestCode = " + requestCode + ", resultCode = " + resultCode);
+        }
+
+        // Ловим сообщения о старте задач
+        if (resultCode == STATUS_START) {
+            switch (requestCode) {
+                case CODE_FOR_CITY:
+                    if (Logger.VERBOSE) {
+                        int ID = data.getIntExtra(ID_CITY_EXTRA, 0);
+                        Log.v(Logger.TAG, this.getClass().getSimpleName() + " onActivityResult(): request for ID = " + ID);
+                    }
+                    break;
+                case CODE_FOR_CITIES_LIST:
+                    if (Logger.VERBOSE) {
+                        int[] IDs = data.getIntArrayExtra(ID_CITIES_EXTRA);
+                        Log.v(Logger.TAG, this.getClass().getSimpleName() + " onActivityResult(): request for " + IDs.length + " IDs" );
+                    }
+                    break;
+            }
+        }
+
+        // Ловим сообщения об окончании задач
+        if (resultCode == STATUS_FINISH) {
+            switch (requestCode) {
+                case CODE_FOR_CITY:
+                    currentCity = data.getParcelableExtra(CITY_EXTRA);
+                    break;
+                case CODE_FOR_CITIES_LIST:
+                    cityList = data.getParcelableArrayListExtra(CITIES_EXTRA);
+                    break;
+            }
+        }
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -306,7 +404,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
     }
 
     @Override
-    public void callingBackListCity(List<City> cityList, String status) {
+    public void callingBackListCities(List<City> cityList, String status) {
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackListCity(): " + status + " " + (cityList != null));
         }

@@ -3,13 +3,18 @@ package com.geekbrains.myweatherapp;
 import com.geekbrains.myweatherapp.model.CurrentWeatherRequest;
 import com.google.gson.Gson;
 
+import java.util.List;
+
 public class ParsingHandler {
+
+    Gson gson = new Gson();
+    private City city;
+    private List<City> cities;
 
     private CurrentWeatherRequest currentWeatherRequest;
 
     public City getWeatherForSelectedCity(String source){
 
-        Gson gson = new Gson();
         currentWeatherRequest = gson.fromJson(source, CurrentWeatherRequest.class);
 
         int id = currentWeatherRequest.getId();
