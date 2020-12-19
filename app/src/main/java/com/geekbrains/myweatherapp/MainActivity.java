@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             //workNetHandler.getCityWithWeather(city.getId());
             requestService.getWeatherInCity(city.getId(), true);
-            fragmentShowWeatherInCity.create(null);
+            fragmentShowWeatherInCity.create(currentCity);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
         }
         historyCitiesSet.add(city);

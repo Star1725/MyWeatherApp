@@ -140,14 +140,14 @@ public class FragmentShowWeatherInCity extends Fragment {
         return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
-//    @Override
-//    public void onSaveInstanceState(@NonNull Bundle saveInstanceState){
-//        super .onSaveInstanceState(saveInstanceState);
-//        if (Logger.VERBOSE && currentCity != null) {
-//            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onSaveInstanceState(): city = " + currentCity.getName());
-//        }
-//        saveInstanceState.putParcelable(Constants.CITY_EXTRA, currentCity);
-//    }
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle saveInstanceState){
+        super .onSaveInstanceState(saveInstanceState);
+        if (Logger.VERBOSE && currentCity != null) {
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onSaveInstanceState(): city = " + currentCity.getName());
+        }
+        saveInstanceState.putParcelable(Constants.CITY_EXTRA, currentCity);
+    }
 
     @Override
     public void onResume() {
