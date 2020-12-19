@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -56,13 +57,17 @@ import static com.geekbrains.myweatherapp.Constants.CODE_FOR_CITIES_LIST;
 import static com.geekbrains.myweatherapp.Constants.CODE_FOR_CITY;
 import static com.geekbrains.myweatherapp.Constants.ID_CITIES_EXTRA;
 import static com.geekbrains.myweatherapp.Constants.ID_CITY_EXTRA;
+import static com.geekbrains.myweatherapp.Constants.IS_SAVED_INSTANCE_STATE;
 import static com.geekbrains.myweatherapp.Constants.STATUS_FINISH;
 import static com.geekbrains.myweatherapp.Constants.STATUS_START;
 
 @Getter
-public class MainActivity extends AppCompatActivity implements FragmentChoiceCity.OnSelectedCityListener,
+public class MainActivity extends AppCompatActivity implements
+        FragmentChoiceCity.OnSelectedCityListener,
         WorkNetHandler.ResultRequestCallback,
-        NavigationView.OnNavigationItemSelectedListener, FragmentHistoryCity.OnSelectedCityListener {
+        NavigationView.OnNavigationItemSelectedListener,
+        FragmentHistoryCity.OnSelectedCityListener,
+        RequestService.CallbackForRequestService {
     private final static int REQUEST_CODE = 1;
 
     public static boolean orientationIsLand;
@@ -96,20 +101,25 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                     "fragmentChoiceCity = " + (fragmentChoiceCity != null));
         }
 
-        WorkNetHandler.registerObserverCallback(this);//подписываемся на ответы от сервера
+        //WorkNetHandler.registerObserverCallback(this);//подписываемся на ответы от сервера
+        RequestService.registerObserverCallback(this);
+
         if (savedInstanceState == null){
             ////////////////////////////////////////////////////////////////////////////////////////////
             ///////////////////////////////////////////////////////////////////////////////////////////////////
             //соединяемся с сервисом и через интент передаём данные для запросов серверу
             Intent intent = new Intent(MainActivity.this, RequestService.class);
             intent.putExtra(ID_CITY_EXTRA, MyApp.getINSTANCE().getIDdefaultCity());
-            int [] ids = getResources().getIntArray(R.array.id_city);
-            intent.putExtra(Constants.ID_CITIES_EXTRA, ids);
+            intent.putExtra(Constants.ID_CITIES_EXTRA, getResources().getIntArray(R.array.id_city));
+            intent.putExtra(IS_SAVED_INSTANCE_STATE, true);
             bindService(intent, requestServiceConnection, BIND_AUTO_CREATE);
             ////////////////////////////////////////////////////////////////////////////////////////////
             ///////////////////////////////////////////////////////////////////////////////////////////////////
             historyCitiesSet = new LinkedHashSet<>();
         } else {
+            Intent intent = new Intent(MainActivity.this, RequestService.class);
+            intent.putExtra(IS_SAVED_INSTANCE_STATE, false);
+            bindService(intent, requestServiceConnection, BIND_AUTO_CREATE);
             currentCity = savedInstanceState.getParcelable(Constants.CITY_EXTRA);
             historyCitiesSet = new LinkedHashSet<>(Objects.requireNonNull(savedInstanceState.getParcelableArrayList(Constants.SET_HISTORY)));
         }
@@ -198,44 +208,6 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (Logger.VERBOSE) {
-            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onActivityResult(): requestCode = " + requestCode + ", resultCode = " + resultCode);
-        }
-
-        // Ловим сообщения о старте задач
-        if (resultCode == STATUS_START) {
-            switch (requestCode) {
-                case CODE_FOR_CITY:
-                    if (Logger.VERBOSE) {
-                        int ID = data.getIntExtra(ID_CITY_EXTRA, 0);
-                        Log.v(Logger.TAG, this.getClass().getSimpleName() + " onActivityResult(): request for ID = " + ID);
-                    }
-                    break;
-                case CODE_FOR_CITIES_LIST:
-                    if (Logger.VERBOSE) {
-                        int[] IDs = data.getIntArrayExtra(ID_CITIES_EXTRA);
-                        Log.v(Logger.TAG, this.getClass().getSimpleName() + " onActivityResult(): request for " + IDs.length + " IDs" );
-                    }
-                    break;
-            }
-        }
-
-        // Ловим сообщения об окончании задач
-        if (resultCode == STATUS_FINISH) {
-            switch (requestCode) {
-                case CODE_FOR_CITY:
-                    currentCity = data.getParcelableExtra(CITY_EXTRA);
-                    break;
-                case CODE_FOR_CITIES_LIST:
-                    cityList = data.getParcelableArrayListExtra(CITIES_EXTRA);
-                    break;
-            }
-        }
-    }
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -266,7 +238,8 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
                 public boolean onQueryTextSubmit(String query) {
                     try {
                         City city = cityList.stream().filter(city1 -> city1.getName().equals(query)).findAny().get();
-                        workNetHandler.getCityWithWeather(city.getId());
+                        //workNetHandler.getCityWithWeather(city.getId());
+                        requestService.getWeatherInCity(city.getId(), true);
                         historyCitiesSet.add(city);
                     } catch (NoSuchElementException e){
                         showDialog(getString(R.string.faild_search), getString(R.string.error));
@@ -373,9 +346,11 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCitySelected(): city = " + city.getName());
         }
         if (orientationIsLand) {
-                workNetHandler.getCityWithWeather(city.getId());
+            //workNetHandler.getCityWithWeather(city.getId());
+            requestService.getWeatherInCity(city.getId(), true);
         } else {
-            workNetHandler.getCityWithWeather(city.getId());
+            //workNetHandler.getCityWithWeather(city.getId());
+            requestService.getWeatherInCity(city.getId(), true);
             fragmentShowWeatherInCity.create(null);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
         }
@@ -443,5 +418,45 @@ public class MainActivity extends AppCompatActivity implements FragmentChoiceCit
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void callingBackWeatherInCity(City city, String status) {
+        if (Logger.VERBOSE) {
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackCity(): " + status + " " + (city != null));
+        }
+        if (status.equals(Constants.FAIL_CONNECTION)){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showDialog(status, getString(R.string.error));
+                }
+            });
+        } else if(city != null){
+            currentCity = city;
+            if (fragmentShowWeatherInCity.isResumed()){
+                fragmentShowWeatherInCity.showWeatherInCity(city);
+            }
+        }
+    }
+
+    @Override
+    public void callingBackWeatherInListCities(List<City> cityList, String status) {
+        if (Logger.VERBOSE) {
+            Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackListCity(): " + status + " " + (cityList != null));
+        }
+        if (status.equals(Constants.FAIL_CONNECTION)){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showDialog(status, getString(R.string.error));
+                }
+            });
+        } else if(cityList != null){
+            MainActivity.cityList = cityList;
+            if (fragmentChoiceCity != null && fragmentChoiceCity.isResumed()){
+                fragmentChoiceCity.showListCities(cityList);
+            }
+        }
     }
 }

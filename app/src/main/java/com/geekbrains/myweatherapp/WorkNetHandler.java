@@ -46,12 +46,11 @@ public class WorkNetHandler {
         }
     }
 
-    //запрос на получение имени города и его координат по ID
-    public String getCurrentWeatherRequest(int idCity) {
+    //запрос на погоды в городе по ID
+    public City getWeatherInCity(int idCity, boolean allWeather) {
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " getDataForIntermediateRequest(): idCity = " + idCity);
         }
-        String result = null;
 
         try {
             URL uri1 = new URL(Constants.START_FOR_URL_WEATHER +
@@ -64,12 +63,37 @@ public class WorkNetHandler {
             try {
                 httpsURLConnection = (HttpsURLConnection) uri1.openConnection();
                 httpsURLConnection.setRequestMethod("GET");
-                httpsURLConnection.setReadTimeout(10000);
-                BufferedReader in = null;
-                in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
-                result = getLines(in);
+                httpsURLConnection.setReadTimeout(5000);
+                BufferedReader in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
+                String result = getLines(in);
                 in.close();
 
+                Gson gson = new Gson();
+                CurrentWeatherRequest currentWeatherRequest = gson.fromJson(result, CurrentWeatherRequest.class);
+                int id = currentWeatherRequest.getId();
+                String cityName = currentWeatherRequest.getName();
+                double currentTemp = currentWeatherRequest.getMain().getTemp();
+                String weatherIcon = currentWeatherRequest.getWeather()[0].getIcon();
+
+                if (allWeather){
+                    double lat = currentWeatherRequest.getCoord().getLat();
+                    double lon = currentWeatherRequest.getCoord().getLon();
+                    long currentDateUTC = currentWeatherRequest.getDt();
+                    long currentDateCity = currentDateUTC + currentWeatherRequest.getTimezone();
+                    int currentPressure = currentWeatherRequest.getMain().getPressure();
+                    int currentHumidity = currentWeatherRequest.getMain().getHumidity();
+
+                    ArrayList<Double> tempForDate = (ArrayList<Double>) getHistoryWeatherRequest(lat, lon, currentDateUTC, true);
+                    ArrayList<Double> listForecast = (ArrayList<Double>) getHistoryWeatherRequest(lat, lon, currentDateUTC, false);
+
+                    for (int i = 1; i < 25 - tempForDate.size(); i++) {
+                        tempForDate.add(listForecast.get(i));
+                    }
+
+                    return new City(id, cityName, currentDateCity, currentTemp, currentPressure, currentHumidity, tempForDate, weatherIcon, R.drawable.ic_sun_svg);
+                }
+
+                return new City(id, cityName, 0, currentTemp, 0, 0, null, weatherIcon, R.drawable.ic_sun_svg);
             } catch (IOException e) {
                 Log.e(Logger.TAG, Constants.FAIL_CONNECTION, e);
                 printException(e);
@@ -81,17 +105,17 @@ public class WorkNetHandler {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        return result;
+        return null;
     }
 
     //запрос на получение почасовой температуры за текущий день. flagHistorical = false - ONECALL - после текущего часа, flagHistorical = true - ONECALL_TIMEMACHINE - до текущего часа
-    public String getHistoryWeatherRequest(double lat, double lon, long currentDateUTC, boolean flagHistory) {
+    private List<Double> getHistoryWeatherRequest(double lat, double lon, long currentDateUTC, boolean flagHistory) {
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " getHistoryWeatherRequest()");
         }
         String result = null;
         URL uri = null;
-
+        HistoryWeatherRequest historyWeatherRequest;
         try {
             if (flagHistory){
                 uri = new URL(Constants.START_FOR_URL_ONECALL +
@@ -113,11 +137,19 @@ public class WorkNetHandler {
             try {
                 httpsURLConnection = (HttpsURLConnection)uri.openConnection();
                 httpsURLConnection.setRequestMethod("GET");
-                httpsURLConnection.setReadTimeout(10000);
+                httpsURLConnection.setReadTimeout(5000);
                 BufferedReader in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
                 result = getLines(in);
                 in.close();
 
+                Gson gson = new Gson();
+                historyWeatherRequest = gson.fromJson(result, HistoryWeatherRequest.class);
+
+                List<Double> listTemp = new ArrayList<>();
+                for (int i = 0; i < historyWeatherRequest.getHourly().length; i++) {
+                    listTemp.add(historyWeatherRequest.getHourly()[i].getTemp());
+                }
+                return listTemp;
             } catch (IOException e) {
                 Log.e(Logger.TAG, Constants.FAIL_CONNECTION, e);
                 printException(e);
@@ -129,9 +161,8 @@ public class WorkNetHandler {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        return result;
+        return null;
     }
-
 
 
     //запрос подробной информации о погоде в городе по ID

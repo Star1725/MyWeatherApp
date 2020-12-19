@@ -119,7 +119,6 @@ public class FragmentShowWeatherInCity extends Fragment {
                     LinearLayoutManager llmHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
                     myRVAdapterHorizontal = new MyRVAdapterHorizontal(city);
                     imageViewWeatherCites.setImageResource(MyApp.getINSTANCE().getMapImages().get(city.getIcon()));
-                    //Picasso.get().load(Constants.START_URL_FOR_DOWNLOAD_ICON + city.getIcon() + Constants.END_URL_FOR_DOWNLOAD_ICON).into(imageViewWeatherCites);
                     if (!MainActivity.orientationIsLand){
                         myThermometer.setLevelTemp((int)Math.round(city.getCurrentTemp()));
                         myThermometer.invalidate();
@@ -141,14 +140,14 @@ public class FragmentShowWeatherInCity extends Fragment {
         return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle saveInstanceState){
-        super .onSaveInstanceState(saveInstanceState);
-        if (Logger.VERBOSE && currentCity != null) {
-            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onSaveInstanceState(): city = " + currentCity.getName());
-        }
-        saveInstanceState.putParcelable(Constants.CITY_EXTRA, currentCity);
-    }
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle saveInstanceState){
+//        super .onSaveInstanceState(saveInstanceState);
+//        if (Logger.VERBOSE && currentCity != null) {
+//            Log.v(Logger.TAG, this.getClass().getSimpleName() + " onSaveInstanceState(): city = " + currentCity.getName());
+//        }
+//        saveInstanceState.putParcelable(Constants.CITY_EXTRA, currentCity);
+//    }
 
     @Override
     public void onResume() {

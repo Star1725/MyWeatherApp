@@ -44,6 +44,8 @@ public class Constants {
     public static final String END_URL_FOR_DOWNLOAD_ICON = "@2x.png";
     //URL = START_URL_FOR_DOWNLOAD_ICON + icon + END_URL_FOR_DOWNLOAD_ICON (icon - String)
 
-    static final String FAIL_CONNECTION = "fail connection";
-    static final String CONNECTION = "connection";
+    public static final String FAIL_CONNECTION = "fail connection";
+    public static final String CONNECTION = "connection";
+
+    public static final String IS_SAVED_INSTANCE_STATE = "isSavedInstanceState";
 }
