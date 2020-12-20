@@ -124,7 +124,8 @@ public class FragmentShowWeatherInCity extends Fragment {
                         myThermometer.invalidate();
                         rvTempHourHorizontal.setLayoutManager(llmHorizontal);
                         rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);
-                        rvTempHourHorizontal.scrollToPosition(getCurrentHour(city));
+                        int scroll = getCurrentHour(city);
+                        rvTempHourHorizontal.scrollToPosition(scroll);
                     } else {
                         tvTemperatureCites.setText(String.format("%d %s", Math.round(city.getCurrentTemp()), currentUnitTemp));
                     }
@@ -137,7 +138,8 @@ public class FragmentShowWeatherInCity extends Fragment {
         Calendar calendar = Calendar.getInstance();
         Date date = new Date(city.getDt()*1000);
         calendar.setTime(date);
-        return calendar.get(Calendar.HOUR_OF_DAY);
+        int h = calendar.get(Calendar.HOUR_OF_DAY);
+        return h;
     }
 
     @Override

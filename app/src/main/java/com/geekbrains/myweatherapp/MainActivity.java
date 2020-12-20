@@ -64,7 +64,6 @@ import static com.geekbrains.myweatherapp.Constants.STATUS_START;
 @Getter
 public class MainActivity extends AppCompatActivity implements
         FragmentChoiceCity.OnSelectedCityListener,
-        WorkNetHandler.ResultRequestCallback,
         NavigationView.OnNavigationItemSelectedListener,
         FragmentHistoryCity.OnSelectedCityListener,
         RequestService.CallbackForRequestService {
@@ -357,47 +356,6 @@ public class MainActivity extends AppCompatActivity implements
         historyCitiesSet.add(city);
     }
 
-    //методы, которые срабатывают, когда приходят данные с сервера
-    @Override
-    public void callingBackCity(City city, String status) {
-        if (Logger.VERBOSE) {
-            Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackCity(): " + status + " " + (city != null));
-        }
-        if (status.equals(Constants.FAIL_CONNECTION)){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    showDialog(status, getString(R.string.error));
-                }
-            });
-        } else if(city != null){
-            currentCity = city;
-            if (fragmentShowWeatherInCity.isResumed()){
-                fragmentShowWeatherInCity.showWeatherInCity(city);
-            }
-        }
-    }
-
-    @Override
-    public void callingBackListCities(List<City> cityList, String status) {
-        if (Logger.VERBOSE) {
-            Log.v(Logger.TAG, this.getClass().getSimpleName() + " callingBackListCity(): " + status + " " + (cityList != null));
-        }
-        if (status.equals(Constants.FAIL_CONNECTION)){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    showDialog(status, getString(R.string.error));
-                }
-            });
-        } else if(cityList != null){
-            MainActivity.cityList = cityList;
-            if (fragmentChoiceCity != null && fragmentChoiceCity.isResumed()){
-                fragmentChoiceCity.showListCities(cityList);
-            }
-        }
-    }
-
     private void showDialog(String message, String type){
         //вывод ошибки через мой кастомный dialogFragment
 //        DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(message);
@@ -420,6 +378,7 @@ public class MainActivity extends AppCompatActivity implements
         alertDialog.show();
     }
 
+    //методы, которые срабатывают, когда приходят данные с сервера
     @Override
     public void callingBackWeatherInCity(City city, String status) {
         if (Logger.VERBOSE) {
