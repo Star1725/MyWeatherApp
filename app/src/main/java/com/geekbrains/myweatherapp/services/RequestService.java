@@ -52,12 +52,6 @@ public class RequestService extends Service {
     private ExecutorService es;
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        es = Executors.newFixedThreadPool(4);
-    }
-
-    @Override
     public IBinder onBind(Intent intent) {
         if (intent.getBooleanExtra(IS_SAVED_INSTANCE_STATE, true)){
             getWeatherInCity(intent.getIntExtra(Constants.ID_CITY_EXTRA, 0), true);
@@ -73,6 +67,7 @@ public class RequestService extends Service {
     }
 
     void getWeatherInCity(int idCity, boolean allWeather){
+        es = Executors.newFixedThreadPool(1);
         Future<City> cityFuture = es.submit(new MyCall(idCity, allWeather));
 
         try {
@@ -81,9 +76,13 @@ public class RequestService extends Service {
             notifyCallBacksWeatherInCity(null, Constants.FAIL_CONNECTION);
             e.printStackTrace();
         }
+
+        es.shutdown();
     }
 
     void getWeatherInListCities(int[] idCities, boolean allWeather){
+        es = Executors.newFixedThreadPool(4);
+
        List<MyCall> myCalls = new ArrayList<>();
         for (int i = 0; i < idCities.length; i++){
             myCalls.add(new MyCall(idCities[i], allWeather));
@@ -101,6 +100,8 @@ public class RequestService extends Service {
             notifyCallBacksWeatherInListCities(null, Constants.FAIL_CONNECTION);
             e.printStackTrace();
         }
+
+        es.shutdown();
     }
 //колобэл, который выполняет запросы
     class MyCall implements Callable<City> {
