@@ -4,12 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -22,44 +20,40 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.geekbrains.myweatherapp.fragments.FragmentChoiceCity;
 import com.geekbrains.myweatherapp.fragments.FragmentHistoryCity;
 import com.geekbrains.myweatherapp.fragments.FragmentShowWeatherInCity;
-import com.geekbrains.myweatherapp.fragments.MyDialogFragment;
+import com.geekbrains.myweatherapp.interfaces.OpenWeather;
+import com.geekbrains.myweatherapp.model.CurrentWeatherRequest;
+import com.geekbrains.myweatherapp.model.HistoryWeatherRequest;
 import com.geekbrains.myweatherapp.services.RequestService;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.geekbrains.myweatherapp.Constants.CITIES_EXTRA;
-import static com.geekbrains.myweatherapp.Constants.CITY_EXTRA;
-import static com.geekbrains.myweatherapp.Constants.CODE_FOR_CITIES_LIST;
-import static com.geekbrains.myweatherapp.Constants.CODE_FOR_CITY;
-import static com.geekbrains.myweatherapp.Constants.ID_CITIES_EXTRA;
 import static com.geekbrains.myweatherapp.Constants.ID_CITY_EXTRA;
 import static com.geekbrains.myweatherapp.Constants.IS_SAVED_INSTANCE_STATE;
-import static com.geekbrains.myweatherapp.Constants.STATUS_FINISH;
-import static com.geekbrains.myweatherapp.Constants.STATUS_START;
 
 @Getter
 public class MainActivity extends AppCompatActivity implements
@@ -67,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         FragmentHistoryCity.OnSelectedCityListener,
         RequestService.CallbackForRequestService {
-    private final static int REQUEST_CODE = 1;
 
     public static boolean orientationIsLand;
     private FragmentChoiceCity fragmentChoiceCity;
@@ -77,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements
     private FragmentShowWeatherInCity fragmentShowWeatherInCity;
     private City currentCity;
     private static WorkNetHandler workNetHandler = new WorkNetHandler();
+    private static WorkRetrofitHandler workRetrofitHandler;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -103,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements
         //WorkNetHandler.registerObserverCallback(this);//подписываемся на ответы от сервера
         RequestService.registerObserverCallback(this);
 
+        workRetrofitHandler = new WorkRetrofitHandler(this);
+
         if (savedInstanceState == null){
             ////////////////////////////////////////////////////////////////////////////////////////////
             ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,6 +110,12 @@ public class MainActivity extends AppCompatActivity implements
             bindService(intent, requestServiceConnection, BIND_AUTO_CREATE);
             ////////////////////////////////////////////////////////////////////////////////////////////
             ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+            workRetrofitHandler.getCityForID( MyApp.getINSTANCE().getIDdefaultCity());
+            workRetrofitHandler.getCityListForIDs(getResources().getIntArray(R.array.id_city));
+
+
             historyCitiesSet = new LinkedHashSet<>();
         } else {
             Intent intent = new Intent(MainActivity.this, RequestService.class);
@@ -150,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private Toolbar initToolbar(){
+    private Toolbar initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         return toolbar;
@@ -178,8 +180,6 @@ public class MainActivity extends AppCompatActivity implements
             fragmentHistoryCity.setCallback(this);
         }
     }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Обработка соединения с сервисом
     private final ServiceConnection requestServiceConnection = new ServiceConnection() {
@@ -206,9 +206,6 @@ public class MainActivity extends AppCompatActivity implements
             unbindService(requestServiceConnection);
         }
     }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -356,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements
         historyCitiesSet.add(city);
     }
 
-    private void showDialog(String message, String type){
+    public void showDialog(String message, String type){
         //вывод ошибки через мой кастомный dialogFragment
 //        DialogFragment dialogFragmentInfo = MyDialogFragment.newInstance(message);
 //        dialogFragmentInfo.show(getSupportFragmentManager(), "dialogError" );
