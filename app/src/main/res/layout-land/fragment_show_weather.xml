@@ -22,6 +22,7 @@
         android:id="@+id/tvNameCites"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:gravity="left"
         android:text="@string/no_name"
@@ -37,44 +38,24 @@
         android:id="@+id/tvTemperature"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/myThermometer" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_current_date" />
 
     <TextView
         android:id="@+id/tv_current_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/no_name"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/myThermometer"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <com.geekbrains.myweatherapp.MyThermometer
-
-        android:id="@+id/myThermometer"
-        android:layout_width="40dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="150dp"
-        android:layout_marginEnd="150dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_current_date"
-        app:level_temp="-10" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_temp_for_hour"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myThermometer" />
 
     <TextView
         android:id="@+id/textView_pressure"

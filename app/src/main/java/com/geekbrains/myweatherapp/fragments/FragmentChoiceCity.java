@@ -70,10 +70,9 @@ public class FragmentChoiceCity extends Fragment {
         }
         if (cities == null){
             cities = new ArrayList<>();
-        }
-
-        if (savedInstanceState != null){
-            cities = savedInstanceState.getParcelableArrayList(Constants.CITIES_EXTRA);
+            if (savedInstanceState != null){
+                cities = savedInstanceState.getParcelableArrayList(Constants.CITIES_EXTRA);
+            }
         }
 //RecyclerView необходим менеджер компоновки для управления позиционированием своих элементов
         rvSites = view.findViewById(R.id.recyclerView_cities);

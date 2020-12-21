@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MyThermometer">
+        <attr name="thermometer_color" format="color"/>
+        <attr name="field_thermometer_color" format="color"/>
+        <attr name="point_zero_color" format="color"/>
+        <attr name="negative_temp_color" format="color"/>
+        <attr name="positive_temp_color" format="color"/>
+        <attr name="level_temp" format="integer"/>
+    </declare-styleable>
+</resources>

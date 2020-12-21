@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.geekbrains.myweatherapp.City;
@@ -16,6 +17,7 @@ import com.geekbrains.myweatherapp.Constants;
 import com.geekbrains.myweatherapp.MyApp;
 import com.geekbrains.myweatherapp.R;
 import com.geekbrains.myweatherapp.fragments.FragmentChoiceCity;
+import com.geekbrains.myweatherapp.fragments.FragmentHistoryCity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -71,18 +73,20 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
             @Override
             public void onClick(View v) {
                 AppCompatActivity currentActivity = (AppCompatActivity) v.getContext();
+                Fragment fragment = null;
                 if (currentActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-                    FragmentChoiceCity fragmentChoiceCity = (FragmentChoiceCity) currentActivity.getSupportFragmentManager().findFragmentById(R.id.cities);
-                    callBackFragmentChoiceCity(fragmentChoiceCity);
+                    fragment = currentActivity.getSupportFragmentManager().findFragmentById(R.id.cities);
                 } else {
-                    FragmentChoiceCity fragmentChoiceCity = (FragmentChoiceCity) currentActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                    callBackFragmentChoiceCity(fragmentChoiceCity);
+                    fragment = currentActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 }
+                callBackFragment(fragment);
             }
 
-            private void callBackFragmentChoiceCity(FragmentChoiceCity fragmentChoiceCity) {
-                if (fragmentChoiceCity != null) {
-                    fragmentChoiceCity.callback.onCitySelected(cites.get(localPos));
+            private void callBackFragment(Fragment fragment) {
+                if (fragment instanceof FragmentChoiceCity) {
+                    ((FragmentChoiceCity) fragment).callback.onCitySelected(cites.get(localPos));
+                } else if (fragment instanceof FragmentHistoryCity) {
+                    ((FragmentHistoryCity) fragment).callback.onCitySelected(cites.get(localPos));
                 }
             }
         });
