@@ -2,14 +2,21 @@ package com.geekbrains.myweatherapp;
 
 public class Constants {
     public static final String CITY_EXTRA = "city_extra";
+    public static final String ID_CITY_EXTRA = "id_city_extra";
     public static final String CITIES_HISTORY = "cities_history";
     public static final String SET_HISTORY = "set_history";
     public static final String CITIES_EXTRA = "cities_extra";
+    public static final String ID_CITIES_EXTRA = "id_cities_extra";
     public static final String INFO = "info";
 
     static final String NAME_SHARED_PREFERENCE = "MyAppPreference";
     static final String IS_LIGHT_THEME = "IsLightTheme";
     static final String IS_UNIT_C = "IsUnitC";
+
+    public final static int STATUS_START = 100;
+    public final static int STATUS_FINISH = 200;
+    public final static int CODE_FOR_CITY = 1;
+    public final static int CODE_FOR_CITIES_LIST = 2;
 
 //наборы статиков для запросов
     //https://api.openweathermap.org/data/2.5/weather?id={city id}&appid={API key}
@@ -37,8 +44,8 @@ public class Constants {
     public static final String END_URL_FOR_DOWNLOAD_ICON = "@2x.png";
     //URL = START_URL_FOR_DOWNLOAD_ICON + icon + END_URL_FOR_DOWNLOAD_ICON (icon - String)
 
+    public static final String FAIL_CONNECTION = "fail connection";
+    public static final String CONNECTION = "connection";
 
-
-    static final String FAIL_CONNECTION = "fail connection";
-    static final String CONNECTION = "connection";
+    public static final String IS_SAVED_INSTANCE_STATE = "isSavedInstanceState";
 }
