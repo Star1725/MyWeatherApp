@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity implements
         FragmentChoiceCity.OnSelectedCityListener,
         NavigationView.OnNavigationItemSelectedListener,
         FragmentHistoryCity.OnSelectedCityListener,
-        RequestService.CallbackForRequestService {
+        RequestService.CallbackForRequestService,
+        WorkRetrofitHandler.CallbackForWorkRetrofitHandler{
 
     public static boolean orientationIsLand;
     private FragmentChoiceCity fragmentChoiceCity;
@@ -95,19 +96,20 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         //WorkNetHandler.registerObserverCallback(this);//подписываемся на ответы от сервера
-        RequestService.registerObserverCallback(this);
+        //RequestService.registerObserverCallback(this);
 
-        workRetrofitHandler = new WorkRetrofitHandler(this);
+        workRetrofitHandler = new WorkRetrofitHandler();
+        WorkRetrofitHandler.registerObserverCallback(this);
 
         if (savedInstanceState == null){
             ////////////////////////////////////////////////////////////////////////////////////////////
             ///////////////////////////////////////////////////////////////////////////////////////////////////
             //соединяемся с сервисом и через интент передаём данные для запросов серверу
-            Intent intent = new Intent(MainActivity.this, RequestService.class);
-            intent.putExtra(ID_CITY_EXTRA, MyApp.getINSTANCE().getIDdefaultCity());
-            intent.putExtra(Constants.ID_CITIES_EXTRA, getResources().getIntArray(R.array.id_city));
-            intent.putExtra(IS_SAVED_INSTANCE_STATE, true);
-            bindService(intent, requestServiceConnection, BIND_AUTO_CREATE);
+//            Intent intent = new Intent(MainActivity.this, RequestService.class);
+//            intent.putExtra(ID_CITY_EXTRA, MyApp.getINSTANCE().getIDdefaultCity());
+//            intent.putExtra(Constants.ID_CITIES_EXTRA, getResources().getIntArray(R.array.id_city));
+//            intent.putExtra(IS_SAVED_INSTANCE_STATE, true);
+//            bindService(intent, requestServiceConnection, BIND_AUTO_CREATE);
             ////////////////////////////////////////////////////////////////////////////////////////////
             ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -342,11 +344,11 @@ public class MainActivity extends AppCompatActivity implements
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCitySelected(): city = " + city.getName());
         }
         if (orientationIsLand) {
-            //workNetHandler.getCityWithWeather(city.getId());
-            requestService.getWeatherInCity(city.getId(), true);
+            //requestService.getWeatherInCity(city.getId(), true);
+            workRetrofitHandler.getCityForID(city.getId());
         } else {
-            //workNetHandler.getCityWithWeather(city.getId());
-            requestService.getWeatherInCity(city.getId(), true);
+            //requestService.getWeatherInCity(city.getId(), true);
+            workRetrofitHandler.getCityForID(city.getId());
             fragmentShowWeatherInCity.create(currentCity);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
         }

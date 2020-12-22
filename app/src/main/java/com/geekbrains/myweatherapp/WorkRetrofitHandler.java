@@ -3,6 +3,7 @@ package com.geekbrains.myweatherapp;
 import com.geekbrains.myweatherapp.interfaces.OpenWeather;
 import com.geekbrains.myweatherapp.model.CurrentWeatherRequest;
 import com.geekbrains.myweatherapp.model.HistoryWeatherRequest;
+import com.geekbrains.myweatherapp.services.RequestService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,39 +16,61 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WorkRetrofitHandler {
+
+
+    public interface CallbackForWorkRetrofitHandler {
+        void callingBackWeatherInCity(City city, String status);
+        void callingBackWeatherInListCities(List<City> cityList, String status);
+    }
+
+    private static final ArrayList<CallbackForWorkRetrofitHandler> callbacks = new ArrayList<>();
+
+    public static void registerObserverCallback(CallbackForWorkRetrofitHandler callback){
+        callbacks.add(callback);
+    }
+
+    private void notifyCallBacksWeatherInCity(City city, String status){
+        for (CallbackForWorkRetrofitHandler callback : callbacks) {
+            callback.callingBackWeatherInCity(city, status);
+        }
+    }
+
+    private void notifyCallBacksWeatherInListCities(List<City> cityList, String status){
+        for (CallbackForWorkRetrofitHandler callback : callbacks) {
+            callback.callingBackWeatherInListCities(cityList, status);
+        }
+    }
+
     private static OpenWeather openWeather;
     private City city;
     private List<City> cityList;
 
-    private MainActivity mainActivity;
-
-    public WorkRetrofitHandler(MainActivity mainActivity){
-        this.mainActivity = mainActivity;
-
+    public WorkRetrofitHandler(){
         initRetrofit();
     }
 
     private static void initRetrofit(){
         Retrofit retrofit = new Retrofit.Builder()
                 // Базовая часть адреса
-                . baseUrl ( "http://api.openweathermap.org/" )
+                .baseUrl ( "http://api.openweathermap.org/" )
 // Конвертер, необходимый для преобразования JSON в объекты
-                . addConverterFactory ( GsonConverterFactory. create ())
-                . build ();
+                .addConverterFactory ( GsonConverterFactory. create ())
+                .build ();
 // Создаём объект, при помощи которого будем выполнять запросы
         openWeather = retrofit.create(OpenWeather.class);
     }
 
-    public List<City> getCityListForIDs(int[] ids){
+    public void getCityListForIDs(int[] ids){
+        cityList = new ArrayList<>();
         for (int i = 0; i < ids.length; i++) {
             cityList.add(requestForWeatherInCityRetrofit(ids[i], Constants.UNITS, BuildConfig.WEATHER_API_KEY, false));
         }
-        return cityList;
+        notifyCallBacksWeatherInListCities(cityList, Constants.CONNECTION);
     }
 
-    public City getCityForID(int id){
+    public void getCityForID(int id){
         city = requestForWeatherInCityRetrofit(id, Constants.UNITS, BuildConfig.WEATHER_API_KEY, true);
-        return city;
+        notifyCallBacksWeatherInCity(city, Constants.CONNECTION);
     }
 
     private City requestForWeatherInCityRetrofit(int cityId, String units, String keyApi, boolean history){
@@ -59,8 +82,9 @@ public class WorkRetrofitHandler {
                     double lon = response.body().getCoord().getLon();
                     long currentDateUTC = response.body().getDt();
 
+                    List<Double> tepmForHours = new ArrayList<>();
                     if (history){
-                        List<Double> tepmForHours =  requestForWeatherInListCitiesHistoryRetrofit(lat, lon, currentDateUTC, Constants.UNITS, BuildConfig.WEATHER_API_KEY);
+                        tepmForHours =  requestForWeatherInListCitiesHistoryRetrofit(lat, lon, currentDateUTC, Constants.UNITS, BuildConfig.WEATHER_API_KEY);
 
                         tepmForHours = requestForWeatherInListCitiesRetrofit(lat, lon, Constants.EXUCLUDE, Constants.UNITS, BuildConfig.WEATHER_API_KEY, tepmForHours);
                     }
@@ -75,13 +99,15 @@ public class WorkRetrofitHandler {
 
                     if (history){
                         city = new City(id, cityName, 0, currentTemp, 0, 0, null, weatherIcon, R.drawable.ic_sun_svg);
+                    } else {
+                        city = new City(id, cityName, currentDateCity, currentTemp, currentPressure, currentHumidity, tepmForHours, weatherIcon, R.drawable.ic_sun_svg);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<CurrentWeatherRequest> call, Throwable t) {
-                mainActivity.showDialog(t.getMessage(), mainActivity.getResources().getString(R.string.error));
+                notifyCallBacksWeatherInCity(null, Constants.FAIL_CONNECTION);
             }
         });
         return city;
@@ -103,7 +129,7 @@ public class WorkRetrofitHandler {
 
             @Override
             public void onFailure(Call<HistoryWeatherRequest> call, Throwable t) {
-                mainActivity.showDialog(t.getMessage(), mainActivity.getResources().getString(R.string.error));
+                notifyCallBacksWeatherInListCities(null, Constants.FAIL_CONNECTION);
             }
         });
         return tepmForHours;
@@ -126,7 +152,7 @@ public class WorkRetrofitHandler {
 
             @Override
             public void onFailure(Call<HistoryWeatherRequest> call, Throwable t) {
-                mainActivity.showDialog(t.getMessage(), mainActivity.getResources().getString(R.string.error));
+                notifyCallBacksWeatherInListCities(null, Constants.FAIL_CONNECTION);
             }
         });
         return tepmForHours;
