@@ -1,5 +1,6 @@
 package com.geekbrains.myweatherapp.interfaces;
 
+import com.geekbrains.myweatherapp.model.CurrentWeatherInListCitiesRequest;
 import com.geekbrains.myweatherapp.model.CurrentWeatherRequest;
 import com.geekbrains.myweatherapp.model.HistoryWeatherRequest;
 
@@ -14,16 +15,21 @@ public interface OpenWeather {
                                              @Query ( "appid" ) String keyApi );
 
     @GET( "data/2.5/onecall")
-    Call<HistoryWeatherRequest> loadWeatherInListCities (@Query( "lat" ) double lat ,
+    Call<HistoryWeatherRequest> loadWeatherInCityForecast (@Query( "lat" ) double lat ,
                                                          @Query( "lon" ) double lon ,
                                                          @Query( "exclude" ) String exclude ,
                                                          @Query( "units" ) String units ,
                                                          @Query ( "appid" ) String keyApi );
 
     @GET( "data/2.5/onecall/timemachine")
-    Call<HistoryWeatherRequest> loadWeatherInListCitiesHistory (@Query( "lat" ) double lat ,
+    Call<HistoryWeatherRequest> loadWeatherInCityHistory (@Query( "lat" ) double lat ,
                                                          @Query( "lon" ) double lon ,
                                                          @Query( "dt" ) long dt ,
                                                          @Query( "units" ) String units ,
                                                          @Query ( "appid" ) String keyApi );
+
+    @GET( "data/2.5/group")
+    Call<CurrentWeatherInListCitiesRequest> loadWeatherInCitiesList (@Query( "id" ) int[] ids ,
+                                                                     @Query( "units" ) String units ,
+                                                                     @Query ( "appid" ) String keyApi );
 }

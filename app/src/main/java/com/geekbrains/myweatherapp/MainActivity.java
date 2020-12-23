@@ -114,8 +114,9 @@ public class MainActivity extends AppCompatActivity implements
             ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-            workRetrofitHandler.getCityForID( MyApp.getINSTANCE().getIDdefaultCity());
-            workRetrofitHandler.getCityListForIDs(getResources().getIntArray(R.array.id_city));
+            workRetrofitHandler.requestForWeatherInCityRetrofit( MyApp.getINSTANCE().getIDdefaultCity());
+            workRetrofitHandler.requestForWeatherInListCitiesRetrofit(getResources().getIntArray(R.array.id_city));
+
 
 
             historyCitiesSet = new LinkedHashSet<>();
@@ -345,10 +346,10 @@ public class MainActivity extends AppCompatActivity implements
         }
         if (orientationIsLand) {
             //requestService.getWeatherInCity(city.getId(), true);
-            workRetrofitHandler.getCityForID(city.getId());
+            workRetrofitHandler.requestForWeatherInCityRetrofit(city.getId());
         } else {
             //requestService.getWeatherInCity(city.getId(), true);
-            workRetrofitHandler.getCityForID(city.getId());
+            workRetrofitHandler.requestForWeatherInCityRetrofit(city.getId());
             fragmentShowWeatherInCity.create(currentCity);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
         }
