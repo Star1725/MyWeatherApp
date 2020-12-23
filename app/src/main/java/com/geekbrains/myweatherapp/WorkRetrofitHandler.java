@@ -152,8 +152,16 @@ public class WorkRetrofitHandler {
     public void requestForWeatherInListCitiesRetrofit(int[] ids){
 
         cityList = new ArrayList<>();
+        StringBuilder stringIds = new StringBuilder();
+        for (int i = 0; i < ids.length; i++) {
+            if (i == ids.length - 1){
+                stringIds.append(ids[i]);
+            } else {
+                stringIds.append(ids[i]).append(",");
+            }
+        }
 
-        openWeather.loadWeatherInCitiesList(ids, Constants.UNITS_FOR_RETROFIT, BuildConfig.WEATHER_API_KEY).enqueue(new Callback<CurrentWeatherInListCitiesRequest>() {
+        openWeather.loadWeatherInCitiesList(Constants.UNITS_FOR_RETROFIT, BuildConfig.WEATHER_API_KEY, stringIds.toString()).enqueue(new Callback<CurrentWeatherInListCitiesRequest>() {
             @Override
             public void onResponse(Call<CurrentWeatherInListCitiesRequest> call, Response<CurrentWeatherInListCitiesRequest> response) {
                 if (response != null){

@@ -29,7 +29,6 @@ public interface OpenWeather {
                                                          @Query ( "appid" ) String keyApi );
 
     @GET( "data/2.5/group")
-    Call<CurrentWeatherInListCitiesRequest> loadWeatherInCitiesList (@Query( "id" ) int[] ids ,
-                                                                     @Query( "units" ) String units ,
-                                                                     @Query ( "appid" ) String keyApi );
+    Call<CurrentWeatherInListCitiesRequest> loadWeatherInCitiesList(@Query("units") String units,
+                                                                    @Query("appid") String keyApi, @Query("id") String ids);
 }
