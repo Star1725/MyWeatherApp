@@ -30,9 +30,7 @@ import android.widget.ArrayAdapter;
 import com.geekbrains.myweatherapp.fragments.FragmentChoiceCity;
 import com.geekbrains.myweatherapp.fragments.FragmentHistoryCity;
 import com.geekbrains.myweatherapp.fragments.FragmentShowWeatherInCity;
-import com.geekbrains.myweatherapp.interfaces.OpenWeather;
-import com.geekbrains.myweatherapp.model.CurrentWeatherRequest;
-import com.geekbrains.myweatherapp.model.HistoryWeatherRequest;
+import com.geekbrains.myweatherapp.model.City;
 import com.geekbrains.myweatherapp.services.RequestService;
 import com.google.android.material.navigation.NavigationView;
 
@@ -42,17 +40,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.geekbrains.myweatherapp.Constants.ID_CITY_EXTRA;
 import static com.geekbrains.myweatherapp.Constants.IS_SAVED_INSTANCE_STATE;
 
 @Getter

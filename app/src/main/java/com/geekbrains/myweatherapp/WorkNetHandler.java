@@ -2,6 +2,7 @@ package com.geekbrains.myweatherapp;
 
 import android.util.Log;
 
+import com.geekbrains.myweatherapp.model.City;
 import com.geekbrains.myweatherapp.model.CurrentWeatherRequest;
 import com.geekbrains.myweatherapp.model.HistoryWeatherRequest;
 import com.google.gson.Gson;

@@ -13,11 +13,6 @@ public class Constants {
     static final String IS_LIGHT_THEME = "IsLightTheme";
     static final String IS_UNIT_C = "IsUnitC";
 
-    public final static int STATUS_START = 100;
-    public final static int STATUS_FINISH = 200;
-    public final static int CODE_FOR_CITY = 1;
-    public final static int CODE_FOR_CITIES_LIST = 2;
-
 //наборы статиков для запросов
     //https://api.openweathermap.org/data/2.5/weather?id={city id}&appid={API key}
     static final String START_FOR_URL_WEATHER = "https://api.openweathermap.org/data/2.5/weather?";
@@ -50,4 +45,10 @@ public class Constants {
     public static final String CONNECTION = "connection";
 
     public static final String IS_SAVED_INSTANCE_STATE = "isSavedInstanceState";
+
+    //for Room
+    public final static String COLUMN_ID = "id";
+    public final static String COLUMN_CITY_NAME = "city_name";
+    public final static String COLUMN_LONG_DT = "dt";
+    public final static String COLUMN_WEATHER_ID = "weather_id";
 }

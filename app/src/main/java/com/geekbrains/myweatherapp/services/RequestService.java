@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.geekbrains.myweatherapp.City;
+import com.geekbrains.myweatherapp.model.City;
 import com.geekbrains.myweatherapp.Constants;
 import com.geekbrains.myweatherapp.WorkNetHandler;
 

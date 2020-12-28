@@ -3,15 +3,13 @@ package com.geekbrains.myweatherapp;
 import android.util.Log;
 
 import com.geekbrains.myweatherapp.interfaces.OpenWeather;
+import com.geekbrains.myweatherapp.model.City;
 import com.geekbrains.myweatherapp.model.CurrentWeatherInListCitiesRequest;
 import com.geekbrains.myweatherapp.model.CurrentWeatherRequest;
 import com.geekbrains.myweatherapp.model.HistoryWeatherRequest;
-import com.geekbrains.myweatherapp.services.RequestService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CountDownLatch;
 
 import retrofit2.Call;
 import retrofit2.Callback;

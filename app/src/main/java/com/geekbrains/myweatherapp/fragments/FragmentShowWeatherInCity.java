@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.geekbrains.myweatherapp.City;
+import com.geekbrains.myweatherapp.model.City;
 import com.geekbrains.myweatherapp.Constants;
 import com.geekbrains.myweatherapp.Logger;
 import com.geekbrains.myweatherapp.MainActivity;
@@ -27,7 +27,6 @@ import com.geekbrains.myweatherapp.R;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 public class FragmentShowWeatherInCity extends Fragment {
 

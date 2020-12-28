@@ -1,5 +1,6 @@
 package com.geekbrains.myweatherapp;
 
+import com.geekbrains.myweatherapp.model.City;
 import com.geekbrains.myweatherapp.model.CurrentWeatherRequest;
 import com.google.gson.Gson;
 
