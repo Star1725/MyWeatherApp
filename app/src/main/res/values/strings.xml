@@ -57,16 +57,48 @@
     <string name="temperature_units">Temperature units</string>
     <string name="actv_search_cites">city search</string>
     <string name="default_name_city">City</string>
+    <string name="history">History</string>
     <string name="default_city">Default city</string>
-    <string name="yandex_weather">yandex weather</string>
+    <string name="error">Error</string>
+    <string name="information">Information</string>
+    <string name="ok">Ok</string>
 
     <string name="current_date">current date</string>
     <string name="city">Choice City</string>
     <string name="current_time">current time</string>
     <string name="info">info</string>
     <string name="about">Developer: Starovoytov Sergey</string>
+    <string name="faild_search">No such city found</string>
     <string name="no_name">\?</string>
     <string name="dialog_snackbar">\"You choosed \"</string>
+
+
+
+
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="menu_cities">cities</string>
+    <string name="menu_weather_in_city">Weather in city</string>
+    <string name="menu_history">History</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="add">Add</string >
+    <string name="update">Update</string >
+    <string name="remove">Remove</string >
+    <string name="clear">Clear</string >
+    <string name="search">Search</string >
+
+    <string name="menu_tools">Tools</string >
+    <string name="menu_share">Share</string >
+    <string name="menu_send">Send</string >
+    <string name="menu_search">Search</string >
+
+    <string name="home_second">Home Second</string>
+    <string name="custom_item_data">Элемент %d</string>
 
 
 </resources>

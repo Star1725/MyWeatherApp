@@ -6,20 +6,20 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 
 @Getter
-public class Weather {
-    @SerializedName("id")
+public class List {
+    @SerializedName("weather")
     @Expose
-    private int id;
+    private Weather[] weather ;
 
     @SerializedName("main")
     @Expose
-    private String main;
+    private Main main ;
 
-    @SerializedName("description")
+    @SerializedName("name")
     @Expose
-    private String description;
+    private String name;
 
-    @SerializedName("icon")
+    @SerializedName("id")
     @Expose
-    private String icon;
+    private Integer id;
 }

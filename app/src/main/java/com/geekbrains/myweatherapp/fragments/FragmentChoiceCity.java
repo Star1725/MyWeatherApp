@@ -1,7 +1,6 @@
 package com.geekbrains.myweatherapp.fragments;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.geekbrains.myweatherapp.City;
+import com.geekbrains.myweatherapp.model.City;
 import com.geekbrains.myweatherapp.Constants;
 import com.geekbrains.myweatherapp.Logger;
 import com.geekbrains.myweatherapp.adapters.MyRVAdapter;
@@ -24,7 +23,6 @@ import com.geekbrains.myweatherapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,10 +68,9 @@ public class FragmentChoiceCity extends Fragment {
         }
         if (cities == null){
             cities = new ArrayList<>();
-        }
-
-        if (savedInstanceState != null){
-            cities = savedInstanceState.getParcelableArrayList(Constants.CITIES_EXTRA);
+            if (savedInstanceState != null){
+                cities = savedInstanceState.getParcelableArrayList(Constants.CITIES_EXTRA);
+            }
         }
 //RecyclerView необходим менеджер компоновки для управления позиционированием своих элементов
         rvSites = view.findViewById(R.id.recyclerView_cities);
