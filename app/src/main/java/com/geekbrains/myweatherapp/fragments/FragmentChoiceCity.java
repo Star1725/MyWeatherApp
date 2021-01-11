@@ -91,7 +91,7 @@ public class FragmentChoiceCity extends Fragment {
                 LinearLayoutManager llm = new LinearLayoutManager((AppCompatActivity) rvSites.getContext());
                 rvSites.setLayoutManager(llm);
 //создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites
-                myRVAdapter = new MyRVAdapter(finalCities);
+                myRVAdapter = new MyRVAdapter(finalCities, null);
                 rvSites.setAdapter(myRVAdapter);
 
                 choiceCityName.setFreezesText(false);
@@ -105,7 +105,7 @@ public class FragmentChoiceCity extends Fragment {
                         if (Logger.VERBOSE) {
                             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate() - myAutoCompleteTextView: s = " + s.toString());
                         }
-                        MyRVAdapter localAdapter = new MyRVAdapter(finalCities.stream().filter(city -> city.getName().toLowerCase().startsWith(s.toString().toLowerCase())).collect(Collectors.toList()));
+                        MyRVAdapter localAdapter = new MyRVAdapter(finalCities.stream().filter(city -> city.getName().toLowerCase().startsWith(s.toString().toLowerCase())).collect(Collectors.toList()), null);
                         rvSites.setAdapter(localAdapter);
                     }
                     @Override

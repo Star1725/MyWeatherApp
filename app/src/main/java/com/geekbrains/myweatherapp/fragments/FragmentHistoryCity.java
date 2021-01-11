@@ -13,11 +13,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.geekbrains.myweatherapp.MyApp;
+import com.geekbrains.myweatherapp.dao.HistoryDao;
 import com.geekbrains.myweatherapp.model.City;
 import com.geekbrains.myweatherapp.Constants;
 import com.geekbrains.myweatherapp.Logger;
 import com.geekbrains.myweatherapp.R;
 import com.geekbrains.myweatherapp.adapters.MyRVAdapter;
+import com.geekbrains.myweatherapp.model.entity.HistorySource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,7 @@ public class FragmentHistoryCity extends Fragment {
 
     private MyRVAdapter myRVAdapter;
     private RecyclerView rvSites;
+    private HistorySource historySource;
 
     public static FragmentHistoryCity create(Set<City> set){
         Bundle bundle =new Bundle();
@@ -77,7 +81,11 @@ public class FragmentHistoryCity extends Fragment {
                     LinearLayoutManager llm = new LinearLayoutManager((AppCompatActivity) rvSites.getContext());
                     rvSites.setLayoutManager(llm);
 //создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites
-                    myRVAdapter = new MyRVAdapter(cities);
+                    HistoryDao historyDao = MyApp
+                            .getINSTANCE()
+                            .getHistoryDao();
+                    historySource = new HistorySource(historyDao);
+                    myRVAdapter = new MyRVAdapter(cities, historySource);
                     rvSites.setAdapter(myRVAdapter);
                 }
             });

@@ -6,6 +6,9 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.geekbrains.myweatherapp.dao.HistoryDao;
+import com.geekbrains.myweatherapp.database.HistoryDatabase;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,10 +20,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MyApp extends Application {
+
     private static MyApp INSTANCE;
     private Storage storage = new Storage();
     private String unitTemp;
     private HashMap<String, Integer> mapImages;
+
+    private HistoryDatabase historyDatabase;
 
 
     @Override
@@ -35,6 +41,13 @@ public class MyApp extends Application {
         unitTemp = getUnit();
         mapImages = initMap();
 
+        historyDatabase = HistoryDatabase.createDB();
+
+    }
+
+    // Получаем EducationDao для составления запросов
+    public HistoryDao getHistoryDao() {
+        return historyDatabase.getHistoryDao();
     }
 
     //чтение настроек темы

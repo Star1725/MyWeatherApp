@@ -119,7 +119,7 @@ public class FragmentShowWeatherInCity extends Fragment {
                     myRVAdapterHorizontal = new MyRVAdapterHorizontal(city);
                     imageViewWeatherCites.setImageResource(MyApp.getINSTANCE().getMapImages().get(city.getIcon()));
                     if (!MainActivity.orientationIsLand){
-                        myThermometer.setLevelTemp((int)Math.round(city.getCurrentTemp()));
+                        myThermometer.setLevelTemp(city.getCurrentTemp());
                         myThermometer.invalidate();
                         rvTempHourHorizontal.setLayoutManager(llmHorizontal);
                         rvTempHourHorizontal.setAdapter(myRVAdapterHorizontal);

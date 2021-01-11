@@ -46,7 +46,7 @@ public class WorkRetrofitHandler {
     private static OpenWeather openWeather;
     private City city;
     private List<City> cityList;
-    private List<Double> tepmForHours;
+    private List<Integer> tepmForHours;
 
     public WorkRetrofitHandler(){
         initRetrofit();
@@ -73,7 +73,7 @@ public class WorkRetrofitHandler {
 
                     int id = response.body().getId();
                     String cityName = response.body().getName();
-                    double currentTemp = response.body().getMain().getTemp();
+                    int currentTemp = (int)Math.round(response.body().getMain().getTemp());
                     String weatherIcon = response.body().getWeather()[0].getIcon();
                     double lat = response.body().getCoord().getLat();
                     double lon = response.body().getCoord().getLon();
@@ -108,7 +108,7 @@ public class WorkRetrofitHandler {
             public void onResponse(Call<HistoryWeatherRequest> call, Response<HistoryWeatherRequest> response) {
                 if (response != null){
                     for (int i = 0; i < response.body().getHourly().length; i++) {
-                        tepmForHours.add(response.body().getHourly()[i].getTemp());
+                        tepmForHours.add((int)Math.round(response.body().getHourly()[i].getTemp()));
 
                     }
                     requestForWeatherInCityForecastRetrofit(lat, lon);
@@ -128,9 +128,8 @@ public class WorkRetrofitHandler {
             @Override
             public void onResponse(Call<HistoryWeatherRequest> call, Response<HistoryWeatherRequest> response) {
                 if (response != null){
-                    List<Double> temps = new ArrayList<>();
                     for (int i = 0; i < 25 - tepmForHours.size(); i++) {
-                        tepmForHours.add(response.body().getHourly()[i].getTemp());
+                        tepmForHours.add((int)Math.round(response.body().getHourly()[i].getTemp()));
                     }
                 }
                 city.setTempForDate(tepmForHours);
@@ -166,14 +165,14 @@ public class WorkRetrofitHandler {
 
                     int id;
                     String cityName;
-                    double currentTemp;
+                    int currentTemp;
                     String weatherIcon;
 
                     for (int i = 0; i < response.body().getList().length; i++) {
 
                         id = response.body().getList()[i].getId();
                         cityName = response.body().getList()[i].getName();
-                        currentTemp = response.body().getList()[i].getMain().getTemp();
+                        currentTemp = (int)Math.round(response.body().getList()[i].getMain().getTemp());
                         weatherIcon = response.body().getList()[i].getWeather()[0].getIcon();
 
                         cityList.add(new City(id, cityName, 0, currentTemp, 0, 0, null, weatherIcon, R.drawable.ic_sun_svg));

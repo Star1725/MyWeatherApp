@@ -18,6 +18,7 @@ import com.geekbrains.myweatherapp.MyApp;
 import com.geekbrains.myweatherapp.R;
 import com.geekbrains.myweatherapp.fragments.FragmentChoiceCity;
 import com.geekbrains.myweatherapp.fragments.FragmentHistoryCity;
+import com.geekbrains.myweatherapp.model.entity.HistorySource;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -32,6 +33,7 @@ import lombok.AllArgsConstructor;
 public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolder> {
 
     private List<City> cites;
+    private HistorySource historySource;
     //Внутри конструктора нашего кастомного ViewHolder, инициализируем View, входящие в RecyclerView.
     public static class CitesViewHolder extends RecyclerView.ViewHolder {
         private TextView citesName;
@@ -61,8 +63,11 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
      */
     @Override
     public void onBindViewHolder(@NonNull CitesViewHolder citesViewHolder, int position) {
+        if (historySource != null){
+            cites = historySource.getCities();
+        }
         citesViewHolder.citesName.setText(cites.get(position).getName());
-        citesViewHolder.citesTemp.setText(String.valueOf(Math.round(cites.get(position).getCurrentTemp())));
+        citesViewHolder.citesTemp.setText(String.valueOf(cites.get(position).getCurrentTemp()));
         citesViewHolder.unit.setText(MyApp.getINSTANCE().getUnitTemp());
         //citesViewHolder.citesWeather.setImageResource(cites.get(position).getImageWeatherID());
         Picasso.get().load(Constants.START_URL_FOR_DOWNLOAD_ICON + cites.get(position).getIcon() + Constants.END_URL_FOR_DOWNLOAD_ICON).into(citesViewHolder.citesWeather);
@@ -94,6 +99,11 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.CitesViewHolde
     //метод вернет количество элементов, присутствующих в данных
     @Override
     public int getItemCount() {
-        return cites.size();
+        if (historySource != null){
+            return (int) historySource.getCountCities();
+        }
+        else {
+            return cites.size();
+        }
     }
 }

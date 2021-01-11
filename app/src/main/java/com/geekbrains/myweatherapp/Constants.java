@@ -47,8 +47,10 @@ public class Constants {
     public static final String IS_SAVED_INSTANCE_STATE = "isSavedInstanceState";
 
     //for Room
+    public static final String DB_NAME = "history_database";
     public final static String COLUMN_ID = "id";
     public final static String COLUMN_CITY_NAME = "city_name";
-    public final static String COLUMN_LONG_DT = "dt";
-    public final static String COLUMN_WEATHER_ID = "weather_id";
+    public final static String COLUMN_TEMPERATURE = "temperature";
+    public final static String COLUMN_LONG_DT = "date";
+    public final static String COLUMN_WEATHER_ICON = "weather_icon";
 }

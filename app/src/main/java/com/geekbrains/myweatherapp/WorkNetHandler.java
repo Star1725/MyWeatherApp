@@ -45,7 +45,7 @@ public class WorkNetHandler {
             CurrentWeatherRequest currentWeatherRequest = gson.fromJson(result, CurrentWeatherRequest.class);
             int id = currentWeatherRequest.getId();
             String cityName = currentWeatherRequest.getName();
-            double currentTemp = currentWeatherRequest.getMain().getTemp();
+            int currentTemp = (int) Math.round(currentWeatherRequest.getMain().getTemp());
             String weatherIcon = currentWeatherRequest.getWeather()[0].getIcon();
             if (allWeather){
                 double lat = currentWeatherRequest.getCoord().getLat();
@@ -54,8 +54,8 @@ public class WorkNetHandler {
                 long currentDateCity = currentDateUTC + currentWeatherRequest.getTimezone();
                 int currentPressure = currentWeatherRequest.getMain().getPressure();
                 int currentHumidity = currentWeatherRequest.getMain().getHumidity();
-                ArrayList<Double> tempForDate = (ArrayList<Double>) getHistoryWeatherRequest(lat, lon, currentDateUTC, true);
-                ArrayList<Double> listForecast = (ArrayList<Double>) getHistoryWeatherRequest(lat, lon, 0, false);
+                ArrayList<Integer> tempForDate = (ArrayList<Integer>) getHistoryWeatherRequest(lat, lon, currentDateUTC, true);
+                ArrayList<Integer> listForecast = (ArrayList<Integer>) getHistoryWeatherRequest(lat, lon, 0, false);
                 for (int i = 1; i < 25 - tempForDate.size(); i++) {
                     tempForDate.add(listForecast.get(i));
                 }
@@ -82,7 +82,7 @@ public class WorkNetHandler {
     }
 
     //запрос на получение почасовой температуры за текущий день. flagHistorical = false - ONECALL - после текущего часа, flagHistorical = true - ONECALL_TIMEMACHINE - до текущего часа
-    private List<Double> getHistoryWeatherRequest(double lat, double lon, long currentDateUTC, boolean flagHistory) throws IOException {
+    private List<Integer> getHistoryWeatherRequest(double lat, double lon, long currentDateUTC, boolean flagHistory) throws IOException {
         if (Logger.VERBOSE) {
             Log.v(Logger.TAG, this.getClass().getSimpleName() + " getHistoryWeatherRequest()");
         }
@@ -115,9 +115,9 @@ public class WorkNetHandler {
             in.close();
             Gson gson = new Gson();
             historyWeatherRequest = gson.fromJson(result, HistoryWeatherRequest.class);
-            List<Double> listTemp = new ArrayList<>();
+            List<Integer> listTemp = new ArrayList<>();
             for (int i = 0; i < historyWeatherRequest.getHourly().length; i++) {
-                listTemp.add(historyWeatherRequest.getHourly()[i].getTemp());
+                listTemp.add((int) Math.round(historyWeatherRequest.getHourly()[i].getTemp()));
             }
             httpsURLConnection.disconnect();
             return listTemp;
