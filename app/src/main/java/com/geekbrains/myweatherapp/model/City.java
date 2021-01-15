@@ -31,6 +31,9 @@ public class City implements Parcelable {
     @ColumnInfo(name = Constants.COLUMN_ID)// autoGenerate = true - автоматическая генерация ключа
     public long idDB;
 
+    @ColumnInfo(name = Constants.COLUMN_ID_CITIES)
+    private int id;
+
     @ColumnInfo(name = Constants.COLUMN_CITY_NAME)
     private String name;
 
@@ -43,12 +46,15 @@ public class City implements Parcelable {
     @ColumnInfo(name = Constants.COLUMN_WEATHER_ICON)
     private String icon;
 
-    public City(long idDB, String name, long dt, int currentTemp, String icon) {
+    public City(int id, String name, long dt, int currentTemp, String icon) {
+        this.id = id;
+        this.name = name;
+        this.dt = dt;
+        this.currentTemp = currentTemp;
+        this.icon = icon;
     }
 
 //поля, игнорируемые БД
-    @Ignore
-    private int id;
     @Ignore
     private int pressure;
     @Ignore

@@ -23,7 +23,7 @@ public class HistorySource {
     }
 
     public void loadCities(){
-        historyDao.getAllCities();
+        cities = historyDao.getAllCities();
     }
 
     public void addCity(City city){

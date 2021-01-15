@@ -27,10 +27,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import com.geekbrains.myweatherapp.dao.HistoryDao;
 import com.geekbrains.myweatherapp.fragments.FragmentChoiceCity;
 import com.geekbrains.myweatherapp.fragments.FragmentHistoryCity;
 import com.geekbrains.myweatherapp.fragments.FragmentShowWeatherInCity;
 import com.geekbrains.myweatherapp.model.City;
+import com.geekbrains.myweatherapp.model.entity.HistorySource;
 import com.geekbrains.myweatherapp.services.RequestService;
 import com.google.android.material.navigation.NavigationView;
 
@@ -50,7 +52,7 @@ import static com.geekbrains.myweatherapp.Constants.IS_SAVED_INSTANCE_STATE;
 public class MainActivity extends AppCompatActivity implements
         FragmentChoiceCity.OnSelectedCityListener,
         NavigationView.OnNavigationItemSelectedListener,
-        FragmentHistoryCity.OnSelectedCityListener,
+        FragmentHistoryCity.OnActionInFragmentShowHistory,
         RequestService.CallbackForRequestService,
         WorkRetrofitHandler.CallbackForWorkRetrofitHandler{
 
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements
     static List<City> cityList;
     private FragmentHistoryCity fragmentHistoryCity;
     static Set<City> historyCitiesSet;
+    public static HistorySource historySource;
     private FragmentShowWeatherInCity fragmentShowWeatherInCity;
     private City currentCity;
     private static WorkNetHandler workNetHandler = new WorkNetHandler();
@@ -111,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements
 
 
             historyCitiesSet = new LinkedHashSet<>();
+            HistoryDao historyDao = MyApp
+                    .getINSTANCE()
+                    .getHistoryDao();
+            historySource = new HistorySource(historyDao);
+
+
         } else {
             Intent intent = new Intent(MainActivity.this, RequestService.class);
             intent.putExtra(IS_SAVED_INSTANCE_STATE, false);
@@ -345,6 +354,12 @@ public class MainActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentShowWeatherInCity).addToBackStack("").commit();
         }
         historyCitiesSet.add(city);
+        historySource.addCity(city);
+    }
+
+    @Override
+    public void clearHistory() {
+        historySource.removeCities();
     }
 
     public void showDialog(String message, String type){

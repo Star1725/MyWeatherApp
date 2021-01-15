@@ -49,6 +49,7 @@ public class Constants {
     //for Room
     public static final String DB_NAME = "history_database";
     public final static String COLUMN_ID = "id";
+    public static final String COLUMN_ID_CITIES = "city_id";
     public final static String COLUMN_CITY_NAME = "city_name";
     public final static String COLUMN_TEMPERATURE = "temperature";
     public final static String COLUMN_LONG_DT = "date";
