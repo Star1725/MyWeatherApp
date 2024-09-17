@@ -34,10 +34,12 @@ public class Constants {
     static final String COORD_LAT = "lat=";
     static final String COORD_LON = "&lon=";
     static final String EXUCLUDE = "&exclude=current,minutely,daily";
+    static final String EXUCLUDE_FOR_RETROFIT = "current,minutely,daily";
     static final String CURRENT_DATE_UTC = "&dt=";
     static final String ID_CITY = "id=";
     static final String APPID = "&appid=";
     static final String UNITS = "&units=metric";
+    static final String UNITS_FOR_RETROFIT = "metric";
 
     //http://openweathermap.org/img/wn/10d@2x.png
     public static final String START_URL_FOR_DOWNLOAD_ICON = "http://openweathermap.org/img/wn/";

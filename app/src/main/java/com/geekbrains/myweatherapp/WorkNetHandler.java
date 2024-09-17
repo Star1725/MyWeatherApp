@@ -54,7 +54,7 @@ public class WorkNetHandler {
                 int currentPressure = currentWeatherRequest.getMain().getPressure();
                 int currentHumidity = currentWeatherRequest.getMain().getHumidity();
                 ArrayList<Double> tempForDate = (ArrayList<Double>) getHistoryWeatherRequest(lat, lon, currentDateUTC, true);
-                ArrayList<Double> listForecast = (ArrayList<Double>) getHistoryWeatherRequest(lat, lon, currentDateUTC, false);
+                ArrayList<Double> listForecast = (ArrayList<Double>) getHistoryWeatherRequest(lat, lon, 0, false);
                 for (int i = 1; i < 25 - tempForDate.size(); i++) {
                     tempForDate.add(listForecast.get(i));
                 }

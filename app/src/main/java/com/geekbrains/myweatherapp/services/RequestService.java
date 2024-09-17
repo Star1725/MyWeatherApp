@@ -63,7 +63,9 @@ public class RequestService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        es.shutdown();
+        if (es != null){
+            es.shutdown();
+        }
     }
 
     void getWeatherInCity(int idCity, boolean allWeather){
