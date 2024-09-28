@@ -1,7 +1,6 @@
 package com.geekbrains.myweatherapp.fragments;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.geekbrains.myweatherapp.City;
+import com.geekbrains.myweatherapp.model.City;
 import com.geekbrains.myweatherapp.Constants;
 import com.geekbrains.myweatherapp.Logger;
 import com.geekbrains.myweatherapp.adapters.MyRVAdapter;
@@ -24,7 +23,6 @@ import com.geekbrains.myweatherapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -93,7 +91,7 @@ public class FragmentChoiceCity extends Fragment {
                 LinearLayoutManager llm = new LinearLayoutManager((AppCompatActivity) rvSites.getContext());
                 rvSites.setLayoutManager(llm);
 //создаём наш костумный адаптер, передаём ему данные и устанавливаем его для нашего rvSites
-                myRVAdapter = new MyRVAdapter(finalCities);
+                myRVAdapter = new MyRVAdapter(finalCities, null);
                 rvSites.setAdapter(myRVAdapter);
 
                 choiceCityName.setFreezesText(false);
@@ -107,7 +105,7 @@ public class FragmentChoiceCity extends Fragment {
                         if (Logger.VERBOSE) {
                             Log.v(Logger.TAG, this.getClass().getSimpleName() + " onCreate() - myAutoCompleteTextView: s = " + s.toString());
                         }
-                        MyRVAdapter localAdapter = new MyRVAdapter(finalCities.stream().filter(city -> city.getName().toLowerCase().startsWith(s.toString().toLowerCase())).collect(Collectors.toList()));
+                        MyRVAdapter localAdapter = new MyRVAdapter(finalCities.stream().filter(city -> city.getName().toLowerCase().startsWith(s.toString().toLowerCase())).collect(Collectors.toList()), null);
                         rvSites.setAdapter(localAdapter);
                     }
                     @Override

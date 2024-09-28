@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.geekbrains.myweatherapp.City;
+import com.geekbrains.myweatherapp.model.City;
 import com.geekbrains.myweatherapp.MyApp;
 import com.geekbrains.myweatherapp.R;
 
@@ -25,8 +25,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHorizontal.TempHourViewHolder> {
     String currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
-    private List<Double> tempForDate;
-    private List<Integer> hour = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
+    private List<Integer> tempForDate;
+    private List<Integer> hour = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
 
     public MyRVAdapterHorizontal(City city) {
         tempForDate = city.getTempForDate();
@@ -64,7 +64,7 @@ public class MyRVAdapterHorizontal extends RecyclerView.Adapter<MyRVAdapterHoriz
     public void onBindViewHolder(@NonNull TempHourViewHolder tempHourViewHolder, int position) {
         currentUnitTemp = MyApp.getINSTANCE().getUnitTemp();
         tempHourViewHolder.Hour.setText(String.format("%d:00",hour.get(position)));
-        tempHourViewHolder.Temp.setText(String.format("%s %s", String.valueOf(Math.round(tempForDate.get(position))), currentUnitTemp));
+        tempHourViewHolder.Temp.setText(String.format("%d %s", tempForDate.get(position), currentUnitTemp));
 
     }
     //метод вернет количество элементов, присутствующих в данных
