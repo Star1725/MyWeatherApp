@@ -11,7 +11,7 @@
 
   <p><strong>Project Stack:</strong> Java 8, Android Studio, Git, Gradle, JSON API.</p>
 </div>
-
+![Image](https://github.com/user-attachments/assets/41334b42-5e10-4abd-a58b-eb6fdf40e573)
 <div align="center">
   <img src="https://github.com/user-attachments/assets/8b41b112-ef41-44e8-a233-89bcb50e04aa" width="420"/>
   <img src="https://github.com/user-attachments/assets/b22a79ed-643e-43ea-9116-7a3c10134f23" width="400"/>
